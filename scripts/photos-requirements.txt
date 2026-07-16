@@ -1,0 +1,6 @@
+# Pinned for scripts/process_guest_images.py via scripts/setup-photos-venv.sh.
+# setuptools<81 is load-bearing: face_recognition_models imports
+# pkg_resources, which setuptools removed in 81.
+Pillow
+face_recognition
+setuptools<81

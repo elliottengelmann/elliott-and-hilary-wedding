@@ -1,0 +1,5 @@
+{
+    "scripts": {
+        "setup": "bash scripts/setup-photos-venv.sh"
+    }
+}

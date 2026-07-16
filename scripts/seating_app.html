@@ -1,0 +1,1985 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Seating · Nima & Elien</title>
+<style>
+  :root {
+    --bg: #faf7f2;
+    --panel: #ffffff;
+    --ink: #2a2520;
+    --ink-soft: #6b6259;
+    --ink-softer: #968b7e;
+    --line: #e6dfd6;
+    --accent: #8b7355;
+    --accent-soft: #b8a388;
+    --success: #5a8f5c;
+    --danger: #b25656;
+    --highlight: #f4ebe0;
+    --feature-bg: #ead9c4;
+    --feature-ink: #5c4733;
+    --bar-bg: #bde7e3;
+    --bar-ink: #2c6561;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; height: 100%; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    color: var(--ink);
+    background: var(--bg);
+    font-size: 14px;
+    line-height: 1.4;
+  }
+  header {
+    background: var(--panel);
+    border-bottom: 1px solid var(--line);
+    padding: 10px 18px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-wrap: wrap;
+    position: sticky; top: 0; z-index: 20;
+  }
+  h1 {
+    margin: 0;
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 18px;
+    font-weight: normal;
+    color: var(--ink);
+    letter-spacing: 0.3px;
+  }
+  .day-tabs {
+    display: flex;
+    gap: 2px;
+    background: var(--bg);
+    border-radius: 8px;
+    padding: 3px;
+  }
+  .day-tab {
+    padding: 6px 14px;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    font-size: 13px;
+    font-family: inherit;
+    color: var(--ink-soft);
+    border-radius: 6px;
+    font-weight: 500;
+  }
+  .day-tab:hover { color: var(--ink); }
+  .day-tab.active {
+    background: var(--panel);
+    color: var(--ink);
+    box-shadow: 0 1px 2px rgba(0,0,0,0.06);
+  }
+  .day-tab .day-count { color: var(--ink-softer); font-size: 11px; margin-left: 5px; font-weight: normal;}
+  .day-tab.active .day-count { color: var(--accent); }
+  .stats { color: var(--ink-soft); font-size: 13px; margin-left: auto; }
+  .stats strong { color: var(--ink); }
+  .actions { display: flex; gap: 5px; flex-wrap: wrap; }
+  button {
+    padding: 6px 11px;
+    border: 1px solid var(--line);
+    background: var(--panel);
+    color: var(--ink);
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 13px;
+    font-family: inherit;
+    transition: background 0.15s, border-color 0.15s;
+  }
+  button:hover { background: var(--highlight); border-color: var(--accent-soft); }
+  button.primary { background: var(--accent); color: white; border-color: var(--accent); }
+  button.primary:hover { background: #72604a; border-color: #72604a; }
+  button.danger { color: var(--danger); border-color: #e6cfcf; }
+  button.danger:hover { background: #fbeeee; }
+
+  main {
+    display: grid;
+    grid-template-columns: 290px 1fr;
+    height: calc(100vh - 54px);
+    overflow: hidden;
+  }
+  .sidebar {
+    background: var(--panel);
+    border-right: 1px solid var(--line);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    min-height: 0;
+  }
+  .sidebar-header { padding: 11px 14px 8px; border-bottom: 1px solid var(--line); }
+  .sidebar-title {
+    font-weight: 600;
+    margin-bottom: 7px;
+    display: flex; justify-content: space-between; align-items: center;
+    font-size: 12px;
+    letter-spacing: 0.4px;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+  }
+  .sidebar-title .count { font-weight: normal; font-size: 12px; text-transform: none; letter-spacing: 0; color: var(--ink-softer);}
+  .add-guest-btn {
+    margin-left: auto;
+    font-size: 11px;
+    padding: 2px 8px;
+    border: 1px solid var(--accent-soft);
+    border-radius: 4px;
+    background: var(--panel);
+    color: var(--accent);
+    cursor: pointer;
+    text-transform: none;
+    letter-spacing: 0;
+    font-family: inherit;
+    font-weight: 500;
+  }
+  .add-guest-btn:hover { background: var(--highlight); color: var(--ink); }
+  .modal-body .rsvp-row .pill { cursor: pointer; user-select: none; transition: all 0.1s; }
+  .modal-body .rsvp-row .pill:hover { transform: scale(1.05); }
+  .add-attending-row { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 4px; }
+  .modal-body label.cb { font-size: 13px; color: var(--ink); text-transform: none; letter-spacing: 0; margin: 0; cursor: pointer; }
+  .modal-body label.cb input { margin-right: 4px; vertical-align: middle; }
+  .search-input, .tag-select {
+    width: 100%;
+    padding: 6px 9px;
+    border: 1px solid var(--line);
+    border-radius: 5px;
+    font-size: 13px;
+    font-family: inherit;
+    background: var(--panel);
+    color: var(--ink);
+  }
+  .search-input:focus { outline: 1px solid var(--accent-soft); border-color: var(--accent-soft); }
+  .tag-filters {
+    padding: 7px 12px;
+    display: flex;
+    gap: 4px;
+    flex-wrap: wrap;
+    border-bottom: 1px solid var(--line);
+  }
+  .tag-chip {
+    font-size: 11px;
+    padding: 3px 8px;
+    border-radius: 10px;
+    border: 1px solid var(--line);
+    background: var(--panel);
+    cursor: pointer;
+    user-select: none;
+    color: var(--ink-soft);
+  }
+  .tag-chip.active { background: var(--ink); color: white; border-color: var(--ink); }
+  .guest-pool {
+    flex: 1;
+    overflow-y: auto;
+    padding: 7px;
+    min-height: 0;
+  }
+  .guest-pool.drop-hover { background: var(--highlight); outline: 2px dashed var(--accent-soft); outline-offset: -4px; }
+  .guest {
+    padding: 5px 9px;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 5px;
+    margin-bottom: 3px;
+    cursor: grab;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    user-select: none;
+  }
+  .guest:hover { border-color: var(--accent-soft); }
+  .guest:active { cursor: grabbing; }
+  .guest.dragging { opacity: 0.35; }
+  .guest .name { flex: 1; font-size: 13px; }
+  .guest .tag-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+  .guest .kid-mark { font-size: 10px; color: var(--ink-softer); font-style: italic; }
+  .guest .note-icon { font-size: 10px; opacity: 0.7; }
+  .empty-hint {
+    text-align: center;
+    padding: 30px 10px;
+    color: var(--ink-softer);
+    font-style: italic;
+    font-size: 13px;
+  }
+
+  .floor-plan {
+    overflow: auto;
+    padding: 18px;
+    background: var(--bg);
+  }
+
+  /* Casa Hyder (Thursday/Friday) layout */
+  .layout-casa {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+  .casa-main-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(380px, 460px));
+    grid-auto-rows: minmax(180px, auto);
+    gap: 18px;
+    justify-content: center;
+  }
+  .casa-back-row {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 4px;
+  }
+  .casa-back-row .table {
+    width: 460px;
+    max-width: 100%;
+    min-height: 180px;
+  }
+  .layout-casa .venue-label {
+    text-align: center;
+    padding: 10px;
+    background: var(--feature-bg);
+    color: var(--feature-ink);
+    border-radius: 6px;
+    font-family: Georgia, serif;
+    font-size: 13px;
+    letter-spacing: 0.5px;
+  }
+  .casa-divider {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin: 24px 0 4px;
+  }
+  .casa-divider::before, .casa-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--accent-soft), transparent);
+  }
+  .casa-divider .label {
+    font-family: Georgia, serif;
+    font-style: italic;
+    font-size: 12px;
+    letter-spacing: 1.4px;
+    text-transform: uppercase;
+    color: var(--ink-softer);
+  }
+  .casa-kids-zone {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    padding: 18px 24px 22px;
+    background: linear-gradient(180deg, #f6f0e3, var(--feature-bg));
+    border-radius: 14px;
+    border: 1px dashed var(--accent-soft);
+    margin: 0 auto;
+    width: fit-content;
+    max-width: 100%;
+  }
+  .casa-kids-zone .zone-label {
+    font-family: Georgia, serif;
+    font-size: 16px;
+    color: var(--feature-ink);
+    margin: 0;
+  }
+  .casa-kids-zone .zone-sublabel {
+    font-size: 11px;
+    color: var(--feature-ink);
+    opacity: 0.7;
+    margin-bottom: 4px;
+    font-style: italic;
+  }
+  .casa-kids-zone .table { width: 460px; max-width: 100%; }
+
+  /* Instituto (Saturday) layout — venue-accurate to the official Pergola
+     Instituto Allende plan ("Rachel's latest map"). Back room: T20 alone
+     near the bar, then T17/18/19, T14/15/16, T12/13. Raised middle:
+     T9/T10/T11 between the step up/down. Front room: T8/T6/T7 horizontal
+     across the upper half, T5 and T4 as tall vertical tables hugging the
+     left wall, dance floor + DJ on the right, T1/T2/T3 across the bottom
+     row by the entrance. All 20 tables seat 10. */
+  .layout-instituto {
+    display: grid;
+    /* Col 2 stays 200px because T4 and T5 are vertical tables that
+       live there — but we visually shrink the bar2 + entrance feature
+       boxes within that column (see [data-area="bar2"] below). The 3
+       table columns get a fatter floor (380px) so cap-10 / cap-11
+       charts don't overflow their cards. */
+    grid-template-columns: 70px minmax(160px, 200px) minmax(380px, 1fr) minmax(380px, 1fr) minmax(380px, 1fr) 110px;
+    /* Wider column gap so adjacent tables' end chairs don't visually
+       run into each other — especially noticeable when tables get
+       drag-swapped to sit side-by-side. Row gap kept smaller. */
+    column-gap: 28px;
+    row-gap: 12px;
+    min-width: 1580px;
+    max-width: 1750px;
+    margin: 0 auto;
+    grid-template-areas:
+      ".     bar2    .       t20     .       cocina"
+      ".     .       t17     t18     t19     cocina"
+      ".     .       t14     t15     t16     cocina"
+      ".     .       t12     t13     .       cocina"
+      "restr .       .       .       .       ."
+      ".     stepup  stepup  stepup  stepup  ."
+      ".     .       t9      t10     t11     ."
+      ".     stepdn  stepdn  stepdn  stepdn  ."
+      ".     .       t8      .       t7      dj"
+      ".     .       .       t6      .       dj"
+      ".     t5      dance   dance   dance   ."
+      ".     t5      dance   dance   dance   ."
+      ".     t4      dance   dance   dance   ."
+      ".     t4      dance   dance   dance   ."
+      ".     .       t1      t2t3    t2t3    ."
+      ".     entr    entr    entr    entr    .";
+  }
+  .layout-instituto [data-area="stepup"] { grid-area: stepup; }
+  .layout-instituto [data-area="stepdn"] { grid-area: stepdn; }
+  /* Raised middle tables (T9, T10, T11) — visually lifted to suggest the
+     stepped-up section between the back and front rooms. */
+  .layout-instituto [data-area="t9"],
+  .layout-instituto [data-area="t10"],
+  .layout-instituto [data-area="t11"] {
+    box-shadow: 0 4px 0 -1px #d8c8b2, 0 6px 12px rgba(120, 95, 70, 0.22);
+    background: linear-gradient(180deg, #fffdf9, #faf2e6);
+    border-color: #d8c8b2;
+  }
+  .layout-instituto .table { min-height: 170px; }
+  /* Long tables (T5, T4) span their grid-area's two rows naturally —
+     the template-areas already place them across two rows. We only
+     need the bigger min-height so the chart-body doesn't squish. */
+  .layout-instituto .table.long { min-height: 360px; }
+
+  .layout-instituto [data-area="bar2"]   {
+    grid-area: bar2;
+    /* Visually shrink the bar inside its 200px column. The column has
+       to stay ~200px because T4 / T5 (vertical tables) live in it,
+       but the bar itself only needs enough room for its label. */
+    max-width: 130px;
+    justify-self: start;
+  }
+  .layout-instituto [data-area="t20"]    { grid-area: t20; }
+  .layout-instituto [data-area="cocina"] { grid-area: cocina; }
+  .layout-instituto [data-area="t19"]    { grid-area: t19; }
+  .layout-instituto [data-area="t18"]    { grid-area: t18; }
+  .layout-instituto [data-area="t17"]    { grid-area: t17; }
+  .layout-instituto [data-area="t14"]    { grid-area: t14; }
+  .layout-instituto [data-area="t15"]    { grid-area: t15; }
+  .layout-instituto [data-area="t16"]    { grid-area: t16; }
+  .layout-instituto [data-area="t13"]    { grid-area: t13; }
+  .layout-instituto [data-area="t12"]    { grid-area: t12; }
+  .layout-instituto [data-area="t11"]    { grid-area: t11; }
+  .layout-instituto [data-area="t10"]    { grid-area: t10; }
+  .layout-instituto [data-area="restr"]  { grid-area: restr; }
+  .layout-instituto [data-area="t9"]     { grid-area: t9; }
+  .layout-instituto [data-area="t8"]     { grid-area: t8; }
+  .layout-instituto [data-area="t7"]     { grid-area: t7; }
+  .layout-instituto [data-area="t4"]     { grid-area: t4; }
+  .layout-instituto [data-area="t5"]     { grid-area: t5; }
+  .layout-instituto [data-area="t6"]     { grid-area: t6; }
+  .layout-instituto [data-area="dance"]  { grid-area: dance; }
+  .layout-instituto [data-area="dj"]     { grid-area: dj; }
+  .layout-instituto [data-area="t3"]     { grid-area: t3; }
+  .layout-instituto [data-area="t1"]     { grid-area: t1; }
+  .layout-instituto [data-area="t2"]     { grid-area: t2; }
+  .layout-instituto [data-area="t2t3"]   { grid-area: t2t3; }
+  .layout-instituto [data-area="entr"]   { grid-area: entr; }
+
+  /* Feature labels (non-table elements) */
+  .feature {
+    background: var(--feature-bg);
+    color: var(--feature-ink);
+    border-radius: 6px;
+    padding: 10px;
+    font-family: Georgia, serif;
+    font-size: 12px;
+    letter-spacing: 0.8px;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 40px;
+    user-select: none;
+  }
+  .feature.bar { background: var(--bar-bg); color: var(--bar-ink); }
+  .feature.vertical { writing-mode: vertical-rl; transform: rotate(180deg); }
+  .feature.dance {
+    min-height: 150px;
+    font-size: 38px;
+    font-weight: 700;
+    background:
+      repeating-linear-gradient(45deg, rgba(255,255,255,0.18) 0 10px, transparent 10px 20px),
+      linear-gradient(135deg, #e8d4b8, #d4b896);
+    border: 1px solid #b89574;
+    color: #5c4733;
+    letter-spacing: 3px;
+  }
+  .feature.dj { min-height: 150px; font-size: 13px; background: #c4a478; color: #3a2815; }
+  .feature.entr { min-height: 36px; }
+  /* Step indicators for the raised middle-row level */
+  .feature.step {
+    min-height: 18px;
+    padding: 3px 10px;
+    background: transparent;
+    color: var(--ink-softer);
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-family: inherit;
+    border-top: 1px dashed #c4b097;
+    border-bottom: 1px dashed #c4b097;
+    font-style: italic;
+  }
+  .feature.step-up { border-bottom: none; }
+  .feature.step-dn { border-top: none; }
+
+  /* Table cards */
+  .table {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    min-height: 140px;
+    transition: border-color 0.15s, box-shadow 0.15s;
+  }
+  .table.drop-hover {
+    border-color: var(--accent);
+    background: var(--highlight);
+    box-shadow: 0 0 0 2px var(--accent-soft);
+  }
+  .table.full { border-left: 3px solid var(--success); }
+  .table.table-dragging { opacity: 0.35; }
+  .table.table-swap-target {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent), 0 0 0 6px var(--accent-soft);
+  }
+  .table-drag-handle {
+    cursor: grab;
+    color: var(--ink-softer);
+    padding: 1px 5px;
+    font-size: 13px;
+    line-height: 1;
+    border-radius: 4px;
+    user-select: none;
+    flex-shrink: 0;
+  }
+  .table-drag-handle:hover { color: var(--ink); background: var(--highlight); }
+  .table-drag-handle:active { cursor: grabbing; }
+  .table-header {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding-bottom: 4px;
+    border-bottom: 1px dashed var(--line);
+    flex-wrap: wrap;
+  }
+  .table-number {
+    font-family: Georgia, serif;
+    font-size: 16px;
+    color: var(--ink);
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    flex-shrink: 0;
+  }
+  .table-name {
+    font-size: 12px;
+    color: var(--ink-soft);
+    border: 1px solid transparent;
+    background: transparent;
+    padding: 2px 5px;
+    border-radius: 4px;
+    flex: 1;
+    min-width: 60px;
+    font-family: inherit;
+    font-style: italic;
+  }
+  .table-name::placeholder { color: var(--ink-softer); }
+  .table-name:hover { background: var(--highlight); }
+  .table-name:focus { outline: none; border-color: var(--accent-soft); background: white; font-style: normal; }
+  .table-capacity {
+    font-size: 11px;
+    color: var(--ink-soft);
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    flex-shrink: 0;
+  }
+  .capacity-input {
+    /* Wide enough that 2-digit values stay visible past the
+       browser-rendered spinner arrows (which eat ~16px on the right). */
+    width: 52px;
+    padding: 1px 3px;
+    border: 1px solid var(--line);
+    border-radius: 3px;
+    font-size: 11px;
+    font-family: inherit;
+    text-align: center;
+    background: var(--panel);
+  }
+  .icon-btn {
+    padding: 2px 5px;
+    background: transparent;
+    border: 1px solid transparent;
+    font-size: 13px;
+    color: var(--ink-softer);
+    cursor: pointer;
+    border-radius: 4px;
+  }
+  .icon-btn:hover { background: var(--highlight); color: var(--ink); }
+  /* Physical table chart: seats arranged around a visual table shape */
+  .table-chart {
+    display: grid;
+    gap: 4px;
+    flex: 1;
+    padding: 2px;
+  }
+  .table-chart.horizontal {
+    grid-template-rows: auto minmax(48px, 1fr) auto;
+    /* End cols can shrink to 44px on narrow cards. Side cols have a
+       50px floor so guest names render legibly — the parent grid
+       (Casa / Saturday) is sized to give cards enough room. */
+    grid-template-columns: minmax(44px, 56px) repeat(var(--side, 4), minmax(50px, 1fr)) minmax(44px, 56px);
+  }
+  /* Two-row heads: Casa Hyder tables of 11+ seat 2 people at one head
+     (interior-facing) and 2 at the other if cap=12+, requiring an
+     extra mid-row for the second head/foot chairs. */
+  .table-chart.horizontal.two-head {
+    grid-template-rows: auto minmax(40px, 1fr) minmax(40px, 1fr) auto;
+  }
+  .table-chart.vertical {
+    grid-template-columns: minmax(62px, 1fr) 64px minmax(62px, 1fr);
+    grid-template-rows: auto repeat(var(--side, 5), minmax(30px, auto)) auto;
+  }
+  .seat-tile {
+    border: 1px dashed var(--line);
+    border-radius: 5px;
+    padding: 12px 4px 4px;
+    font-size: 11px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 42px;
+    position: relative;
+    overflow: hidden;
+    text-align: center;
+    transition: background 0.1s, border-color 0.1s;
+  }
+  .seat-tile.empty {
+    color: var(--ink-softer); font-style: italic; font-size: 10px;
+    background: #fbf3c4;
+  }
+  .seat-tile.occupied {
+    border-style: solid; background: var(--panel); cursor: grab; border-color: var(--line);
+  }
+  .seat-tile.occupied:hover { border-color: var(--accent-soft); }
+  .seat-tile.occupied:active { cursor: grabbing; }
+  .seat-tile.occupied.dragging { opacity: 0.35; }
+  .seat-tile.overflow { border-color: var(--danger); background: #fff5f5; }
+  /* Occupant has a romantic partner attending this day who isn't seated
+     at this table — light red flag so it's easy to scan for couples that
+     accidentally got split apart. */
+  .seat-tile.occupied.partner-split {
+    background: #fde4e4;
+    border-color: #e8b1b1;
+  }
+  .seat-tile.occupied.partner-split:hover { border-color: #c87878; }
+  .seat-tile.drop-hover { background: var(--highlight); border-color: var(--accent); border-style: solid; }
+  .seat-tile .seat-num {
+    position: absolute;
+    top: 1px; left: 3px;
+    font-size: 8px;
+    color: var(--ink-softer);
+    line-height: 1;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+  }
+  .seat-tile .tag-dot {
+    position: absolute;
+    top: 2px; right: 3px;
+    width: 6px; height: 6px; border-radius: 50%;
+  }
+  .seat-tile .name {
+    font-size: 10.5px;
+    line-height: 1.15;
+    word-break: break-word;
+    width: 100%;
+  }
+  .seat-tile .name .fn { font-weight: 600; }
+  .seat-tile .name .ln { color: var(--ink-soft); font-weight: normal; }
+  .seat-tile .remove-btn {
+    position: absolute;
+    bottom: 1px; right: 2px;
+    opacity: 0;
+    padding: 0 3px;
+    font-size: 10px;
+    color: var(--ink-softer);
+    background: none;
+    border: none;
+    cursor: pointer;
+    line-height: 1;
+  }
+  .seat-tile:hover .remove-btn { opacity: 1; }
+  .seat-tile .remove-btn:hover { color: var(--danger); }
+  .seat-tile .kid-mark { font-size: 8px; color: var(--ink-softer); font-style: italic; }
+
+  /* Food-pick label — color-coded word printed under each guest's
+     name on the seat tile and inline on the guest-pool card, so the
+     kitchen-side balance of a table is glanceable. Color palette
+     mirrors the meal categories (steel blue / tan / deep red /
+     purple / sage). */
+  .food-label {
+    font-size: 9.5px;
+    line-height: 1.1;
+    font-style: italic;
+    letter-spacing: 0.2px;
+    font-weight: 600;
+  }
+  .food-label.fish   { color: #4a7a9c; }
+  .food-label.kebab  { color: #b07242; }
+  .food-label.chille { color: #8a3e3e; }
+  .food-label.lamb   { color: #6b5a8a; }
+  .food-label.pasta  { color: #a88a3a; }
+  .food-label.other  { color: #5a6b5e; }
+  .seat-tile .food-label {
+    margin-top: 1px;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .guest .food-label { margin-left: 6px; font-size: 10px; }
+  /* Per-table food tally below the header — words, not icons */
+  .table-food-tally {
+    width: 100%;
+    margin-top: 2px;
+    font-size: 10px;
+    color: var(--ink-soft);
+    display: flex;
+    flex-wrap: wrap;
+    column-gap: 8px;
+    row-gap: 2px;
+    align-items: baseline;
+  }
+  .table-food-tally .tally-item { display: inline; }
+  .table-food-tally .tally-item .food-label { font-size: 10px; }
+  .table-food-tally .tally-count { color: var(--ink); font-style: normal; font-weight: 600; margin-left: 2px; }
+
+  /* The visual table "top" in the middle of the chart */
+  .table-body {
+    background: linear-gradient(145deg, #9c8261, #7a5f3f);
+    color: rgba(255,255,255,0.95);
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    font-family: Georgia, serif;
+    padding: 6px;
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.2), 0 1px 2px rgba(0,0,0,0.1);
+    text-align: center;
+    user-select: none;
+    min-height: 36px;
+  }
+  .table-body .tb-num { font-size: 17px; font-weight: 600; letter-spacing: 0.6px; line-height: 1.1; }
+  .table-body .tb-name {
+    font-size: 10px;
+    opacity: 0.9;
+    font-style: italic;
+    line-height: 1.2;
+    margin-top: 2px;
+    word-break: break-word;
+    max-width: 100%;
+  }
+  .table-chart.vertical .table-body { writing-mode: horizontal-tb; }
+  /* Overflow row (guests beyond capacity) */
+  .overflow-row {
+    grid-column: 1 / -1;
+    display: flex;
+    gap: 3px;
+    flex-wrap: wrap;
+    border-top: 1px dashed var(--danger);
+    padding-top: 4px;
+    margin-top: 4px;
+  }
+  .overflow-row .seat-tile { min-width: 80px; flex: 0 0 auto; }
+
+  dialog {
+    border: none;
+    border-radius: 10px;
+    padding: 0;
+    background: var(--panel);
+    max-width: 420px;
+    width: 90%;
+    box-shadow: 0 16px 40px rgba(0,0,0,0.18);
+    color: var(--ink);
+  }
+  dialog::backdrop { background: rgba(0,0,0,0.4); }
+  .modal-header { padding: 14px 18px; border-bottom: 1px solid var(--line); }
+  .modal-header h3 { margin: 0; font-family: Georgia, serif; font-weight: normal; font-size: 17px; }
+  .modal-body { padding: 14px 18px; }
+  .modal-body label {
+    display: block;
+    font-size: 12px;
+    color: var(--ink-soft);
+    margin-bottom: 5px;
+    margin-top: 14px;
+    letter-spacing: 0.3px;
+    text-transform: uppercase;
+  }
+  .modal-body label:first-child { margin-top: 0; }
+  .modal-body .rsvp-row {
+    display: flex; gap: 8px; font-size: 12px; color: var(--ink-soft);
+    margin-bottom: 6px;
+  }
+  .modal-body .rsvp-row .pill {
+    padding: 2px 8px; border-radius: 10px; background: var(--highlight);
+  }
+  .modal-body .rsvp-row .pill.yes { background: #e2f0e3; color: #3e6e40; }
+  .modal-body .rsvp-row .pill.no  { background: #f2d9d9; color: #8a3e3e; }
+  .modal-body input[type=text], .modal-body textarea {
+    width: 100%;
+    padding: 7px 10px;
+    border: 1px solid var(--line);
+    border-radius: 5px;
+    font-size: 13px;
+    font-family: inherit;
+    background: var(--panel);
+  }
+  .modal-body textarea { resize: vertical; min-height: 60px; }
+  .modal-footer {
+    padding: 11px 18px;
+    border-top: 1px solid var(--line);
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+  }
+  .tag-list { display: flex; gap: 5px; flex-wrap: wrap; margin-top: 4px; }
+  .tag-option {
+    padding: 4px 10px;
+    border-radius: 10px;
+    border: 1px solid var(--line);
+    font-size: 12px;
+    cursor: pointer;
+    user-select: none;
+    background: var(--panel);
+  }
+  .tag-option.selected { border-width: 2px; font-weight: 600; padding: 3px 9px; }
+  .manage-tags-list { margin-top: 4px; }
+  .tag-row { display: flex; gap: 6px; align-items: center; margin-bottom: 5px; }
+  .tag-row input[type=text] { flex: 1; }
+  .tag-row input[type=color] {
+    width: 32px; height: 30px; padding: 0; border: 1px solid var(--line);
+    border-radius: 4px; background: none; cursor: pointer;
+  }
+
+  .tip-banner {
+    background: var(--highlight);
+    border: 1px solid var(--accent-soft);
+    border-radius: 8px;
+    padding: 8px 12px;
+    margin: 0 auto 14px;
+    max-width: 900px;
+    font-size: 12px;
+    color: var(--ink);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+  }
+  .tip-banner button { font-size: 11px; padding: 3px 8px; }
+
+  /* Search highlighting on the map */
+  body.search-active .seat-tile.occupied:not(.search-match) { opacity: 0.32; transition: opacity 0.15s; }
+  body.search-active .seat-tile.empty { opacity: 0.18; }
+  body.search-active .table:not(.has-search-match) .table-body { opacity: 0.55; }
+  body.search-active .table.has-search-match { box-shadow: 0 0 0 2px #e0b94a, 0 4px 18px rgba(224, 185, 74, 0.4); border-color: #d4a838; }
+  .seat-tile.search-match {
+    background: #fff4b8 !important;
+    border: 2px solid #d4a838 !important;
+    box-shadow: 0 0 0 2px rgba(212, 168, 56, 0.35), 0 0 14px rgba(212, 168, 56, 0.5);
+    z-index: 2;
+    transition: background 0.15s, box-shadow 0.15s;
+  }
+  .seat-tile.search-match .name { color: #5a4214; font-weight: 700; }
+  .search-clear {
+    position: absolute;
+    right: 18px;
+    top: 41px;
+    cursor: pointer;
+    color: var(--ink-softer);
+    font-size: 14px;
+    background: none;
+    border: none;
+    padding: 2px 4px;
+    line-height: 1;
+    border-radius: 4px;
+    display: none;
+  }
+  .search-clear:hover { color: var(--ink); background: var(--highlight); }
+  .search-input.has-value + .search-clear { display: block; }
+  .search-result-count {
+    font-size: 11px;
+    color: var(--accent);
+    margin-top: 4px;
+    font-style: italic;
+    display: none;
+    padding-left: 2px;
+  }
+  .search-result-count.visible { display: block; }
+
+  /* Save status indicator (auto-saves to wedding.db) */
+  .save-status {
+    display: inline-flex; align-items: center;
+    font-size: 12px; color: var(--ink-soft);
+    padding: 4px 8px; border-radius: 6px;
+    background: transparent;
+  }
+  .save-status.pending { color: var(--accent); }
+  .save-status.ok { color: var(--success); }
+  .save-status.error { color: var(--danger); background: #fbeeee; font-weight: 600; }
+
+  @media print {
+    @page { margin: 0.4in; size: landscape; }
+    header, .sidebar, .icon-btn, .remove-btn, .capacity-input, .tip-banner, .day-tabs { display: none !important; }
+    main { display: block; height: auto; overflow: visible; }
+    .floor-plan { padding: 0; overflow: visible; background: white; }
+    .layout-casa, .layout-instituto { min-width: 0; }
+    .table { break-inside: avoid; page-break-inside: avoid; border: 1px solid #bbb; min-height: unset; box-shadow: none !important; }
+    .table-name { font-style: italic; }
+    .seat.empty { display: none; }
+    .seat.occupied { border: none; background: transparent; padding: 2px 4px; }
+    body { background: white; }
+    .print-title { display: block !important; text-align: center; font-family: Georgia, serif; font-size: 20px; margin-bottom: 14px; }
+  }
+  .print-title { display: none; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Seating Chart</h1>
+  <div class="day-tabs" id="day-tabs">
+    <button class="day-tab active" data-day="thu">Thursday <span class="day-count" id="count-thu"></span></button>
+    <button class="day-tab" data-day="fri">Friday <span class="day-count" id="count-fri"></span></button>
+    <button class="day-tab" data-day="sat">Saturday <span class="day-count" id="count-sat"></span></button>
+  </div>
+  <div class="stats" id="stats"></div>
+  <div class="actions">
+    <button onclick="addTable()">+ Table</button>
+    <button onclick="openTagManager()">Tags</button>
+    <button onclick="window.print()">Print</button>
+    <span class="save-status" id="save-status" title="Saved to wedding.db">Saved</span>
+    <button class="danger" onclick="resetDay()">Reset Day</button>
+  </div>
+</header>
+<main>
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-title">
+        <span id="sidebar-title-day">Unseated</span>
+        <span class="count" id="unseated-count"></span>
+      </div>
+      <input type="text" class="search-input" id="search" placeholder="Search guests on map…" oninput="applySearch()" onkeydown="if(event.key==='Escape'){this.value='';applySearch();}">
+      <button class="search-clear" id="search-clear" onclick="document.getElementById('search').value='';applySearch();" title="Clear search">✕</button>
+      <div class="search-result-count" id="search-result-count"></div>
+    </div>
+    <div class="tag-filters" id="tag-filters"></div>
+    <div class="guest-pool" id="guest-pool"></div>
+  </aside>
+  <section class="floor-plan" id="floor-plan">
+    <div class="print-title" id="print-title">Seating Chart</div>
+    <div id="tip-banner-wrap"></div>
+    <div id="layout-root"></div>
+  </section>
+</main>
+
+<dialog id="guest-modal">
+  <div class="modal-header">
+    <h3 id="modal-guest-name"></h3>
+  </div>
+  <div class="modal-body">
+    <label>RSVP per day <span style="text-transform:none;font-style:italic;color:var(--ink-softer);font-size:11px;">(read-only — manage in main editor)</span></label>
+    <div class="rsvp-row" id="modal-rsvp"></div>
+    <div id="modal-food" style="margin-top:14px;font-size:13px;color:var(--ink);display:none;align-items:center;gap:6px;"></div>
+    <label class="cb" style="margin-top:14px;display:block;"><input type="checkbox" id="modal-is-kid" onchange="toggleModalKid()"> Treat as a kid (for kids-table grouping)</label>
+    <label style="margin-top:14px;">Group / Tag</label>
+    <div class="tag-list" id="modal-tags"></div>
+    <label>Notes</label>
+    <textarea id="modal-note" placeholder="e.g. vegetarian, near parents, wheelchair access..."></textarea>
+  </div>
+  <div class="modal-footer">
+    <span style="flex:1"></span>
+    <button onclick="closeGuestModal()">Close</button>
+    <button class="primary" onclick="saveGuestModal()">Save</button>
+  </div>
+</dialog>
+
+<dialog id="tag-modal">
+  <div class="modal-header"><h3>Manage Tags</h3></div>
+  <div class="modal-body">
+    <p style="margin:0 0 6px;font-size:12px;color:var(--ink-soft);">Create groups like "Bride's family", "College friends" — then color-code guests to spot patterns as you arrange.</p>
+    <div class="manage-tags-list" id="manage-tags-list"></div>
+    <button onclick="addTag()" style="margin-top:6px">+ Add Tag</button>
+  </div>
+  <div class="modal-footer">
+    <button class="primary" onclick="closeTagManager()">Done</button>
+  </div>
+</dialog>
+
+<script>
+/* ===== Server-loaded data ===== */
+/* The full state (guests, tags, tables, seating) is loaded from
+   /api/state at boot. wedding.db is the source of truth. */
+
+const DEFAULT_TAGS = [
+  { id: "bride_family", name: "Bride's family",  color: "#c85a5a" },
+  { id: "groom_family", name: "Groom's family", color: "#d48a3e" },
+  { id: "friends",      name: "Friends",         color: "#5a8fc8" },
+  { id: "work",         name: "Work",            color: "#7a5ac8" },
+  { id: "kids",         name: "Kids",            color: "#5ac887" }
+];
+
+const DAYS = ['thu', 'fri', 'sat'];
+const DAY_LABELS = { thu: 'Thursday', fri: 'Friday', sat: 'Saturday' };
+const DAY_VENUES = { thu: 'Casa Hyder · Thursday Welcome Dinner', fri: 'Casa Hyder · Friday Welcome Dinner', sat: 'Instituto · Wedding Ceremony & Party' };
+
+/* ----- Default table layouts per day ----- */
+function defaultCasaTables(dayKey) {
+  // Casa Hyder. T13 (kids) = 8 seats, separate room.
+  // Thursday: 11 tables of 10. T11 alone at the back, T1-T10 in 2-col grid below.
+  // Friday: 12 tables. T12 (family) = 12 seats, T1-T11 = 10 seats.
+  let order;
+  let perTableCap;
+  if (dayKey === 'thu') {
+    order = [11, 9, 10, 7, 8, 5, 6, 3, 4, 1, 2];
+    perTableCap = (n) => 10;
+  } else {
+    order = [11, 12, 9, 10, 7, 8, 5, 6, 3, 4, 1, 2];
+    perTableCap = (n) => (n === 12 ? 12 : 10);
+  }
+  const tables = order.map(i => ({
+    id: `${dayKey}_${i}`, num: i, name: "", capacity: perTableCap(i), seats: [], layout: null
+  }));
+  tables.push({
+    id: `${dayKey}_13`,
+    num: 13, name: "Kids Table",
+    capacity: 8, seats: [],
+    layout: { zone: 'kids' }
+  });
+  return tables;
+}
+
+function defaultInstitutoTables() {
+  // Saturday at Instituto: 20 tables matching Draft Layout PDF.
+  // Standard tables = 10 seats; T3 & T4 are long head tables = 12.
+  const base = [
+    { num: 20, area: 't20',  capacity: 10 },
+    { num: 19, area: 't19',  capacity: 10 },
+    { num: 18, area: 't18',  capacity: 10 },
+    { num: 17, area: 't17',  capacity: 10 },
+    { num: 14, area: 't14',  capacity: 10 },
+    { num: 15, area: 't15',  capacity: 10 },
+    { num: 16, area: 't16',  capacity: 10 },
+    { num: 13, area: 't13',  capacity: 10 },
+    { num: 12, area: 't12',  capacity: 10 },
+    { num: 11, area: 't11',  capacity: 10 },
+    { num: 10, area: 't10',  capacity: 10 },
+    { num: 9,  area: 't9',   capacity: 10 },
+    { num: 8,  area: 't8',   capacity: 10 },
+    { num: 7,  area: 't7',   capacity: 10 },
+    { num: 4,  area: 't4',   capacity: 12, long: true },
+    { num: 5,  area: 't5',   capacity: 10 },
+    { num: 6,  area: 't6',   capacity: 10 },
+    { num: 3,  area: 't3',   capacity: 12, long: true },
+    { num: 1,  area: 't1',   capacity: 10 },
+    { num: 2,  area: 't2',   capacity: 10 },
+  ];
+  return base.map(t => ({
+    id: `sat_${t.num}`,
+    num: t.num, name: "", capacity: t.capacity, seats: [],
+    layout: { area: t.area, long: !!t.long }
+  }));
+}
+
+/* ===== STATE =====
+   Loaded from /api/state at boot. wedding.db tables (seating_tags,
+   seating_tables, seating_assignments, seating_guest_meta, plus
+   guests for read-only RSVP) are the single source of truth. */
+let state;
+let dismissedTip = {thu:false, fri:false, sat:false};
+
+function freshState() {
+  // Used only as a fallback shape if /api/state somehow returns nothing.
+  return {
+    guests: [],
+    tags: JSON.parse(JSON.stringify(DEFAULT_TAGS)),
+    currentDay: 'thu',
+    days: {
+      thu: { tables: defaultCasaTables('thu'), activeTagFilter: null },
+      fri: { tables: defaultCasaTables('fri'), activeTagFilter: null },
+      sat: { tables: defaultInstitutoTables(),  activeTagFilter: null }
+    }
+  };
+}
+
+/* ===== Server-backed save / load ===== */
+let pendingSaveTimer = null;
+let inFlightSave = null;
+let saveStatusEl = null;
+function _setSaveStatus(text, cls) {
+  if (!saveStatusEl) saveStatusEl = document.getElementById('save-status');
+  if (!saveStatusEl) return;
+  saveStatusEl.textContent = text;
+  saveStatusEl.className = 'save-status' + (cls ? ' ' + cls : '');
+}
+async function _doSave() {
+  if (!state) return;
+  inFlightSave = (async () => {
+    try {
+      _setSaveStatus('Saving…', 'pending');
+      const res = await fetch('/api/state', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(state),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok || !data.ok) {
+        const msg = (data && data.error) || ('HTTP ' + res.status);
+        console.error('save failed:', msg);
+        _setSaveStatus('Save failed', 'error');
+        return;
+      }
+      _setSaveStatus('Saved', 'ok');
+    } catch (e) {
+      console.error('save error:', e);
+      _setSaveStatus('Offline', 'error');
+    }
+  })();
+  await inFlightSave;
+  inFlightSave = null;
+}
+function saveState() {
+  // Debounce rapid edits (drag-drop sequences) into one POST.
+  clearTimeout(pendingSaveTimer);
+  _setSaveStatus('Saving…', 'pending');
+  pendingSaveTimer = setTimeout(() => { _doSave(); }, 300);
+}
+async function loadState() {
+  const res = await fetch('/api/state');
+  if (!res.ok) throw new Error('GET /api/state -> ' + res.status);
+  const s = await res.json();
+  return s;
+}
+
+/* ===== HELPERS ===== */
+function getGuest(id) { return state.guests.find(g => g.id === id); }
+function getTag(id)   { return state.tags.find(t => t.id === id); }
+function currentDay() { return state.days[state.currentDay]; }
+function getTables()  { return currentDay().tables; }
+function getTable(id) { return getTables().find(t => t.id === id); }
+function isAttending(g, dayKey) { return g.rsvp[dayKey] === 'Attending'; }
+function attendingGuests(dayKey) { return state.guests.filter(g => isAttending(g, dayKey)); }
+function isSeated(guestId) {
+  return getTables().some(t => t.seats.includes(guestId));
+}
+function tableOfGuest(guestId) {
+  return getTables().find(t => t.seats.includes(guestId));
+}
+/* True iff `guestId` has at least one romantic partner attending the
+   given day, AND none of those partners is seated at table `t` (the
+   table the guest itself is at). Used to flag the seat in light red
+   so the user can spot couples that drifted apart. */
+function isPartnerSplit(guestId, t, dayKey) {
+  const partners = state.partners && state.partners[guestId];
+  if (!partners || !partners.length) return false;
+  let hasAttendingPartner = false;
+  for (const pid of partners) {
+    const p = getGuest(pid);
+    if (!p || !isAttending(p, dayKey)) continue;
+    hasAttendingPartner = true;
+    if (t.seats.includes(pid)) return false;  // sitting together
+  }
+  return hasAttendingPartner;
+}
+function removeFromAnywhere(guestId) {
+  for (const t of getTables()) {
+    const idx = t.seats.indexOf(guestId);
+    if (idx >= 0) t.seats[idx] = undefined;
+    while (t.seats.length && t.seats[t.seats.length - 1] === undefined) t.seats.pop();
+  }
+}
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+/* ===== RENDER ===== */
+function render() {
+  renderDayTabs();
+  renderStats();
+  renderTagFilters();
+  renderPool();
+  renderLayout();
+  renderTipBanner();
+  document.getElementById('print-title').textContent =
+    `${DAY_LABELS[state.currentDay]} · ${DAY_VENUES[state.currentDay]}`;
+  highlightMapMatches();
+  saveState();
+}
+
+function applySearch() {
+  // Update sidebar pool filter and map highlights without re-rendering everything
+  renderPool();
+  highlightMapMatches();
+}
+
+function highlightMapMatches() {
+  const searchEl = document.getElementById('search');
+  const search = (searchEl.value || '').toLowerCase().trim();
+  const clearBtn = document.getElementById('search-clear');
+  const countEl = document.getElementById('search-result-count');
+
+  // Toggle clear-button visibility class
+  searchEl.classList.toggle('has-value', !!search);
+
+  // Clear previous classes
+  document.body.classList.toggle('search-active', !!search);
+  document.querySelectorAll('.seat-tile.search-match').forEach(el => el.classList.remove('search-match'));
+  document.querySelectorAll('.table.has-search-match').forEach(el => el.classList.remove('has-search-match'));
+
+  if (!search) {
+    countEl.classList.remove('visible');
+    countEl.textContent = '';
+    return;
+  }
+
+  // Highlight matching seated guests
+  let mapMatches = 0;
+  document.querySelectorAll('.seat-tile.occupied').forEach(el => {
+    const gid = parseInt(el.dataset.guestId);
+    const g = getGuest(gid);
+    if (!g) return;
+    const full = (g.first + ' ' + g.last).toLowerCase();
+    if (full.includes(search)) {
+      el.classList.add('search-match');
+      const tableEl = el.closest('.table');
+      if (tableEl) tableEl.classList.add('has-search-match');
+      mapMatches++;
+    }
+  });
+
+  // Count unseated matches (in current day) — they're already filtered in the pool
+  const day = state.currentDay;
+  const unseatedMatches = state.guests.filter(g =>
+    isAttending(g, day) && !isSeated(g.id) &&
+    (g.first + ' ' + g.last).toLowerCase().includes(search)
+  ).length;
+
+  countEl.textContent = `${mapMatches} on map · ${unseatedMatches} unseated`;
+  countEl.classList.add('visible');
+}
+
+function renderDayTabs() {
+  for (const d of DAYS) {
+    const n = attendingGuests(d).length;
+    document.getElementById('count-' + d).textContent = n;
+    document.querySelector(`.day-tab[data-day="${d}"]`).classList.toggle('active', d === state.currentDay);
+  }
+}
+
+function renderStats() {
+  const day = state.currentDay;
+  const attending = attendingGuests(day);
+  const total = attending.length;
+  const seated = attending.filter(g => isSeated(g.id)).length;
+  const tables = getTables();
+  const capacity = tables.reduce((s, t) => s + t.capacity, 0);
+  const capStatus = capacity >= total
+    ? `capacity <strong>${capacity}</strong>`
+    : `<span style="color:var(--danger)">capacity <strong>${capacity}</strong> (short by ${total - capacity})</span>`;
+  document.getElementById('stats').innerHTML =
+    `<strong>${seated}</strong>/${total} seated · <strong>${tables.length}</strong> tables · ${capStatus}`;
+  document.getElementById('sidebar-title-day').textContent = `Unseated · ${DAY_LABELS[day]}`;
+}
+
+function renderTipBanner() {
+  const wrap = document.getElementById('tip-banner-wrap');
+  if (dismissedTip[state.currentDay]) { wrap.innerHTML = ''; return; }
+  const day = state.currentDay;
+  const venueMsg = day === 'sat'
+    ? 'Tables are laid out to match the Instituto draft layout (numbers preserved). '
+    : 'Casa Hyder · 12 tables numbered top→bottom. ';
+  wrap.innerHTML = `<div class="tip-banner">
+    <span><strong>${DAY_LABELS[day]}:</strong> ${venueMsg}Click a table's italic text to give it an internal name. Drag guests in; click guests to tag/note them. Each day saves independently.</span>
+    <button onclick="dismissTip('${day}')">Got it</button>
+  </div>`;
+}
+function dismissTip(day) { dismissedTip[day] = true; renderTipBanner(); }
+
+function renderTagFilters() {
+  const el = document.getElementById('tag-filters');
+  const active = currentDay().activeTagFilter;
+  const all = `<span class="tag-chip ${!active ? 'active' : ''}" onclick="setTagFilter(null)">All</span>`;
+  const tags = state.tags.map(t => {
+    const isActive = active === t.id;
+    const style = isActive ? '' : `color:${t.color};border-color:${t.color}55;`;
+    return `<span class="tag-chip ${isActive ? 'active' : ''}" style="${style}" onclick="setTagFilter('${t.id}')">${escapeHtml(t.name)}</span>`;
+  }).join('');
+  el.innerHTML = all + tags;
+}
+function setTagFilter(id) {
+  const cd = currentDay();
+  cd.activeTagFilter = cd.activeTagFilter === id ? null : id;
+  render();
+}
+
+function renderPool() {
+  const searchEl = document.getElementById('search');
+  const search = (searchEl.value || '').toLowerCase().trim();
+  const day = state.currentDay;
+  const attending = attendingGuests(day);
+  const unseated = attending.filter(g => !isSeated(g.id));
+  const activeFilter = currentDay().activeTagFilter;
+  const filtered = unseated.filter(g => {
+    if (activeFilter && g.tagId !== activeFilter) return false;
+    if (!search) return true;
+    return (g.first + ' ' + g.last).toLowerCase().includes(search);
+  });
+  filtered.sort((a, b) => (a.last + a.first).localeCompare(b.last + b.first));
+
+  document.getElementById('unseated-count').textContent = `${unseated.length} of ${attending.length}`;
+  const el = document.getElementById('guest-pool');
+  el.innerHTML = filtered.map(g => guestCardHTML(g)).join('') ||
+    (unseated.length === 0 ? '<div class="empty-hint">Everyone seated 🎉</div>' : '<div class="empty-hint">No matches</div>');
+
+  attachGuestDrag(el);
+  el.ondragover  = onDragOverPool;
+  el.ondragleave = onDragLeavePool;
+  el.ondrop      = onDropPool;
+}
+
+function renderLayout() {
+  const root = document.getElementById('layout-root');
+  const day = state.currentDay;
+  const tables = getTables();
+  root.className = day === 'sat' ? 'layout-instituto' : 'layout-casa';
+  root.innerHTML = '';
+
+  if (day === 'sat') {
+    root.innerHTML += featureHTML('bar2', 'Bar 🍸', ['bar']);
+    root.innerHTML += featureHTML('cocina', 'COCINA', ['vertical']);
+    root.innerHTML += featureHTML('restr', 'Restrooms', []);
+    root.innerHTML += featureHTML('stepup', '▲ ▲ ▲  step up — raised level  ▲ ▲ ▲', ['step','step-up']);
+    root.innerHTML += featureHTML('stepdn', '▼ ▼ ▼  step down  ▼ ▼ ▼', ['step','step-dn']);
+    root.innerHTML += featureHTML('dance', '✨ Dance Floor ✨', ['dance']);
+    root.innerHTML += featureHTML('dj', 'DJ 🎧', ['dj']);
+    root.innerHTML += featureHTML('entr', 'ENTRANCE', ['entr']);
+    const tablesHTML = tables.map(t => tableHTML(t)).join('');
+    root.insertAdjacentHTML('beforeend', tablesHTML);
+  } else {
+    // Casa Hyder: main grid + separate Kids Zone (different room of house)
+    const mainTables = tables.filter(t => !(t.layout && t.layout.zone === 'kids'));
+    const kidsTables = tables.filter(t => t.layout && t.layout.zone === 'kids');
+    // For Thursday, render the highest-numbered (back) table alone in its own row,
+    // then the rest in a 2-column grid below.
+    if (state.currentDay === 'thu' && mainTables.length === 11) {
+      const back = mainTables[0];   // highest-num (T11)
+      const rest = mainTables.slice(1);
+      root.insertAdjacentHTML('beforeend',
+        `<div class="casa-back-row">${tableHTML(back)}</div>`);
+      root.insertAdjacentHTML('beforeend',
+        `<div class="casa-main-grid">${rest.map(tableHTML).join('')}</div>`);
+    } else {
+      root.insertAdjacentHTML('beforeend',
+        `<div class="casa-main-grid">${mainTables.map(tableHTML).join('')}</div>`);
+    }
+    root.insertAdjacentHTML('beforeend',
+      `<div class="venue-label">↓ Cakes · Stage · DJ (front of room) ↓</div>`);
+    if (kidsTables.length) {
+      root.insertAdjacentHTML('beforeend', `
+        <div class="casa-divider"><span class="label">elsewhere in the house</span></div>
+        <div class="casa-kids-zone">
+          <div class="zone-label">🎈 Kids Area</div>
+          <div class="zone-sublabel">Separate room — different part of the house</div>
+          ${kidsTables.map(tableHTML).join('')}
+        </div>`);
+    }
+  }
+
+  // Wire table drag/drop
+  for (const t of tables) {
+    const tableEl = root.querySelector(`[data-table-id="${t.id}"]`);
+    if (!tableEl) continue;
+    tableEl.addEventListener('dragover', e => onDragOverTable(e, tableEl));
+    tableEl.addEventListener('dragleave', e => onDragLeaveTable(e, tableEl));
+    tableEl.addEventListener('drop', e => onDropTable(e, t.id));
+    tableEl.querySelectorAll('.seat-tile').forEach(seatEl => {
+      seatEl.addEventListener('dragover',  e => onDragOverSeat(e));
+      seatEl.addEventListener('dragleave', e => onDragLeaveSeat(e));
+      seatEl.addEventListener('drop',      e => onDropSeat(e, t.id, parseInt(seatEl.dataset.seatIdx)));
+    });
+    attachGuestDrag(tableEl);
+    attachTableDrag(tableEl);
+  }
+}
+
+function attachTableDrag(tableEl) {
+  const handle = tableEl.querySelector('.table-drag-handle');
+  if (!handle) return;
+  handle.addEventListener('dragstart', e => {
+    const id = handle.dataset.dragTable;
+    e.dataTransfer.setData('application/x-wedding-table', id);
+    e.dataTransfer.effectAllowed = 'move';
+    tableEl.classList.add('table-dragging');
+    try { e.dataTransfer.setDragImage(tableEl, 30, 20); } catch (err) {}
+  });
+  handle.addEventListener('dragend', () => {
+    document.querySelectorAll('.table-dragging').forEach(n => n.classList.remove('table-dragging'));
+    document.querySelectorAll('.table-swap-target').forEach(n => n.classList.remove('table-swap-target'));
+  });
+}
+
+function swapTables(srcId, tgtId) {
+  if (!srcId || srcId === tgtId) return;
+  const tables = getTables();
+  const srcIdx = tables.findIndex(t => t.id === srcId);
+  const tgtIdx = tables.findIndex(t => t.id === tgtId);
+  if (srcIdx < 0 || tgtIdx < 0) return;
+  if (state.currentDay === 'sat') {
+    // Saturday positions are grid-areas. Swap layouts so tables move to each other's spots.
+    const a = tables[srcIdx], b = tables[tgtIdx];
+    [a.layout, b.layout] = [b.layout, a.layout];
+  } else {
+    // Casa: swap order in the array (the grid flows in array order)
+    [tables[srcIdx], tables[tgtIdx]] = [tables[tgtIdx], tables[srcIdx]];
+  }
+  render();
+}
+
+function featureHTML(area, label, extraClasses) {
+  return `<div class="feature ${extraClasses.join(' ')}" data-area="${area}">${label}</div>`;
+}
+
+function attachGuestDrag(container) {
+  container.querySelectorAll('[data-guest-id][draggable="true"]').forEach(el => {
+    el.addEventListener('dragstart', e => {
+      e.dataTransfer.setData('text/plain', el.dataset.guestId);
+      e.dataTransfer.effectAllowed = 'move';
+      el.classList.add('dragging');
+    });
+    el.addEventListener('dragend', () => {
+      el.classList.remove('dragging');
+      document.querySelectorAll('.drop-hover').forEach(n => n.classList.remove('drop-hover'));
+    });
+  });
+}
+
+/* Food picks come from `guests.food_choice` (Fish / Kebab / Chille
+   / Lamb / Plain pasta / blank / one-off long custom string). Each
+   pick gets a short display word and a color class so the
+   kitchen-side balance of a table is glanceable. `label` is the
+   full original string (kept for tooltips / the modal). `word` is
+   what we print under the name. */
+function foodInfo(g) {
+  const raw = (g && g.food) || '';
+  if (!raw) return null;
+  const lower = raw.toLowerCase();
+  // Prefix match — handles the one custom long "Fish with only
+  // rice…" entry too, since it still starts with "Fish".
+  if (lower.startsWith('fish'))                                  return { word: 'Fish',  cls: 'fish',   label: raw };
+  if (lower.startsWith('kebab'))                                 return { word: 'Kebab', cls: 'kebab',  label: raw };
+  if (lower.startsWith('chille'))                                return { word: 'Chille',cls: 'chille', label: raw };
+  if (lower.startsWith('lamb'))                                  return { word: 'Lamb',  cls: 'lamb',   label: raw };
+  if (lower.startsWith('plain pasta') || lower.startsWith('pasta')) return { word: 'Pasta', cls: 'pasta', label: raw };
+  return { word: 'Other', cls: 'other', label: raw };
+}
+function foodLabelHTML(g) {
+  const info = foodInfo(g);
+  if (!info) return '';
+  return `<span class="food-label ${info.cls}" title="${escapeHtml(info.label)}">${info.word}</span>`;
+}
+/* Tally of food picks across the seated occupants of a single table.
+   Shown under the table header so the kitchen-side balance is
+   glanceable. Only renders rows we actually have at the table; skips
+   the "?" custom bucket if zero, and shows a muted "— n no pick" if
+   anyone seated didn't supply a food choice. */
+function tableFoodTallyHTML(t) {
+  const counts = { fish: 0, kebab: 0, chille: 0, lamb: 0, pasta: 0, other: 0, none: 0 };
+  let total = 0;
+  for (const gid of t.seats) {
+    if (!gid) continue;
+    const g = getGuest(gid);
+    if (!g) continue;
+    total++;
+    const info = foodInfo(g);
+    if (!info) counts.none++;
+    else counts[info.cls]++;
+  }
+  if (total === 0) return '';
+  const order = [
+    ['fish',   'Fish'],
+    ['kebab',  'Kebab'],
+    ['chille', 'Chille'],
+    ['lamb',   'Lamb'],
+    ['pasta',  'Pasta'],
+    ['other',  'Other'],
+  ];
+  const items = order
+    .filter(([cls]) => counts[cls] > 0)
+    .map(([cls, word]) =>
+      `<span class="tally-item"><span class="food-label ${cls}">${word}</span><span class="tally-count">${counts[cls]}</span></span>`
+    );
+  if (counts.none > 0) {
+    items.push(`<span class="tally-item" style="color:var(--ink-softer);font-style:italic;">${counts.none} no pick</span>`);
+  }
+  if (!items.length) return '';
+  return `<div class="table-food-tally">${items.join('')}</div>`;
+}
+
+function guestCardHTML(g) {
+  const tag = g.tagId ? getTag(g.tagId) : null;
+  const dot = tag ? `<span class="tag-dot" style="background:${tag.color}"></span>` : '';
+  const kid = g.isKid ? `<span class="kid-mark">kid</span>` : '';
+  const note = g.note ? `<span class="note-icon" title="${escapeHtml(g.note)}">•</span>` : '';
+  const food = foodLabelHTML(g);
+  return `<div class="guest" draggable="true" data-guest-id="${g.id}" onclick="openGuestModal(${g.id})">
+    ${dot}<span class="name">${escapeHtml(g.first)} ${escapeHtml(g.last)}</span>${kid}${note}${food}
+  </div>`;
+}
+
+function seatTileHTML(idx, gridRow, gridCol, positionLabel, overflow, t) {
+  const guestId = t.seats[idx];
+  const style = `grid-row:${gridRow};grid-column:${gridCol}`;
+  if (guestId) {
+    const g = getGuest(guestId);
+    if (!g) return '';
+    const tag = g.tagId ? getTag(g.tagId) : null;
+    const dot = tag ? `<span class="tag-dot" style="background:${tag.color}"></span>` : '';
+    const kid = g.isKid ? `<span class="kid-mark">(kid)</span>` : '';
+    const split = isPartnerSplit(guestId, t, state.currentDay);
+    const food = foodInfo(g);
+    const foodLabel = food ? `<span class="food-label ${food.cls}" title="${escapeHtml(food.label)}">${food.word}</span>` : '';
+    const titleParts = [`${g.first} ${g.last}`];
+    if (positionLabel) titleParts.push(`· ${positionLabel}`);
+    if (food) titleParts.push(`· ${food.label}`);
+    if (split) titleParts.push('· away from partner');
+    if (g.note) titleParts.push(`· ${g.note}`);
+    return `<div class="seat-tile occupied ${overflow ? 'overflow' : ''}${split ? ' partner-split' : ''}" draggable="true" data-guest-id="${guestId}" data-seat-idx="${idx}" style="${style}" onclick="openGuestModal(${guestId})" title="${escapeHtml(titleParts.join(' '))}">
+      <span class="seat-num">${idx+1}</span>${dot}<span class="name"><span class="fn">${escapeHtml(g.first)}</span> <span class="ln">${escapeHtml(g.last)}</span></span>${kid}${foodLabel}
+      <button class="remove-btn" onclick="event.stopPropagation();unseat(${guestId})" title="Remove">✕</button>
+    </div>`;
+  }
+  return `<div class="seat-tile empty" data-seat-idx="${idx}" style="${style}" title="${positionLabel || 'empty seat'}">
+    <span class="seat-num">${idx+1}</span>
+    <span class="name">empty</span>
+  </div>`;
+}
+
+/* Seat-shape helpers.
+   A "shape" describes how a table's seats are distributed across
+   sides ({ topCount, bottomCount, headCount, footCount, tinyCount }).
+   It's derived from capacity by default, but we persist a custom
+   shape on `t.layout.shape` whenever the user shrinks capacity, so
+   removing an empty seat only "peels" the trailing chair instead of
+   reflowing everyone (e.g. cap 13 → 12 stays 5+4+2+1, not 4+4+2+2). */
+function defaultShape(capacity, allowDoubleEnds) {
+  if (capacity <= 3) {
+    return { topCount: 0, bottomCount: 0, headCount: 0, footCount: 0, tinyCount: capacity };
+  }
+  if (allowDoubleEnds && capacity > 10) {
+    const headCount = 2;
+    const footCount = (capacity === 11) ? 1 : 2;
+    const remaining = capacity - headCount - footCount;
+    const topCount = Math.ceil(remaining / 2);
+    const bottomCount = remaining - topCount;
+    return { topCount, bottomCount, headCount, footCount, tinyCount: 0 };
+  }
+  const side = Math.max(1, Math.ceil((capacity - 2) / 2));
+  return { topCount: side, bottomCount: capacity - 2 - side, headCount: 1, footCount: 1, tinyCount: 0 };
+}
+function shapeSeats(s) {
+  return (s.topCount || 0) + (s.bottomCount || 0) + (s.headCount || 0) + (s.footCount || 0) + (s.tinyCount || 0);
+}
+function tableAllowsDoubleEnds(t) {
+  const isVertical = !!(t.layout && t.layout.long);
+  const isCasa = state.currentDay === 'thu' || state.currentDay === 'fri';
+  return isCasa && !isVertical;
+}
+function getShape(t) {
+  const stored = t.layout && t.layout.shape;
+  if (stored && shapeSeats(stored) === t.capacity) {
+    return { ...stored, tinyCount: stored.tinyCount || 0 };
+  }
+  return defaultShape(t.capacity, tableAllowsDoubleEnds(t));
+}
+function peelShape(shape, n) {
+  // Remove `n` seats from the trailing array index, in the same
+  // order indices appear in tableHTML's seat layout: foot2 → head2
+  // → bottom (R→L) → foot1 → top (R→L) → head1.
+  for (let i = 0; i < n; i++) {
+    if (shape.tinyCount && shape.tinyCount > 0)            { shape.tinyCount -= 1; continue; }
+    if (shape.headCount === 2 && shape.footCount === 2)    { shape.footCount = 1; continue; }
+    if (shape.headCount === 2 && shape.footCount === 1)    { shape.headCount = 1; continue; }
+    if (shape.headCount === 1 && shape.footCount === 2)    { shape.footCount = 1; continue; }
+    if (shape.headCount === 2 && shape.footCount === 0)    { shape.headCount = 1; continue; }
+    if (shape.bottomCount > 0)                             { shape.bottomCount -= 1; continue; }
+    if (shape.footCount > 0)                               { shape.footCount -= 1; continue; }
+    if (shape.topCount > 0)                                { shape.topCount -= 1; continue; }
+    if (shape.headCount > 0)                               { shape.headCount -= 1; continue; }
+    break;
+  }
+  return shape;
+}
+
+function tableHTML(t) {
+  const capacity = t.capacity;
+  const isVertical = !!(t.layout && t.layout.long);
+  const shape = getShape(t);
+  const topCount = shape.topCount;
+  const bottomCount = shape.bottomCount;
+  const headCount = shape.headCount;
+  const footCount = shape.footCount;
+  // useDoubleEnds = stacked-heads geometry (Casa Hyder long tables of
+  // 11+, or any table whose stored shape has 2 heads after a peel).
+  const useDoubleEnds = headCount === 2;
+  const hasEnds = headCount > 0 || footCount > 0;
+  const side = useDoubleEnds
+    ? Math.max(topCount, bottomCount, 1)
+    : Math.max(1, topCount, bottomCount);
+
+  let chart = '';
+  if (hasEnds) {
+    if (isVertical) {
+      // Vertical: col1=left seats, col2=table, col3=right seats. Rows: 1=topEnd, 2..side+1=sides, side+2=bottomEnd
+      // Seat idx: 0=topEnd, 1..topCount=right (top->bottom), topCount+1=bottomEnd, rest=left (top->bottom)
+      chart += seatTileHTML(0, 1, 2, 'head (top)', false, t);
+      for (let i = 0; i < topCount; i++) {
+        chart += seatTileHTML(1 + i, 2 + i, 3, `right #${i+1}`, false, t);
+      }
+      chart += seatTileHTML(1 + topCount, 2 + topCount, 2, 'foot (bottom)', false, t);
+      for (let i = 0; i < bottomCount; i++) {
+        chart += seatTileHTML(2 + topCount + i, 2 + i, 1, `left #${i+1}`, false, t);
+      }
+      const tableRowEnd = 2 + Math.max(topCount, bottomCount);
+      chart += `<div class="table-body" style="grid-row: 2 / ${tableRowEnd}; grid-column: 2;">
+        <div class="tb-num">T${t.num}</div>${t.name ? `<div class="tb-name">${escapeHtml(t.name)}</div>` : ''}
+      </div>`;
+    } else if (useDoubleEnds) {
+      // Horizontal with 2-chair heads (Casa, cap >= 11):
+      //   Row 1: top chairs (cols 2..)
+      //   Row 2: head1 | TABLE BODY (cols 2..2+side) | foot1
+      //   Row 3: head2 | (body continues)            | foot2 (if cap>=12)
+      //   Row 4: bottom chairs
+      // Seat idx layout (preserves a contiguous 0..cap-1):
+      //   0           = head1 (left, top half)
+      //   1..topCount = top chairs (L→R)
+      //   topCount+1  = foot1 (right, top half)
+      //   next bottomCount = bottom chairs (L→R)
+      //   next        = head2 (left, bottom half)
+      //   next        = foot2 (right, bottom half) — only if footCount===2
+      const footCol = 2 + side;
+      chart += seatTileHTML(0, 2, 1, 'head (interior, top)', false, t);
+      for (let i = 0; i < topCount; i++) {
+        chart += seatTileHTML(1 + i, 1, 2 + i, `top #${i+1}`, false, t);
+      }
+      chart += seatTileHTML(1 + topCount, 2, footCol, 'foot (exterior, top)', false, t);
+      for (let i = 0; i < bottomCount; i++) {
+        chart += seatTileHTML(2 + topCount + i, 4, 2 + i, `bottom #${i+1}`, false, t);
+      }
+      const head2Idx = 2 + topCount + bottomCount;
+      chart += seatTileHTML(head2Idx, 3, 1, 'head (interior, bottom)', false, t);
+      if (footCount === 2) {
+        chart += seatTileHTML(head2Idx + 1, 3, footCol, 'foot (exterior, bottom)', false, t);
+      }
+      chart += `<div class="table-body" style="grid-row: 2 / 4; grid-column: 2 / ${2 + side};">
+        <div class="tb-num">T${t.num}</div>${t.name ? `<div class="tb-name">${escapeHtml(t.name)}</div>` : ''}
+      </div>`;
+    } else {
+      // Horizontal: row1=top seats, row2=[leftEnd | table | rightEnd], row3=bottom seats
+      // Seat idx: 0=leftEnd, 1..topCount=top (L->R), topCount+1=rightEnd, rest=bottom (L->R)
+      chart += seatTileHTML(0, 2, 1, 'head (left)', false, t);
+      for (let i = 0; i < topCount; i++) {
+        chart += seatTileHTML(1 + i, 1, 2 + i, `top #${i+1}`, false, t);
+      }
+      chart += seatTileHTML(1 + topCount, 2, 2 + side, 'head (right)', false, t);
+      for (let i = 0; i < bottomCount; i++) {
+        chart += seatTileHTML(2 + topCount + i, 3, 2 + i, `bottom #${i+1}`, false, t);
+      }
+      chart += `<div class="table-body" style="grid-row: 2; grid-column: 2 / ${2 + side};">
+        <div class="tb-num">T${t.num}</div>${t.name ? `<div class="tb-name">${escapeHtml(t.name)}</div>` : ''}
+      </div>`;
+    }
+  } else {
+    // Tiny table (<=3): single row
+    for (let i = 0; i < capacity; i++) {
+      chart += seatTileHTML(i, 2, 1 + i, `seat ${i+1}`, false, t);
+    }
+    chart += `<div class="table-body" style="grid-row: 1; grid-column: 1 / ${capacity + 1};">
+      <div class="tb-num">T${t.num}</div>${t.name ? `<div class="tb-name">${escapeHtml(t.name)}</div>` : ''}
+    </div>`;
+  }
+
+  // Overflow (guests beyond capacity) — render in a spillover row
+  let overflowHTML = '';
+  if (t.seats.length > capacity) {
+    const extras = [];
+    for (let i = capacity; i < t.seats.length; i++) {
+      if (t.seats[i]) extras.push(seatTileHTML(i, 'auto', 'auto', 'overflow', true, t));
+    }
+    if (extras.length) {
+      overflowHTML = `<div class="overflow-row">${extras.join('')}</div>`;
+    }
+  }
+
+  const filled = t.seats.filter(Boolean).length;
+  const fullClass = filled >= capacity ? 'full' : '';
+  const longClass = isVertical ? 'long' : '';
+  const area = t.layout && t.layout.area ? t.layout.area : '';
+  const dataArea = area ? `data-area="${area}"` : '';
+  const foodTally = tableFoodTallyHTML(t);
+  return `<div class="table ${fullClass} ${longClass}" ${dataArea} data-table-id="${t.id}">
+    <div class="table-header">
+      <span class="table-drag-handle" draggable="true" data-drag-table="${t.id}" title="Drag to swap this table's position with another table">⠿</span>
+      <input class="table-name" value="${escapeHtml(t.name)}" placeholder="internal name for T${t.num}…" onchange="renameTable('${t.id}', this.value)" onkeydown="if(event.key==='Enter')this.blur()">
+      <span class="table-capacity">${filled}/<input class="capacity-input" type="number" min="2" max="30" value="${capacity}" onchange="setCapacity('${t.id}', this.value)"></span>
+      <button class="icon-btn" onclick="deleteTable('${t.id}')" title="Delete table">✕</button>
+      ${foodTally}
+    </div>
+    <div class="table-chart ${isVertical ? 'vertical' : 'horizontal'}${useDoubleEnds ? ' two-head' : ''}" style="--side: ${side}">
+      ${chart}
+    </div>
+    ${overflowHTML}
+  </div>`;
+}
+
+/* ===== DRAG & DROP ===== */
+function onDragOverPool(e) { e.preventDefault(); document.getElementById('guest-pool').classList.add('drop-hover'); }
+function onDragLeavePool(e) {
+  const el = document.getElementById('guest-pool');
+  if (!el.contains(e.relatedTarget)) el.classList.remove('drop-hover');
+}
+function onDropPool(e) {
+  e.preventDefault();
+  document.getElementById('guest-pool').classList.remove('drop-hover');
+  const gid = parseInt(e.dataTransfer.getData('text/plain'));
+  if (!gid) return;
+  removeFromAnywhere(gid);
+  render();
+}
+function onDragOverTable(e, el) {
+  e.preventDefault();
+  // If a table is being dragged, show swap-target highlight instead of guest drop-hover
+  const isTableDrag = Array.from(e.dataTransfer.types || []).includes('application/x-wedding-table');
+  if (isTableDrag) {
+    if (!el.classList.contains('table-dragging')) el.classList.add('table-swap-target');
+  } else {
+    el.classList.add('drop-hover');
+  }
+}
+function onDragLeaveTable(e, el) {
+  if (!el.contains(e.relatedTarget)) {
+    el.classList.remove('drop-hover');
+    el.classList.remove('table-swap-target');
+  }
+}
+function onDropTable(e, tableId) {
+  e.preventDefault();
+  const el = document.querySelector(`[data-table-id="${tableId}"]`);
+  if (el) { el.classList.remove('drop-hover'); el.classList.remove('table-swap-target'); }
+  // Table drag takes precedence
+  const srcTableId = e.dataTransfer.getData('application/x-wedding-table');
+  if (srcTableId) { swapTables(srcTableId, tableId); return; }
+  if (e.target.closest('.seat-tile')) return;
+  const gid = parseInt(e.dataTransfer.getData('text/plain'));
+  if (!gid) return;
+  placeGuest(gid, tableId, null);
+}
+function onDragOverSeat(e) {
+  e.preventDefault(); e.stopPropagation();
+  e.currentTarget.classList.add('drop-hover');
+}
+function onDragLeaveSeat(e) { e.currentTarget.classList.remove('drop-hover'); }
+function onDropSeat(e, tableId, seatIdx) {
+  e.preventDefault(); e.stopPropagation();
+  e.currentTarget.classList.remove('drop-hover');
+  // If a table was being dragged, swap with the table that contains this seat
+  const srcTableId = e.dataTransfer.getData('application/x-wedding-table');
+  if (srcTableId) { swapTables(srcTableId, tableId); return; }
+  const gid = parseInt(e.dataTransfer.getData('text/plain'));
+  if (!gid) return;
+  placeGuest(gid, tableId, seatIdx);
+}
+
+function placeGuest(guestId, tableId, seatIdx) {
+  const table = getTable(tableId);
+  if (!table) return;
+  if (seatIdx != null) {
+    const occupant = table.seats[seatIdx];
+    if (occupant === guestId) return;
+    // Remove the dragged guest from any prior position
+    const fromTable = tableOfGuest(guestId);
+    const fromIdx = fromTable ? fromTable.seats.indexOf(guestId) : -1;
+    if (fromTable) fromTable.seats[fromIdx] = undefined;
+    // Place the dragged guest in the target seat — overwriting any occupant.
+    // The displaced occupant is NOT swapped; they just become unseated.
+    while (table.seats.length <= seatIdx) table.seats.push(undefined);
+    table.seats[seatIdx] = guestId;
+    // Auto-grow capacity if we landed beyond it
+    if (seatIdx >= table.capacity) table.capacity = seatIdx + 1;
+    [table, fromTable].filter(Boolean).forEach(t => {
+      while (t.seats.length && t.seats[t.seats.length - 1] === undefined) t.seats.pop();
+    });
+  } else {
+    removeFromAnywhere(guestId);
+    let placed = false;
+    for (let i = 0; i < table.capacity; i++) {
+      if (!table.seats[i]) { table.seats[i] = guestId; placed = true; break; }
+    }
+    if (!placed) {
+      // Table is full — auto-grow capacity to absorb the new guest
+      table.seats[table.capacity] = guestId;
+      table.capacity++;
+    }
+  }
+  render();
+}
+function unseat(guestId) { removeFromAnywhere(guestId); render(); }
+
+/* ===== TABLE OPS ===== */
+function addTable() {
+  const tables = getTables();
+  const maxNum = tables.reduce((m, t) => Math.max(m, t.num || 0), 0);
+  const newNum = maxNum + 1;
+  tables.push({
+    id: `${state.currentDay}_extra_${Date.now()}`,
+    num: newNum, name: "", capacity: 10, seats: [],
+    layout: null
+  });
+  render();
+}
+function deleteTable(id) {
+  const tables = getTables();
+  const t = tables.find(x => x.id === id);
+  if (!t) return;
+  const count = t.seats.filter(Boolean).length;
+  // Empty tables delete instantly — nothing to lose.
+  if (count > 0) {
+    const msg = `Delete Table ${t.num}${t.name ? ' — ' + t.name : ''}? ${count} guest${count===1?'':'s'} will return to Unseated.`;
+    if (!confirm(msg)) return;
+  }
+  const cd = currentDay();
+  cd.tables = tables.filter(x => x.id !== id);
+  render();
+}
+function renameTable(id, name) {
+  const t = getTable(id);
+  if (t) { t.name = name; render(); }
+}
+function setCapacity(id, cap) {
+  const t = getTable(id);
+  if (!t) return;
+  const c = Math.max(1, Math.min(30, parseInt(cap) || 1));
+  const oldCap = t.capacity;
+  // Always compact first: drop any undefined gaps so guests sit at
+  // indices 0..n-1. Seat numbers are only positional anchors — the
+  // user has been clear that they don't want gaps or stranded
+  // occupants when shrinking capacity.
+  const occupants = t.seats.filter(Boolean);
+  if (c < occupants.length) {
+    // New capacity below current headcount — displace the trailing
+    // occupants back to the Unseated pool. Confirm so a fat-finger
+    // on the spinner can't silently unseat people.
+    const lost = occupants.length - c;
+    const ok = confirm(
+      `Reducing capacity to ${c} will unseat ${lost} guest${lost === 1 ? '' : 's'} ` +
+      `from Table ${t.num}${t.name ? ' (' + t.name + ')' : ''}. Continue?`
+    );
+    if (!ok) {
+      render();  // re-render to snap the capacity input back to old value
+      return;
+    }
+    t.seats = occupants.slice(0, c);
+  } else {
+    // Capacity at or above current headcount — compact only, nobody displaced.
+    t.seats = occupants;
+  }
+  // Manage seat-shape so visual positions stay put when shrinking.
+  // Reducing capacity peels trailing chairs off the current shape
+  // (cap 13 → 12 stays 5+4+2+1, not 4+4+2+2). Growing or unchanged
+  // capacity drops any custom shape and re-derives from defaults.
+  if (c < oldCap) {
+    const peeled = peelShape(getShape(t), oldCap - c);
+    t.layout = t.layout || {};
+    t.layout.shape = peeled;
+  } else if (c > oldCap) {
+    if (t.layout && t.layout.shape) delete t.layout.shape;
+  }
+  t.capacity = c;
+  render();
+}
+
+/* ===== DAY SWITCHING ===== */
+document.getElementById('day-tabs').addEventListener('click', e => {
+  const b = e.target.closest('.day-tab');
+  if (!b) return;
+  state.currentDay = b.dataset.day;
+  if (history && history.replaceState) history.replaceState(null, '', '#' + b.dataset.day);
+  else location.hash = b.dataset.day;
+  render();
+});
+
+/* Deep-link support: #thu / #fri / #sat opens that day directly */
+function applyHashDay() {
+  if (!state) return;
+  const h = (location.hash || '').replace('#', '').toLowerCase();
+  if (DAYS.includes(h) && h !== state.currentDay) {
+    state.currentDay = h;
+    render();
+  }
+}
+window.addEventListener('hashchange', applyHashDay);
+
+/* ===== GUEST MODAL ===== */
+let modalGuestId = null;
+let modalOriginalNote = "";
+function openGuestModal(id) {
+  modalGuestId = id;
+  const g = getGuest(id);
+  if (!g) return;
+  modalOriginalNote = g.note || "";
+  document.getElementById('modal-guest-name').textContent =
+    `${g.first} ${g.last}${g.isKid ? ' · kid' : ''}`;
+  renderModalRsvp();
+  renderModalFood(g);
+  document.getElementById('modal-is-kid').checked = !!g.isKid;
+  document.getElementById('modal-note').value = g.note || '';
+  renderModalTags();
+  document.getElementById('guest-modal').showModal();
+}
+function renderModalFood(g) {
+  const el = document.getElementById('modal-food');
+  const info = foodInfo(g);
+  if (!info) {
+    el.style.display = 'none';
+    el.innerHTML = '';
+    return;
+  }
+  el.style.display = 'flex';
+  el.innerHTML =
+    `<span style="font-style:italic;color:var(--ink-soft);">Wedding meal:</span>` +
+    `<span class="food-label ${info.cls}" style="font-size:13px;">${escapeHtml(info.label)}</span>`;
+}
+function renderModalTags() {
+  const g = getGuest(modalGuestId);
+  if (!g) return;
+  const el = document.getElementById('modal-tags');
+  const none = `<span class="tag-option ${!g.tagId ? 'selected' : ''}" onclick="pickModalTag(null)">None</span>`;
+  const tags = state.tags.map(t => {
+    const selected = g.tagId === t.id;
+    return `<span class="tag-option ${selected ? 'selected' : ''}" onclick="pickModalTag('${t.id}')" style="color:${t.color};border-color:${t.color}${selected ? '' : '66'};${selected ? `background:${t.color}15` : ''}">${escapeHtml(t.name)}</span>`;
+  }).join('');
+  el.innerHTML = none + tags;
+}
+function pickModalTag(id) {
+  const g = getGuest(modalGuestId);
+  if (!g) return;
+  g.tagId = id;
+  renderModalTags();
+  render();
+}
+function saveGuestModal() {
+  const g = getGuest(modalGuestId);
+  if (g) g.note = document.getElementById('modal-note').value.trim();
+  closeGuestModal(true);
+}
+function closeGuestModal(saved) {
+  if (!saved) {
+    const g = getGuest(modalGuestId);
+    if (g) g.note = modalOriginalNote;
+  }
+  document.getElementById('guest-modal').close();
+  modalGuestId = null;
+  render();
+}
+
+/* ===== TAG MANAGER ===== */
+function openTagManager() { renderTagManagerList(); document.getElementById('tag-modal').showModal(); }
+function renderTagManagerList() {
+  const el = document.getElementById('manage-tags-list');
+  el.innerHTML = state.tags.map((t, i) => `<div class="tag-row">
+    <input type="color" value="${t.color}" onchange="state.tags[${i}].color=this.value;render();renderTagManagerList();">
+    <input type="text" value="${escapeHtml(t.name)}" onchange="state.tags[${i}].name=this.value;render();">
+    <button class="icon-btn" onclick="deleteTag('${t.id}')" title="Delete tag">✕</button>
+  </div>`).join('') || '<div style="color:var(--ink-soft);font-size:13px;">No tags yet.</div>';
+}
+function addTag() {
+  const palette = ['#d4a574','#a57bc0','#7ba3c0','#c07ba3','#86c07b','#c0a57b','#7bb0b0','#b07b7b'];
+  const c = palette[state.tags.length % palette.length];
+  state.tags.push({ id: 'tag_' + Date.now(), name: 'New Group', color: c });
+  renderTagManagerList();
+  render();
+}
+function deleteTag(id) {
+  if (!confirm('Delete this tag? Guests with this tag will lose it.')) return;
+  for (const g of state.guests) if (g.tagId === id) g.tagId = null;
+  state.tags = state.tags.filter(t => t.id !== id);
+  for (const d of DAYS) {
+    if (state.days[d].activeTagFilter === id) state.days[d].activeTagFilter = null;
+  }
+  renderTagManagerList();
+  render();
+}
+function closeTagManager() { document.getElementById('tag-modal').close(); }
+
+/* ===== RSVP display in guest modal (read-only — manage in main editor) ===== */
+function renderModalRsvp() {
+  const g = getGuest(modalGuestId);
+  if (!g) return;
+  const r = g.rsvp;
+  const pill = (label, status) => {
+    const cls = status === 'Attending' ? 'yes' : (status === 'Declined' ? 'no' : '');
+    const sym = status === 'Attending' ? '✓' : (status === 'Declined' ? '✕' : '—');
+    return `<span class="pill ${cls}" style="cursor:default" title="${escapeHtml(status)}">${label} ${sym}</span>`;
+  };
+  document.getElementById('modal-rsvp').innerHTML =
+    pill('Thu', r.thu) + pill('Fri', r.fri) + pill('Sat', r.sat);
+}
+
+/* ===== Toggle "is kid" flag from guest modal ===== */
+function toggleModalKid() {
+  const g = getGuest(modalGuestId);
+  if (!g) return;
+  g.isKid = !!document.getElementById('modal-is-kid').checked;
+  if (g.isKid && !g.tagId) g.tagId = 'kids';
+  render();
+}
+
+function resetDay() {
+  const d = state.currentDay;
+  if (!confirm(`Reset ${DAY_LABELS[d]} chart? All tables and assignments for this day will return to defaults (other days untouched).`)) return;
+  state.days[d] = d === 'sat'
+    ? { tables: defaultInstitutoTables(), activeTagFilter: null }
+    : { tables: defaultCasaTables(d), activeTagFilter: null };
+  render();
+}
+
+
+/* ===== INIT ===== */
+async function boot() {
+  try {
+    state = await loadState();
+  } catch (err) {
+    console.error('Failed to load /api/state:', err);
+    state = freshState();
+    _setSaveStatus('Offline', 'error');
+    alert('Could not load seating data from the server. Is edit_seating.py still running?');
+  }
+  render();
+  applyHashDay();
+}
+boot();
+</script>
+</body>
+</html>

@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 30" width="120" height="120">
+  <!--
+    Microphone Icon — Hand-drawn style
+    Used for the Toasts tab in the wedding app
+    Tilted right 20 degrees, with cord hanging left
+
+    In the app, stroke color is inherited from parent CSS:
+    - Inactive: #8FB89E
+    - Active: #3A6B48
+
+    This icon should appear in the tab bar AFTER April 28th.
+    BEFORE April 28th, Travel Info icon appears in this position instead.
+  -->
+  <g transform="rotate(20, 15, 14)" stroke="#3A6B48" fill="none">
+    <!-- Mic head (round) -->
+    <circle cx="15" cy="8" r="6" stroke-width="2"/>
+    <!-- Mesh lines on mic head -->
+    <line x1="12" y1="4.5" x2="18" y2="4.5" stroke-width="1.5" stroke-linecap="round" opacity="0.7"/>
+    <line x1="11" y1="7" x2="19" y2="7" stroke-width="1.5" stroke-linecap="round" opacity="0.7"/>
+    <line x1="11" y1="9.5" x2="19" y2="9.5" stroke-width="1.5" stroke-linecap="round" opacity="0.7"/>
+    <line x1="12" y1="12" x2="18" y2="12" stroke-width="1.5" stroke-linecap="round" opacity="0.7"/>
+    <!-- Handle -->
+    <rect x="13" y="14" width="4" height="9" rx="1.5" stroke-width="2"/>
+    <!-- Cord -->
+    <path d="M15 23 C15 25, 13 26.5, 10 27" stroke-width="1.8" stroke-linecap="round"/>
+  </g>
+</svg>

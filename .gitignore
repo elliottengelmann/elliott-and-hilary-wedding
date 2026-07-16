@@ -1,0 +1,10 @@
+.DS_Store
+.venv/
+node_modules/
+tmp-icons/
+.tmp-icons/
+.vercel
+.context
+*.csv
+__pycache__/
+.tinify-cache.json
