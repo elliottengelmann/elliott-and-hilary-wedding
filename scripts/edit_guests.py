@@ -1565,7 +1565,7 @@ INDEX_HTML = r"""<!doctype html>
         <input type="text" list="city-names" autocomplete="off" value="${escapeAttr(loc.hometown || '')}" oninput="updateLocation('${g.key}', 'hometown', this.value)">
       </div>
       ${formFieldGroup(g, 'how_we_know', 'How they know Elien and Nima', storyValue, !!fo.how_we_know, g.formStory)}
-      ${formFieldGroup(g, 'least_favorite', "What they don't like about weddings", leastValue, !!fo.least_favorite, g.formLeastFavorite)}
+      ${formFieldGroup(g, 'least_favorite', "Go-to karaoke song", leastValue, !!fo.least_favorite, g.formLeastFavorite)}
       ${hereWithBlock(g)}
       ${memoryGroup(g, 'them', `A memory of ${g.name}`, memsBySubject.them)}
       ${memoryGroup(g, 'nima', 'A memory of Nima', memsBySubject.nima)}

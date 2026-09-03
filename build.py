@@ -53,9 +53,9 @@ ROMANTIC_LABELS = {
 
 MEMORY_TITLES = {
     "them": "A memory of {name}",
-    "nima": "A memory of Elliott",
-    "elien": "A memory of Hilary",
-    "both":  "A memory of Elliott and Hilary",
+    "nima": "A memory of Hilary",
+    "elien": "A memory of Elliot",
+    "both":  "A memory of Hilary and Elliot",
 }
 
 # Real guest photos live in images/guests/, resolved by merge_guests.py
@@ -246,26 +246,6 @@ def build_events(conn):
                                     <div class="detail-value"><a href="{esc(e["location_url"])}" target="_blank">{esc(e["location_label"])}</a></div>
                                 </div>"""
 
-        # Add id for Thursday/Friday so JS can show/hide based on RSVP
-        day_id = ""
-        dl = (e["day_label"] or "").lower()
-        attending_filter_word = ""
-        if "thursday" in dl:
-            day_id = ' id="event-thursday"'
-            attending_filter_word = "thursday"
-        elif "friday" in dl:
-            day_id = ' id="event-friday"'
-            attending_filter_word = "friday"
-
-        # Action buttons. For the two welcome dinners, add a third button
-        # that jumps to Los Invitados with that night's RSVP pre-filtered.
-        attending_btn = ""
-        if attending_filter_word:
-            attending_btn = (
-                f'<button class="btn btn-secondary btn-small" '
-                f'onclick="event.stopPropagation(); invitadoFilterByEvent(\'{attending_filter_word}\')">'
-                f"Who's Coming</button>"
-            )
         action_links = []
         map_url = event_map_url(e)
         if map_url:
@@ -277,15 +257,13 @@ def build_events(conn):
             action_links.append(
                 f'<a href="{esc(cal_url)}" target="_blank" rel="noopener" class="btn btn-secondary btn-small">Add to Calendar</a>'
             )
-        if attending_btn:
-            action_links.append(attending_btn)
         if action_links:
             details += """
                                 <div class="action-buttons">
                                     """ + "\n                                    ".join(action_links) + """
                                 </div>"""
 
-        parts.append(f"""                    <div class="day-section"{day_id}>
+        parts.append(f"""                    <div class="day-section">
                         <div class="event-card" onclick="toggleEvent(this, event)">
                             <div class="event-header">
                                 <div class="day-label">{esc(e["day_label"])}</div>
@@ -293,7 +271,7 @@ def build_events(conn):
                                 <div class="event-time">{esc(e["time"])}</div>
                                 <div class="venue-row">
                                     <div class="event-venue">{esc(e["venue"])}</div>
-                                    <div class="expand-icon"><svg width="20" height="20" viewBox="0 0 40 40" fill="none"><path d="M10 12 C16 16, 17 26, 20 32 C23 26, 24 16, 30 12" stroke="#4A7C59" stroke-width="3.5" fill="none" stroke-linecap="round"/></svg></div>
+                                    <div class="expand-icon"><svg width="20" height="20" viewBox="0 0 40 40" fill="none"><path d="M10 12 C16 16, 17 26, 20 32 C23 26, 24 16, 30 12" stroke="#1F6E8C" stroke-width="3.5" fill="none" stroke-linecap="round"/></svg></div>
                                 </div>
                             </div>
                             <div class="event-details">{details}
@@ -364,7 +342,7 @@ def build_extras(conn):
                                 <div class="event-time">{esc(e["time"])}</div>
                                 <div class="venue-row">
                                     <div class="event-venue">{esc(e["venue"])}</div>
-                                    <div class="expand-icon"><svg width="20" height="20" viewBox="0 0 40 40" fill="none"><path d="M10 12 C16 16, 17 26, 20 32 C23 26, 24 16, 30 12" stroke="#4A7C59" stroke-width="3.5" fill="none" stroke-linecap="round"/></svg></div>
+                                    <div class="expand-icon"><svg width="20" height="20" viewBox="0 0 40 40" fill="none"><path d="M10 12 C16 16, 17 26, 20 32 C23 26, 24 16, 30 12" stroke="#1F6E8C" stroke-width="3.5" fill="none" stroke-linecap="round"/></svg></div>
                                 </div>
                             </div>
                             <div class="event-details">{details}
@@ -466,13 +444,8 @@ GUIDE_SECTION_ORDER = [
 # more pinned links at the top before its cards — Elien's curated maps
 # for that category. Banned outside this dict; never auto-generated.
 GUIDE_SECTION_MAPS = {
-    "Restaurants": [
-        ("Rooftops Google Map", "https://maps.app.goo.gl/zws4dkANXaHKepdg6"),
-        ("Restaurants Google Map", "https://maps.app.goo.gl/hELbgRtGWDiuKLys8"),
-    ],
-    "Coffee & Espresso": [
-        ("Coffee & Espresso Google Map", "https://maps.app.goo.gl/T3mNJQd9H6fLAVuh9"),
-    ],
+    # Optional pinned Google-Maps links per guide section — Hilary & Elliot's
+    # own curated maps go here. Empty until they add theirs.
 }
 
 GUIDE_SECTION_SLUG = {
@@ -650,7 +623,7 @@ def build_guide(conn):
                         <h3 class="guide-section-title">
                             <button type="button" class="guide-section-toggle" onclick="toggleGuideSection(this.closest('.guide-section'))" aria-expanded="true" aria-controls="{section_id}-body">
                                 <span>{esc(label)}</span>
-                                <span class="guide-section-arrow" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 40 40" fill="none"><path d="M10 12 C16 16, 17 26, 20 32 C23 26, 24 16, 30 12" stroke="#4A7C59" stroke-width="3.5" fill="none" stroke-linecap="round"/></svg></span>
+                                <span class="guide-section-arrow" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 40 40" fill="none"><path d="M10 12 C16 16, 17 26, 20 32 C23 26, 24 16, 30 12" stroke="#1F6E8C" stroke-width="3.5" fill="none" stroke-linecap="round"/></svg></span>
                             </button>
                         </h3>
                         <div class="guide-section-body" id="{section_id}-body">
@@ -969,6 +942,7 @@ def build_guest_json(conn):
         photo = (fo.get("photo_url") or g.get("photo_url") or "").strip()
         story = (fo.get("how_we_know") or g.get("how_we_know") or "").strip()
         least_fav = (fo.get("least_favorite") or g.get("least_favorite") or "").strip()
+        pronouns = (g.get("pronouns") or "").strip()
         thu = (fo.get("rsvp_thursday") or g.get("rsvp_thursday") or "").strip()
         fri = (fo.get("rsvp_friday") or g.get("rsvp_friday") or "").strip()
         sat = (fo.get("rsvp_wedding") or g.get("rsvp_wedding") or "").strip()
@@ -1010,6 +984,7 @@ def build_guest_json(conn):
             "name": display,
             "city": city,
             "hometown": hometown,
+            "pronouns": pronouns,
             "story": story,
             "leastFavorite": least_fav,
             "guestMemory": (g.get("form_memory") or "").strip(),
@@ -1253,8 +1228,8 @@ TEMPLATE = r"""<!DOCTYPE html>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Elliott &amp; Hilary's Wedding</title>
-    <meta name="description" content="Elliott &amp; Hilary's wedding.">
+    <title>Hilary & Elliot's Wedding</title>
+    <meta name="description" content="Hilary & Elliot's wedding.">
 
     <!-- ?v={{VERSION}} on every icon URL is the only reliable cache-bust
          for installed PWAs. iOS keeps the apple-touch-icon it grabbed at
@@ -1263,7 +1238,7 @@ TEMPLATE = r"""<!DOCTYPE html>
          even on reinstall. {{VERSION}} is the same content hash baked
          into sw.js's CACHE_VERSION, so a deploy bumps both in lockstep. -->
     <link rel="manifest" href="manifest.webmanifest?v={{VERSION}}">
-    <meta name="theme-color" content="#F5F0EB">
+    <meta name="theme-color" content="#1F6E8C">
     <meta name="color-scheme" content="light">
 
     <link rel="icon" type="image/svg+xml" href="icons/icon.svg?v={{VERSION}}">
@@ -1274,7 +1249,7 @@ TEMPLATE = r"""<!DOCTYPE html>
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    <meta name="apple-mobile-web-app-title" content="Elliott &amp; Hilary">
+    <meta name="apple-mobile-web-app-title" content="Hilary & Elliot">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -1290,13 +1265,13 @@ TEMPLATE = r"""<!DOCTYPE html>
         }
 
         :root {
-            --primary-green: #4A7C59;
+            --primary-green: #1F6E8C;
             --light-bg: #F5F0EB;
-            --light-sage: #D4E7D0;
+            --light-sage: #CDE7F0;
             --dark: #2D2D2D;
-            --accent-warm: #E8845C;
-            --accent-pink: #D4639A;
-            --accent-lavender: #9B7EB5;
+            --accent-warm: #E24A2E;
+            --accent-pink: #E9A13B;
+            --accent-lavender: #4FB0C6;
             --light-text: #666666;
             --divider: #E5DDD3;
         }
@@ -1768,7 +1743,7 @@ TEMPLATE = r"""<!DOCTYPE html>
         }
 
         a:hover {
-            color: #3A6B48;
+            color: #164E63;
         }
 
         .action-buttons {
@@ -1826,10 +1801,10 @@ TEMPLATE = r"""<!DOCTYPE html>
             opacity: 1;
         }
 
-        .avatar-1 { background: #E8845C; }
-        .avatar-2 { background: #D4639A; }
-        .avatar-3 { background: #9B7EB5; }
-        .avatar-4 { background: #4A7C59; }
+        .avatar-1 { background: #E24A2E; }
+        .avatar-2 { background: #E9A13B; }
+        .avatar-3 { background: #4FB0C6; }
+        .avatar-4 { background: #1F6E8C; }
         .avatar-5 { background: #D4A574; }
 
         .invitado-back {
@@ -2448,7 +2423,7 @@ TEMPLATE = r"""<!DOCTYPE html>
             font-family: 'Bodoni Moda', serif;
             font-size: 15px; /* +12% from 13 — readability pass per Elien's note */
             color: white;
-            background: #8FB89E;
+            background: #7FB5C9;
             border: none;
             border-radius: 999px;
             padding: 7px 15px;
@@ -2588,7 +2563,7 @@ TEMPLATE = r"""<!DOCTYPE html>
             stroke-linejoin: round;
         }
         /* Black-line PNGs from the Noun Project tinted to the primary green
-           via filter — converts black pixels to a green close to var(--primary-green: #4A7C59).
+           via filter — converts black pixels to a green close to var(--primary-green: #1F6E8C).
            See: https://codepen.io/sosuke/pen/Pjoqqp for the multi-step filter recipe. */
         .goodtime-tip-icon img.goodtime-tip-img {
             width: 48px;
@@ -2860,17 +2835,17 @@ TEMPLATE = r"""<!DOCTYPE html>
         }
 
         .tab-icon svg path, .tab-icon svg rect, .tab-icon svg circle, .tab-icon svg line, .tab-icon svg polyline, .tab-icon svg ellipse, .tab-icon svg text {
-            stroke: #8FB89E;
+            stroke: #7FB5C9;
             transition: stroke 0.2s ease, fill 0.2s ease;
         }
 
         .tab-icon svg circle.dot, .tab-icon svg .fill-elem {
-            fill: #8FB89E;
+            fill: #7FB5C9;
             stroke: none;
         }
 
         .tab-icon svg text {
-            fill: #8FB89E;
+            fill: #7FB5C9;
             stroke: none;
         }
 
@@ -3183,16 +3158,16 @@ TEMPLATE = r"""<!DOCTYPE html>
 </head>
 <body>
     <div class="update-indicator" id="updateIndicator" role="status" aria-live="polite" aria-label="Updating app">
-        <img src="images/rosa-rugosa.png" alt="" class="update-flower" decoding="async">
+        <img src="images/lobster.png" onerror="this.style.display='none'" alt="" class="update-flower" decoding="async">
     </div>
     <div class="app-container">
-            <img src="images/rosa-rugosa.png" alt="" class="bg-nasturtiums" id="bgNasturtiums">
-            <img src="images/rosa-rugosa.png" alt="" class="bg-rose" id="bgRose">
+            <img src="images/lobster.png" onerror="this.style.display='none'" alt="" class="bg-nasturtiums" id="bgNasturtiums">
+            <img src="images/lobster.png" onerror="this.style.display='none'" alt="" class="bg-rose" id="bgRose">
             <!-- LOGIN SCREEN -->
             <div class="screen login-screen active" id="login">
                 <div class="login-card">
-                    <h1 style="font-family: 'Mea Culpa', cursive; font-size: 56px; font-weight: 400;">Elliott &amp; Hilary</h1>
-                    <p>[[VENUE — replace with city/venue name]]</p>
+                    <h1 style="font-family: 'Mea Culpa', cursive; font-size: 56px; font-weight: 400;">Hilary & Elliot</h1>
+                    <p>[Wedding location]</p>
                     <form id="loginForm" onsubmit="event.preventDefault(); handleLogin();" novalidate>
                         <div class="input-group">
                             <label for="nameInput" class="sr-only">Full name</label>
@@ -3212,7 +3187,7 @@ TEMPLATE = r"""<!DOCTYPE html>
                         </div>
                         <button type="submit" aria-label="Continue" style="background: none; border: none; cursor: pointer; margin-top: 16px; display: flex; align-items: center; justify-content: center; margin-left: auto; margin-right: auto;">
                             <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
-                                <path d="M12 10 C16 16, 26 17, 32 20 C26 23, 16 24, 12 30" stroke="#4A7C59" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+                                <path d="M12 10 C16 16, 26 17, 32 20 C26 23, 16 24, 12 30" stroke="#1F6E8C" stroke-width="2.5" fill="none" stroke-linecap="round"/>
                             </svg>
                         </button>
                     </form>
@@ -3223,15 +3198,15 @@ TEMPLATE = r"""<!DOCTYPE html>
             <div class="screen splash-screen" id="splash">
                 <div class="splash-content">
                     <div class="splash-image">
-                        <img src="images/rosa-rugosa.png" alt="Rosa rugosa watercolor" loading="eager" decoding="async">
+                        <img src="images/lobster.png" onerror="this.style.display='none'" alt="Two lobsters forming a heart" loading="eager" decoding="async">
                     </div>
                     <div class="splash-text">
-                        [[SPLASH THANK-YOU — replace with Elliott &amp; Hilary's personal note welcoming guests. This paragraph is the first thing guests see after entering their name; on the source site it was a heartfelt thank-you for traveling to the venue.]]
+                        [Your welcome note goes here. Write a few warm sentences to your guests.]
                     </div>
-                    <div class="splash-signature">Love, Elliott &amp; Hilary</div>
+                    <div class="splash-signature">Love, Hilary & Elliot</div>
                     <div class="splash-arrow" onclick="skipSplash()">
                         <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
-                            <path d="M12 10 C16 16, 26 17, 32 20 C26 23, 16 24, 12 30" stroke="#4A7C59" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+                            <path d="M12 10 C16 16, 26 17, 32 20 C26 23, 16 24, 12 30" stroke="#1F6E8C" stroke-width="2.5" fill="none" stroke-linecap="round"/>
                         </svg>
                     </div>
                 </div>
@@ -3241,7 +3216,7 @@ TEMPLATE = r"""<!DOCTYPE html>
             <div class="screen" id="schedule">
                 <div class="header">
                     <h1 class="header-title">Schedule of Events</h1>
-                    <button class="hamburger" onclick="toggleMenu()"><svg width="22" height="16" viewBox="0 0 22 16" fill="none"><line x1="1" y1="1" x2="21" y2="1" stroke="#4A7C59" stroke-width="1.5" stroke-linecap="round"/><line x1="1" y1="8" x2="21" y2="8" stroke="#4A7C59" stroke-width="1.5" stroke-linecap="round"/><line x1="1" y1="15" x2="21" y2="15" stroke="#4A7C59" stroke-width="1.5" stroke-linecap="round"/></svg></button>
+                    <button class="hamburger" onclick="toggleMenu()"><svg width="22" height="16" viewBox="0 0 22 16" fill="none"><line x1="1" y1="1" x2="21" y2="1" stroke="#1F6E8C" stroke-width="1.5" stroke-linecap="round"/><line x1="1" y1="8" x2="21" y2="8" stroke="#1F6E8C" stroke-width="1.5" stroke-linecap="round"/><line x1="1" y1="15" x2="21" y2="15" stroke="#1F6E8C" stroke-width="1.5" stroke-linecap="round"/></svg></button>
                 </div>
                 <div class="screen-content">
 {{EVENTS}}
@@ -3263,7 +3238,7 @@ TEMPLATE = r"""<!DOCTYPE html>
             <div class="screen" id="extras">
                 <div class="header">
                     <h1 class="header-title">Extra Activities</h1>
-                    <button class="hamburger" onclick="toggleMenu()"><svg width="22" height="16" viewBox="0 0 22 16" fill="none"><line x1="1" y1="1" x2="21" y2="1" stroke="#4A7C59" stroke-width="1.5" stroke-linecap="round"/><line x1="1" y1="8" x2="21" y2="8" stroke="#4A7C59" stroke-width="1.5" stroke-linecap="round"/><line x1="1" y1="15" x2="21" y2="15" stroke="#4A7C59" stroke-width="1.5" stroke-linecap="round"/></svg></button>
+                    <button class="hamburger" onclick="toggleMenu()"><svg width="22" height="16" viewBox="0 0 22 16" fill="none"><line x1="1" y1="1" x2="21" y2="1" stroke="#1F6E8C" stroke-width="1.5" stroke-linecap="round"/><line x1="1" y1="8" x2="21" y2="8" stroke="#1F6E8C" stroke-width="1.5" stroke-linecap="round"/><line x1="1" y1="15" x2="21" y2="15" stroke="#1F6E8C" stroke-width="1.5" stroke-linecap="round"/></svg></button>
                 </div>
                 <div class="screen-content">
 {{EXTRAS}}
@@ -3281,11 +3256,11 @@ TEMPLATE = r"""<!DOCTYPE html>
                              home. invitadoShowProfile / invitadoShowBrowse toggle
                              the inline display style. -->
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                            <path d="M14 6 L8 12 L14 18" stroke="#4A7C59" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M14 6 L8 12 L14 18" stroke="#1F6E8C" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
                         </svg>
                     </button>
                     <h1 class="header-title invitado-screen-title">Los Invitados</h1>
-                    <button class="hamburger" onclick="toggleMenu()"><svg width="22" height="16" viewBox="0 0 22 16" fill="none"><line x1="1" y1="1" x2="21" y2="1" stroke="#4A7C59" stroke-width="1.5" stroke-linecap="round"/><line x1="1" y1="8" x2="21" y2="8" stroke="#4A7C59" stroke-width="1.5" stroke-linecap="round"/><line x1="1" y1="15" x2="21" y2="15" stroke="#4A7C59" stroke-width="1.5" stroke-linecap="round"/></svg></button>
+                    <button class="hamburger" onclick="toggleMenu()"><svg width="22" height="16" viewBox="0 0 22 16" fill="none"><line x1="1" y1="1" x2="21" y2="1" stroke="#1F6E8C" stroke-width="1.5" stroke-linecap="round"/><line x1="1" y1="8" x2="21" y2="8" stroke="#1F6E8C" stroke-width="1.5" stroke-linecap="round"/><line x1="1" y1="15" x2="21" y2="15" stroke="#1F6E8C" stroke-width="1.5" stroke-linecap="round"/></svg></button>
                 </div>
 
                 <!-- BROWSE VIEW -->
@@ -3301,7 +3276,7 @@ TEMPLATE = r"""<!DOCTYPE html>
                         </div>
                     </div>
                     <button class="invitado-surprise" onclick="invitadoSurprise()" aria-label="Meet a random guest" title="Meet a random guest">
-                        <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" fill="#4A7C59" aria-hidden="true">
+                        <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" fill="#1F6E8C" aria-hidden="true">
                             <!-- Flower head: 12 slim petals ringed around a tiny center.
                                  More petals + thinner shape keeps the silhouette reading
                                  airy and delicate at 32px. -->
@@ -3321,7 +3296,7 @@ TEMPLATE = r"""<!DOCTYPE html>
                                 <circle r="1.8"/>
                             </g>
                             <!-- Thin S-curved stem. -->
-                            <path d="M 16 19 Q 18 22 14 25 Q 12 28 16 30" stroke="#4A7C59" stroke-width="1.1" stroke-linecap="round" fill="none"/>
+                            <path d="M 16 19 Q 18 22 14 25 Q 12 28 16 30" stroke="#1F6E8C" stroke-width="1.1" stroke-linecap="round" fill="none"/>
                             <!-- Two small pointed leaves, one each side of the stem. -->
                             <path d="M 14.5 23 C 10 21.5 8.5 24 10.5 25 C 12.5 24.8 14 24 14.5 23 Z"/>
                             <path d="M 16.5 27 C 21 25.5 22.5 28 20.5 29 C 18.5 28.8 17 28 16.5 27 Z"/>
@@ -3337,12 +3312,12 @@ TEMPLATE = r"""<!DOCTYPE html>
                     <div class="invitado-nav">
                         <button class="invitado-arrow" onclick="invitadoPrev()" aria-label="Previous guest">
                             <svg width="28" height="28" viewBox="0 0 40 40" fill="none">
-                                <path d="M28 10 C24 16, 14 17, 8 20 C14 23, 24 24, 28 30" stroke="#4A7C59" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+                                <path d="M28 10 C24 16, 14 17, 8 20 C14 23, 24 24, 28 30" stroke="#1F6E8C" stroke-width="2.5" fill="none" stroke-linecap="round"/>
                             </svg>
                         </button>
                         <button class="invitado-arrow" onclick="invitadoNext()" aria-label="Next guest">
                             <svg width="28" height="28" viewBox="0 0 40 40" fill="none">
-                                <path d="M12 10 C16 16, 26 17, 32 20 C26 23, 16 24, 12 30" stroke="#4A7C59" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+                                <path d="M12 10 C16 16, 26 17, 32 20 C26 23, 16 24, 12 30" stroke="#1F6E8C" stroke-width="2.5" fill="none" stroke-linecap="round"/>
                             </svg>
                         </button>
                     </div>
@@ -3353,21 +3328,21 @@ TEMPLATE = r"""<!DOCTYPE html>
             <div class="screen" id="toasts">
                 <div class="header">
                     <h1 class="header-title">Toasts</h1>
-                    <button class="hamburger" onclick="toggleMenu()"><svg width="22" height="16" viewBox="0 0 22 16" fill="none"><line x1="1" y1="1" x2="21" y2="1" stroke="#4A7C59" stroke-width="1.5" stroke-linecap="round"/><line x1="1" y1="8" x2="21" y2="8" stroke="#4A7C59" stroke-width="1.5" stroke-linecap="round"/><line x1="1" y1="15" x2="21" y2="15" stroke="#4A7C59" stroke-width="1.5" stroke-linecap="round"/></svg></button>
+                    <button class="hamburger" onclick="toggleMenu()"><svg width="22" height="16" viewBox="0 0 22 16" fill="none"><line x1="1" y1="1" x2="21" y2="1" stroke="#1F6E8C" stroke-width="1.5" stroke-linecap="round"/><line x1="1" y1="8" x2="21" y2="8" stroke="#1F6E8C" stroke-width="1.5" stroke-linecap="round"/><line x1="1" y1="15" x2="21" y2="15" stroke="#1F6E8C" stroke-width="1.5" stroke-linecap="round"/></svg></button>
                 </div>
                 <div class="screen-content">
 {{TOASTS}}
                 </div>
             </div>
 
-            <!-- LOCAL GUIDE SCREEN -->
+            <!-- SAN MIGUEL GUIDE SCREEN -->
             <div class="screen" id="guide">
                 <div class="header">
                     <h1 class="header-title">Local Guide</h1>
-                    <button class="hamburger" onclick="toggleMenu()"><svg width="22" height="16" viewBox="0 0 22 16" fill="none"><line x1="1" y1="1" x2="21" y2="1" stroke="#4A7C59" stroke-width="1.5" stroke-linecap="round"/><line x1="1" y1="8" x2="21" y2="8" stroke="#4A7C59" stroke-width="1.5" stroke-linecap="round"/><line x1="1" y1="15" x2="21" y2="15" stroke="#4A7C59" stroke-width="1.5" stroke-linecap="round"/></svg></button>
+                    <button class="hamburger" onclick="toggleMenu()"><svg width="22" height="16" viewBox="0 0 22 16" fill="none"><line x1="1" y1="1" x2="21" y2="1" stroke="#1F6E8C" stroke-width="1.5" stroke-linecap="round"/><line x1="1" y1="8" x2="21" y2="8" stroke="#1F6E8C" stroke-width="1.5" stroke-linecap="round"/><line x1="1" y1="15" x2="21" y2="15" stroke="#1F6E8C" stroke-width="1.5" stroke-linecap="round"/></svg></button>
                 </div>
                 <div class="screen-content">
-                    <div class="guide-intro">[[GUIDE INTRO — Elliott &amp; Hilary's welcome note for their venue-city recommendations.]]</div>
+                    <div class="guide-intro">[A short intro to your local recommendations goes here.]</div>
 {{GUIDE}}
                 </div>
             </div>
@@ -3376,34 +3351,38 @@ TEMPLATE = r"""<!DOCTYPE html>
             <div class="screen" id="goodtime">
                 <div class="header">
                     <span></span>
-                    <button class="hamburger" onclick="toggleMenu()"><svg width="22" height="16" viewBox="0 0 22 16" fill="none"><line x1="1" y1="1" x2="21" y2="1" stroke="#4A7C59" stroke-width="1.5" stroke-linecap="round"/><line x1="1" y1="8" x2="21" y2="8" stroke="#4A7C59" stroke-width="1.5" stroke-linecap="round"/><line x1="1" y1="15" x2="21" y2="15" stroke="#4A7C59" stroke-width="1.5" stroke-linecap="round"/></svg></button>
+                    <button class="hamburger" onclick="toggleMenu()"><svg width="22" height="16" viewBox="0 0 22 16" fill="none"><line x1="1" y1="1" x2="21" y2="1" stroke="#1F6E8C" stroke-width="1.5" stroke-linecap="round"/><line x1="1" y1="8" x2="21" y2="8" stroke="#1F6E8C" stroke-width="1.5" stroke-linecap="round"/><line x1="1" y1="15" x2="21" y2="15" stroke="#1F6E8C" stroke-width="1.5" stroke-linecap="round"/></svg></button>
                 </div>
                 <div class="screen-content">
                     <div class="goodtime-content">
-                        <div class="goodtime-heading">The Trip Is<br>Best With:</div>
+                        <div class="goodtime-heading">[Your City] Is<br>Best With:</div>
 
                         <div class="goodtime-tip">
                             <span class="goodtime-tip-icon" aria-hidden="true">
+                                <!-- Hand-illustrated sneaker from the Noun Project,
+                                     selected by Elien. Tinted to primary green via CSS filter. -->
                                 <img class="goodtime-tip-img" src="images/icons/sneaker.png" alt="" width="48" height="48">
                             </span>
-                            <div class="goodtime-tip-name">[[TIP 1 NAME]]</div>
-                            <div class="goodtime-tip-body">[[TIP 1 BODY — Elliott &amp; Hilary's first "packing / trip prep" tip.]]</div>
+                            <div class="goodtime-tip-name">Sneakers, Sandals</div>
+                            <div class="goodtime-tip-body">It's hilly and cobblestoned. If you have a shoe emergency there is a <a href="https://maps.app.goo.gl/tZTv6ooX4q2rLHzJ9" target="_blank" rel="noopener" class="goodtime-link">Birkenstock store</a> here.</div>
                         </div>
 
                         <div class="goodtime-tip">
                             <span class="goodtime-tip-icon" aria-hidden="true">
+                                <!-- Hammock between two posts -->
                                 <svg viewBox="0 0 48 32"><line x1="6" y1="6" x2="6" y2="26" stroke-width="1.5"/><line x1="42" y1="6" x2="42" y2="26" stroke-width="1.5"/><path d="M6 12 Q24 27 42 12" stroke-width="1.5"/><path d="M6 12 Q24 22 42 12" stroke-width="1.1" opacity="0.55"/></svg>
                             </span>
-                            <div class="goodtime-tip-name">[[TIP 2 NAME]]</div>
-                            <div class="goodtime-tip-body">[[TIP 2 BODY — Elliott &amp; Hilary's second tip.]]</div>
+                            <div class="goodtime-tip-name">Siesta</div>
+                            <div class="goodtime-tip-body">It's hot in the heat of the day! You'll be happy if you rest from 1&ndash;4ish.</div>
                         </div>
 
                         <div class="goodtime-tip">
                             <span class="goodtime-tip-icon" aria-hidden="true">
+                                <!-- Half-sun on the horizon, with rays -->
                                 <svg viewBox="0 0 48 32"><line x1="3" y1="22" x2="45" y2="22" stroke-width="1.5"/><path d="M16 22 A8 8 0 0 1 32 22" stroke-width="1.5"/><line x1="24" y1="5" x2="24" y2="9" stroke-width="1.2"/><line x1="13" y1="9" x2="15" y2="12" stroke-width="1.2"/><line x1="35" y1="9" x2="33" y2="12" stroke-width="1.2"/><line x1="5" y1="17" x2="9" y2="17" stroke-width="1.2"/><line x1="39" y1="17" x2="43" y2="17" stroke-width="1.2"/></svg>
                             </span>
-                            <div class="goodtime-tip-name">[[TIP 3 NAME]]</div>
-                            <div class="goodtime-tip-body">[[TIP 3 BODY — Elliott &amp; Hilary's third tip.]]</div>
+                            <div class="goodtime-tip-name">Sunset</div>
+                            <div class="goodtime-tip-body">All about the rooftops; arrive 45 min before sunset for golden hour. Ask us or <a href="#" onclick="switchScreen('guide', 2); return false;" class="goodtime-link">check this guide</a> for recommendations.</div>
                         </div>
                     </div>
                 </div>
@@ -3413,7 +3392,7 @@ TEMPLATE = r"""<!DOCTYPE html>
             <div class="screen" id="faq">
                 <div class="header">
                     <h1 class="header-title">FAQs</h1>
-                    <button class="hamburger" onclick="toggleMenu()"><svg width="22" height="16" viewBox="0 0 22 16" fill="none"><line x1="1" y1="1" x2="21" y2="1" stroke="#4A7C59" stroke-width="1.5" stroke-linecap="round"/><line x1="1" y1="8" x2="21" y2="8" stroke="#4A7C59" stroke-width="1.5" stroke-linecap="round"/><line x1="1" y1="15" x2="21" y2="15" stroke="#4A7C59" stroke-width="1.5" stroke-linecap="round"/></svg></button>
+                    <button class="hamburger" onclick="toggleMenu()"><svg width="22" height="16" viewBox="0 0 22 16" fill="none"><line x1="1" y1="1" x2="21" y2="1" stroke="#1F6E8C" stroke-width="1.5" stroke-linecap="round"/><line x1="1" y1="8" x2="21" y2="8" stroke="#1F6E8C" stroke-width="1.5" stroke-linecap="round"/><line x1="1" y1="15" x2="21" y2="15" stroke="#1F6E8C" stroke-width="1.5" stroke-linecap="round"/></svg></button>
                 </div>
                 <div class="screen-content">
 {{FAQS}}
@@ -3424,7 +3403,7 @@ TEMPLATE = r"""<!DOCTYPE html>
             <div class="screen" id="album">
                 <div class="header">
                     <h1 class="header-title">Photo Album</h1>
-                    <button class="hamburger" onclick="toggleMenu()"><svg width="22" height="16" viewBox="0 0 22 16" fill="none"><line x1="1" y1="1" x2="21" y2="1" stroke="#4A7C59" stroke-width="1.5" stroke-linecap="round"/><line x1="1" y1="8" x2="21" y2="8" stroke="#4A7C59" stroke-width="1.5" stroke-linecap="round"/><line x1="1" y1="15" x2="21" y2="15" stroke="#4A7C59" stroke-width="1.5" stroke-linecap="round"/></svg></button>
+                    <button class="hamburger" onclick="toggleMenu()"><svg width="22" height="16" viewBox="0 0 22 16" fill="none"><line x1="1" y1="1" x2="21" y2="1" stroke="#1F6E8C" stroke-width="1.5" stroke-linecap="round"/><line x1="1" y1="8" x2="21" y2="8" stroke="#1F6E8C" stroke-width="1.5" stroke-linecap="round"/><line x1="1" y1="15" x2="21" y2="15" stroke="#1F6E8C" stroke-width="1.5" stroke-linecap="round"/></svg></button>
                 </div>
                 <div class="screen-content">
                     <div class="album-card">
@@ -3439,7 +3418,7 @@ TEMPLATE = r"""<!DOCTYPE html>
             <div class="screen" id="coffee">
                 <div class="header">
                     <h1 class="header-title">Coffee Map</h1>
-                    <button class="hamburger" onclick="toggleMenu()"><svg width="22" height="16" viewBox="0 0 22 16" fill="none"><line x1="1" y1="1" x2="21" y2="1" stroke="#4A7C59" stroke-width="1.5" stroke-linecap="round"/><line x1="1" y1="8" x2="21" y2="8" stroke="#4A7C59" stroke-width="1.5" stroke-linecap="round"/><line x1="1" y1="15" x2="21" y2="15" stroke="#4A7C59" stroke-width="1.5" stroke-linecap="round"/></svg></button>
+                    <button class="hamburger" onclick="toggleMenu()"><svg width="22" height="16" viewBox="0 0 22 16" fill="none"><line x1="1" y1="1" x2="21" y2="1" stroke="#1F6E8C" stroke-width="1.5" stroke-linecap="round"/><line x1="1" y1="8" x2="21" y2="8" stroke="#1F6E8C" stroke-width="1.5" stroke-linecap="round"/><line x1="1" y1="15" x2="21" y2="15" stroke="#1F6E8C" stroke-width="1.5" stroke-linecap="round"/></svg></button>
                 </div>
                 <div class="screen-content">
                     <div class="coffee-map-placeholder">[Illustrated Coffee Map — v2]</div>
@@ -3450,35 +3429,37 @@ TEMPLATE = r"""<!DOCTYPE html>
             <div class="screen" id="registry">
                 <div class="header">
                     <span></span>
-                    <button class="hamburger" onclick="toggleMenu()"><svg width="22" height="16" viewBox="0 0 22 16" fill="none"><line x1="1" y1="1" x2="21" y2="1" stroke="#4A7C59" stroke-width="1.5" stroke-linecap="round"/><line x1="1" y1="8" x2="21" y2="8" stroke="#4A7C59" stroke-width="1.5" stroke-linecap="round"/><line x1="1" y1="15" x2="21" y2="15" stroke="#4A7C59" stroke-width="1.5" stroke-linecap="round"/></svg></button>
+                    <button class="hamburger" onclick="toggleMenu()"><svg width="22" height="16" viewBox="0 0 22 16" fill="none"><line x1="1" y1="1" x2="21" y2="1" stroke="#1F6E8C" stroke-width="1.5" stroke-linecap="round"/><line x1="1" y1="8" x2="21" y2="8" stroke="#1F6E8C" stroke-width="1.5" stroke-linecap="round"/><line x1="1" y1="15" x2="21" y2="15" stroke="#1F6E8C" stroke-width="1.5" stroke-linecap="round"/></svg></button>
                 </div>
                 <div class="screen-content">
                     <div style="text-align: center; margin-bottom: 24px;">
                         <div style="font-family: 'Mea Culpa', cursive; font-size: 32px; color: var(--primary-green); margin-bottom: 8px;">Gifts</div>
-                        <div style="font-family: 'Bodoni Moda', serif; font-size: 14px; color: var(--dark); line-height: 1.7;">[[GIFT INTRO — replace with Elliott &amp; Hilary's gift/charity intro copy.]]</div>
+                        <div style="font-family: 'Bodoni Moda', serif; font-size: 14px; color: var(--dark); line-height: 1.7;">[Your registry note goes here.]</div>
                     </div>
 
                     <div style="margin-bottom: 24px;">
                         <div style="font-family: 'Mea Culpa', cursive; font-size: 20px; color: var(--primary-green); margin-bottom: 12px;">Causes Close to Our Hearts</div>
 
                         <div style="background: white; border: 1px solid var(--divider); border-radius: 12px; padding: 16px; margin-bottom: 12px;">
-                            <div style="font-family: 'Bodoni Moda', serif; font-size: 18px; font-weight: 600; color: var(--dark); margin-bottom: 6px;">[[CHARITY 1 NAME]]</div>
-                            <div style="font-family: 'Nunito', sans-serif; font-size: 16px; color: var(--dark); line-height: 1.6; margin-bottom: 10px;">[[Charity 1 short description.]]</div>
-                            <a href="https://example.org/" target="_blank" style="font-family: 'Nunito', sans-serif; font-size: 16px; color: var(--primary-green); word-break: break-all;">example.org</a>
+                            <div style="font-family: 'Bodoni Moda', serif; font-size: 18px; font-weight: 600; color: var(--dark); margin-bottom: 6px;">[Cause name]</div>
+                            <div style="font-family: 'Nunito', sans-serif; font-size: 16px; color: var(--dark); line-height: 1.6; margin-bottom: 10px;">[Description of this cause.]</div>
+                            <a href="#" target="_blank" style="font-family: 'Nunito', sans-serif; font-size: 16px; color: var(--primary-green); word-break: break-all;">[link]</a>
                         </div>
 
                         <div style="background: white; border: 1px solid var(--divider); border-radius: 12px; padding: 16px; margin-bottom: 12px;">
-                            <div style="font-family: 'Bodoni Moda', serif; font-size: 18px; font-weight: 600; color: var(--dark); margin-bottom: 6px;">[[CHARITY 2 NAME]]</div>
-                            <div style="font-family: 'Nunito', sans-serif; font-size: 16px; color: var(--dark); line-height: 1.6; margin-bottom: 10px;">[[Charity 2 short description.]]</div>
-                            <a href="https://example.org/" target="_blank" style="font-family: 'Nunito', sans-serif; font-size: 16px; color: var(--primary-green); word-break: break-all;">example.org</a>
+                            <div style="font-family: 'Bodoni Moda', serif; font-size: 18px; font-weight: 600; color: var(--dark); margin-bottom: 6px;">[Cause name]</div>
+                            <div style="font-family: 'Nunito', sans-serif; font-size: 16px; color: var(--dark); line-height: 1.6; margin-bottom: 10px;">[Description of this cause.]</div>
+                            <a href="#" target="_blank" style="font-family: 'Nunito', sans-serif; font-size: 16px; color: var(--primary-green); word-break: break-all;">[link]</a>
                         </div>
                     </div>
 
                     <div style="background: white; border: 1px solid var(--divider); border-radius: 12px; padding: 16px; text-align: center;">
                         <div style="font-family: 'Mea Culpa', cursive; font-size: 20px; color: var(--primary-green); margin-bottom: 8px;">Or, if Charity isn't Your Thing</div>
-                        <div style="font-family: 'Bodoni Moda', serif; font-size: 14px; color: var(--dark); line-height: 1.6; margin-bottom: 12px;">[[VENMO/CASH APP COPY — replace, and update the button link/handle below.]]</div>
-                        <a href="https://venmo.com/" target="_blank" class="btn btn-primary" style="display: inline-block; text-decoration: none;">Venmo @[[handle]]</a>
+                        <div style="font-family: 'Bodoni Moda', serif; font-size: 14px; color: var(--dark); line-height: 1.6; margin-bottom: 12px;">[Optional cash-gift note.]</div>
+                        <a href="#" target="_blank" class="btn btn-primary" style="display: inline-block; text-decoration: none;">[Payment link]</a>
                     </div>
+
+                    <div style="font-family: 'Bodoni Moda', serif; font-size: 14px; color: var(--dark); line-height: 1.6; margin-top: 20px; text-align: center;"></div>
                 </div>
             </div>
 
@@ -3486,20 +3467,20 @@ TEMPLATE = r"""<!DOCTYPE html>
             <div class="screen" id="travel">
                 <div class="header">
                     <h1 class="header-title" style="font-size: 16px; font-weight: 400; color: #666666; letter-spacing: 0.5px;">Travel Information</h1>
-                    <button class="hamburger" onclick="toggleMenu()"><svg width="22" height="16" viewBox="0 0 22 16" fill="none"><line x1="1" y1="1" x2="21" y2="1" stroke="#4A7C59" stroke-width="1.5" stroke-linecap="round"/><line x1="1" y1="8" x2="21" y2="8" stroke="#4A7C59" stroke-width="1.5" stroke-linecap="round"/><line x1="1" y1="15" x2="21" y2="15" stroke="#4A7C59" stroke-width="1.5" stroke-linecap="round"/></svg></button>
+                    <button class="hamburger" onclick="toggleMenu()"><svg width="22" height="16" viewBox="0 0 22 16" fill="none"><line x1="1" y1="1" x2="21" y2="1" stroke="#1F6E8C" stroke-width="1.5" stroke-linecap="round"/><line x1="1" y1="8" x2="21" y2="8" stroke="#1F6E8C" stroke-width="1.5" stroke-linecap="round"/><line x1="1" y1="15" x2="21" y2="15" stroke="#1F6E8C" stroke-width="1.5" stroke-linecap="round"/></svg></button>
                 </div>
                 <div class="screen-content">
 
                     <!-- OUR RECOMMENDATION -->
                     <div style="margin-bottom: 20px;">
                         <div style="font-family: 'Mea Culpa', cursive; font-size: 20px; color: var(--primary-green); margin-bottom: 8px;">A quick note</div>
-                        <div style="font-family: 'Bodoni Moda', serif; font-size: 14px; color: var(--dark); line-height: 1.6; font-style: italic;">[[TRAVEL RECOMMENDATION — Elliott &amp; Hilary's short travel tip goes here.]]</div>
+                        <div style="font-family: 'Bodoni Moda', serif; font-size: 14px; color: var(--dark); line-height: 1.6; font-style: italic;">[Your travel tip goes here.]</div>
                     </div>
 
                     <!-- CAR SERVICES -->
                     <div style="margin-bottom: 24px;">
                         <div style="font-family: 'Mea Culpa', cursive; font-size: 20px; color: var(--primary-green); margin-bottom: 12px;">Car Services, Shuttles &amp; Rental Cars</div>
-                        <div style="font-family: 'Bodoni Moda', serif; font-size: 14px; color: var(--dark); line-height: 1.6; margin-bottom: 16px;">[[GROUND TRANSPORT INTRO — describe the couple's rental-car / rideshare recommendation for the venue city.]]</div>
+                        <div style="font-family: 'Bodoni Moda', serif; font-size: 14px; color: var(--dark); line-height: 1.6; margin-bottom: 16px;">[Your note about car services and rentals goes here.]</div>
 
 {{CAR_SERVICES}}
                     </div>
@@ -3507,8 +3488,8 @@ TEMPLATE = r"""<!DOCTYPE html>
                     <!-- TRAVEL COORDINATION -->
                     <div style="background: white; border: 1px solid var(--divider); border-radius: 12px; padding: 16px; margin-bottom: 24px; text-align: center;">
                         <div style="font-family: 'Mea Culpa', cursive; font-size: 20px; color: var(--primary-green); margin-bottom: 8px;">Share Your Travel Info</div>
-                        <div style="font-family: 'Bodoni Moda', serif; font-size: 14px; color: var(--dark); line-height: 1.6; margin-bottom: 12px;">[[TRAVEL COORD COPY — explain the shared travel sheet, why guests should add their info.]]</div>
-                        <a href="[[TRAVEL_SHEET_URL]]" target="_blank" class="btn btn-primary" style="display: inline-block; text-decoration: none;">Add Arrival &amp; Departure Info</a>
+                        <div style="font-family: 'Bodoni Moda', serif; font-size: 14px; color: var(--dark); line-height: 1.6; margin-bottom: 12px;">Help us know when you'll be in town by dropping your travel information here! (And in case people want to share car services to and from the airports as well.)</div>
+                        <a href="#" target="_blank" class="btn btn-primary" style="display: inline-block; text-decoration: none;">Add Arrival &amp; Departure Info</a>
                     </div>
 
                     <!-- FLIGHTS -->
@@ -3521,9 +3502,9 @@ TEMPLATE = r"""<!DOCTYPE html>
                     <!-- HOUSES & HOTELS -->
                     <div style="margin-bottom: 24px;">
                         <div style="font-family: 'Mea Culpa', cursive; font-size: 20px; color: var(--primary-green); margin-bottom: 8px;">Houses &amp; Hotels</div>
-                        <div style="font-family: 'Bodoni Moda', serif; font-size: 14px; color: var(--dark); line-height: 1.6; margin-bottom: 12px;">[[LODGING INTRO — Elliott &amp; Hilary's short intro to the lodging sheet.]]</div>
+                        <div style="font-family: 'Bodoni Moda', serif; font-size: 14px; color: var(--dark); line-height: 1.6; margin-bottom: 12px;">[Your note about lodging goes here.]</div>
                         <div style="text-align: center;">
-                            <a href="[[LODGING_SHEET_URL]]" target="_blank" class="btn btn-primary" style="display: inline-block; text-decoration: none;">View Houses &amp; Hotels</a>
+                            <a href="#" target="_blank" class="btn btn-primary" style="display: inline-block; text-decoration: none;">View Houses &amp; Hotels</a>
                         </div>
                     </div>
                 </div>
@@ -3541,14 +3522,14 @@ TEMPLATE = r"""<!DOCTYPE html>
                      on/after the Toasts item is visible (Travel hidden). Toggled
                      by initHamburgerDateSwap(). -->
                 <button class="menu-item install-menu-item" id="installMenuItem" onclick="installApp()">Download the App</button>
-                <a class="menu-item" href="[[GROUP_CHAT_URL]]" target="_blank" rel="noopener noreferrer" onclick="closeMenu()" style="text-decoration:none;color:inherit;display:block;">Chat</a>
+                <a class="menu-item" href="#" target="_blank" rel="noopener noreferrer" onclick="closeMenu()" style="text-decoration:none;color:inherit;display:block;">Chat</a>
                 <button class="menu-item" onclick="switchScreenFromMenu('extras')">Extra Activities</button>
                 <button class="menu-item menu-item--good-time" onclick="switchScreenFromMenu('goodtime')"><span>To Enjoy Your Time</span><span class="menu-item-icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><circle cx="8" cy="8" r="2.6"/><line x1="8" y1="2" x2="8" y2="3.4"/><line x1="8" y1="12.6" x2="8" y2="14"/><line x1="2" y1="8" x2="3.4" y2="8"/><line x1="12.6" y1="8" x2="14" y2="8"/><line x1="3.76" y1="3.76" x2="4.75" y2="4.75"/><line x1="11.25" y1="11.25" x2="12.24" y2="12.24"/><line x1="3.76" y1="12.24" x2="4.75" y2="11.25"/><line x1="11.25" y1="4.75" x2="12.24" y2="3.76"/></svg></span></button>
                 <button class="menu-item" onclick="switchScreen('facebook', 0)">Los Invitados</button>
                 <button class="menu-item" onclick="switchScreenFromMenu('registry')">Registry</button>
                 <button class="menu-item" onclick="switchScreen('guide', 2)">Local Guide</button>
                 <button class="menu-item" onclick="switchScreenFromMenu('schedule')">Schedule</button>
-                <button class="menu-item" id="hamburger-toasts" onclick="switchScreen('toasts', 1)">Toasts</button>
+                <button class="menu-item" id="hamburger-toasts" onclick="switchScreen('toasts', 1)">Toasts in Farsi</button>
                 <button class="menu-item" id="hamburger-travel" onclick="switchScreen('travel', 1)">Travel</button>
                 <div class="menu-version" aria-hidden="true">v{{VERSION}}</div>
             </div>
@@ -3651,7 +3632,7 @@ TEMPLATE = r"""<!DOCTYPE html>
                     </div>
                     <span class="tab-label">Guide</span>
                 </button>
-                <a class="tab" href="[[SHARED_PHOTOS_URL]]" target="_blank" rel="noopener noreferrer" aria-label="Share photos to the shared album">
+                <a class="tab" href="#" target="_blank" rel="noopener noreferrer" aria-label="Share photos to the shared album">
                     <div class="tab-icon">
                         <!-- Camera silhouette in the same line-art style as
                              the other tab icons: rounded body, viewfinder
@@ -3757,19 +3738,9 @@ TEMPLATE = r"""<!DOCTYPE html>
         }
 
         function applyGuestSchedule(guest) {
+            // RSVPs are not used in this app; this only remembers who is
+            // logged in. Every guest sees the full schedule.
             currentGuest = guest;
-            const thu = document.getElementById('event-thursday');
-            const fri = document.getElementById('event-friday');
-            if (!thu || !fri) return;
-            const rsvpThu = (guest.t || '').toLowerCase();
-            const rsvpFri = (guest.r || '').toLowerCase();
-            if (rsvpThu === 'attending' && rsvpFri !== 'attending') {
-                fri.style.display = 'none'; thu.style.display = '';
-            } else if (rsvpFri === 'attending' && rsvpThu !== 'attending') {
-                thu.style.display = 'none'; fri.style.display = '';
-            } else {
-                thu.style.display = ''; fri.style.display = '';
-            }
         }
 
         function handleLogin() {
@@ -4106,14 +4077,13 @@ TEMPLATE = r"""<!DOCTYPE html>
         }
 
         // Date-gated Travel / Toasts tab.
-        //   Before TOASTS_CUTOVER: the tab shows a plane icon labeled "Travel"
-        //     and navigates to the #travel screen.
-        //   On or after TOASTS_CUTOVER: the tab shows the microphone icon
+        //   Before 2026-04-28 00:00 local time: the tab shows a plane icon
+        //     labeled "Travel" and navigates to the #travel screen.
+        //   On or after 2026-04-28 00:00: the tab shows the microphone icon
         //     labeled "Toasts" and navigates to the #toasts screen.
-        // Set TOASTS_CUTOVER to the date guests arrive at the wedding — until
-        // Elliott &amp; Hilary confirm their wedding date, it's set far in the
-        // future so the tab stays on "Travel".
-        const TOASTS_CUTOVER = new Date(2099, 0, 1, 0, 0, 0); // TODO: set to arrival date. JS months are 0-indexed.
+        // The switch honors the comment in microphone-icon.svg about the
+        // Toasts feature only being relevant once guests are on site.
+        const TOASTS_CUTOVER = new Date(2026, 3, 28, 0, 0, 0); // JS months are 0-indexed: 3 = April
         function isToastsTime() {
             return new Date() >= TOASTS_CUTOVER;
         }
@@ -4292,7 +4262,7 @@ TEMPLATE = r"""<!DOCTYPE html>
             `).join('');
             return `
                 <div class="invitado-contact-label">
-                    <img class="invitado-contact-label-bud" src="images/rosa-rugosa.png" alt="">
+                    <img class="invitado-contact-label-bud" src="images/lobster.png" onerror="this.style.display='none'" alt="">
                     Stay in Touch
                 </div>
                 <ul class="invitado-contacts">${lis}</ul>
@@ -4334,7 +4304,7 @@ TEMPLATE = r"""<!DOCTYPE html>
                 // photos' loading policy and not slow the grid render.
                 const eager = i < INVITADO_EAGER_COUNT;
                 const badgeHtml = guest.hasContacts
-                    ? `<div class="invitado-thumb-badge" aria-label="Shared contact info"><img src="images/rosa-rugosa.png" alt="" loading="${eager ? 'eager' : 'lazy'}"></div>`
+                    ? `<div class="invitado-thumb-badge" aria-label="Shared contact info"><img src="images/lobster.png" onerror="this.style.display='none'" alt="" loading="${eager ? 'eager' : 'lazy'}"></div>`
                     : '';
                 const cell = document.createElement('div');
                 cell.className = 'invitado-thumb';
@@ -4475,11 +4445,11 @@ TEMPLATE = r"""<!DOCTYPE html>
                 ? `<div class="invitado-hometown">Grew up in ${invitadoEscape(guest.hometown)}</div>`
                 : '';
             const storyHtml = guest.story
-                ? `<div class="invitado-story-label">How I know Elliott and Hilary</div>
+                ? `<div class="invitado-story-label">How I know Hilary and Elliot</div>
                    <div class="invitado-story">${invitadoEscape(guest.story)}</div>`
                 : '';
             const leastHtml = guest.leastFavorite
-                ? `<div class="invitado-least-label">Life is Editing&hellip;what ${invitadoEscape(guest.firstName)} doesn&rsquo;t like about weddings</div>
+                ? `<div class="invitado-least-label">${invitadoEscape(guest.firstName)}&rsquo;s go-to karaoke song</div>
                    <div class="invitado-least">${invitadoEscape(guest.leastFavorite)}</div>`
                 : '';
             const guestMemoryHtml = guest.guestMemory
@@ -4525,6 +4495,7 @@ TEMPLATE = r"""<!DOCTYPE html>
             card.innerHTML = `
                 <div class="invitado-photo ${colorClass}">${invitadoEscape(guest.initials)}${photoImg}</div>
                 <div class="invitado-name">${invitadoEscape(guest.name)}</div>
+                ${guest.pronouns ? `<div class="invitado-city">${invitadoEscape(guest.pronouns)}</div>` : ''}
                 ${cityHtml}
                 ${hometownHtml}
                 ${hereWithHtml}

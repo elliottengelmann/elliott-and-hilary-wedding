@@ -6,5 +6,6 @@ tmp-icons/
 .vercel
 .context
 *.csv
+*Farsi Toasts.md
 __pycache__/
 .tinify-cache.json

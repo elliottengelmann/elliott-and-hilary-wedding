@@ -389,8 +389,12 @@ def read_form_responses():
             key = FORM_NAME_MAP.get(key, key)
             responses[key] = {
                 "how_we_know":    _first_matching_column(row, "How do you know"),
-                "photo_url":      _first_matching_column(row, "Please Upload a Photo", "Photo URL"),
-                "least_favorite": _first_matching_column(row, "*Bonus* Life is Editing", "Least Favorite"),
+                "photo_url":      _first_matching_column(row, "Share a photo", "Please Upload a Photo", "Photo URL"),
+                # Hilary & Elliot's form asks for a go-to karaoke song instead of a
+                # "least favorite thing about weddings". We carry it in the existing
+                # least_favorite column; the profile label reads as karaoke (build.py).
+                "least_favorite": _first_matching_column(row, "What is one of your go-to karaoke", "*Bonus* Life is Editing", "Least Favorite"),
+                "pronouns":       _first_matching_column(row, "Pronoun"),
                 "form_current_city": _first_matching_column(row, "What city or town do you live in now"),
                 "form_hometown":     _first_matching_column(row, "Where did you grow up"),
                 "form_memory":       _first_matching_column(row, "If you'd like share a memory", "If you'd like to share a memory"),
@@ -434,6 +438,7 @@ def merge_and_write(export_guests, full_list_extras, master, form_responses):
             form_current_city TEXT,
             form_hometown     TEXT,
             form_memory       TEXT,
+            pronouns          TEXT,
             initials        TEXT
         )
     """)
@@ -474,8 +479,9 @@ def merge_and_write(export_guests, full_list_extras, master, form_responses):
                 is_plus_one,
                 how_we_know, photo_url, least_favorite,
                 form_current_city, form_hometown, form_memory,
+                pronouns,
                 initials
-            ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+            ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
         """, (
             g["first_name"], g["last_name"], g["full_name"],
             g["title"], g["suffix"],
@@ -493,6 +499,7 @@ def merge_and_write(export_guests, full_list_extras, master, form_responses):
             form.get("form_current_city", ""),
             form.get("form_hometown", ""),
             form.get("form_memory", ""),
+            form.get("pronouns", ""),
             initials,
         ))
 
@@ -519,8 +526,9 @@ def merge_and_write(export_guests, full_list_extras, master, form_responses):
                 is_plus_one,
                 how_we_know, photo_url, least_favorite,
                 form_current_city, form_hometown, form_memory,
+                pronouns,
                 initials
-            ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+            ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
         """, (
             first_cap, last_cap, f"{first_cap} {last_cap}", "", "",
             m.get("email", ""), m.get("group_house", ""),
@@ -536,6 +544,7 @@ def merge_and_write(export_guests, full_list_extras, master, form_responses):
             form.get("form_current_city", ""),
             form.get("form_hometown", ""),
             form.get("form_memory", ""),
+            form.get("pronouns", ""),
             initials,
         ))
         form_matched += 1
