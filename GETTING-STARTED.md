@@ -84,6 +84,30 @@ that's usually why.)*
 
 ---
 
+## Your first task once you're set up: add the lobster art 🦞
+
+The whole site is designed around a hand-drawn lobster illustration (two
+lobsters forming a heart). The design already points to it everywhere — but the
+image file itself isn't in the repo yet, so that spot is currently blank. To
+finish it:
+
+1. Get the lobster image (Elien/Hilary has it) and save it as a file named
+   **exactly** `lobster.png`.
+2. Put it in the app's `images` folder. In **Finder**: menu **Go → Go to
+   Folder…**, paste this and press Return, then drag `lobster.png` in:
+   ```
+   ~/code/elliott-and-hilary-wedding/images
+   ```
+3. Open Claude Code in the app folder and say: **"I added the lobster image —
+   build and publish it."** It rebuilds and pushes, and the lobster appears on
+   the live site in about a minute.
+
+*Optional polish for later:* the image has a white background, so it shows a
+faint white box on the cream screens. Ask Claude Code to make the background
+transparent whenever you want it cleaner (there's a helper for it in `scripts/`).
+
+---
+
 ## The one thing you'll actually do over and over
 
 **When guests fill out the form and you want the site updated**, open Claude Code

@@ -71,9 +71,18 @@ The template has clearly-marked blanks in square brackets, e.g.
 their welcome note, registry causes, travel advice, or location. Ask them.
 
 Also still couple-specific and worth reviewing: the "For a Good Time" tips, the
-watercolor artwork and green/cream color scheme, the app icons, and the
-date-based Travel↔Toasts tab swap (currently set to the old couple's date). The
-overall visual design has NOT yet been decided for Hilary & Elliot.
+app icons (still placeholders), and the date-based Travel↔Toasts tab swap
+(currently set to the old couple's date).
+
+**Visual design:** a simple coastal-Maine palette is applied — navy `#1F6E8C`
+(primary), warm cream `#F5F0EB` (background), lobster-red `#E24A2E` (accent).
+Tweak freely. Note: the CSS variables are still named `--primary-green` /
+`--accent-warm` etc. (legacy names, coastal values) — rename them if you tidy up.
+
+**Lobster motif — action needed:** the app references `images/lobster.png` (a
+hand-drawn two-lobsters-forming-a-heart illustration) for the welcome screen and
+background, but that file is not in the repo yet, so the motif is intentionally
+blank for now (it hides gracefully). See GETTING-STARTED.md to add it.
 
 ## NEVER fabricate guest content (absolute rule)
 
