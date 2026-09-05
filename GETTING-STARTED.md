@@ -84,27 +84,13 @@ that's usually why.)*
 
 ---
 
-## Your first task once you're set up: add the lobster art 🦞
+## The motif: lighthouse & coastline
 
-The whole site is designed around a hand-drawn lobster illustration (two
-lobsters forming a heart). The design already points to it everywhere — but the
-image file itself isn't in the repo yet, so that spot is currently blank. To
-finish it:
-
-1. Get the lobster image (Elien/Hilary has it) and save it as a file named
-   **exactly** `lobster.png`.
-2. Put it in the app's `images` folder. In **Finder**: menu **Go → Go to
-   Folder…**, paste this and press Return, then drag `lobster.png` in:
-   ```
-   ~/code/elliott-and-hilary-wedding/images
-   ```
-3. Open Claude Code in the app folder and say: **"I added the lobster image —
-   build and publish it."** It rebuilds and pushes, and the lobster appears on
-   the live site in about a minute.
-
-*Optional polish for later:* the image has a white background, so it shows a
-faint white box on the cream screens. Ask Claude Code to make the background
-transparent whenever you want it cleaner (there's a helper for it in `scripts/`).
+The site originally planned a hand-drawn lobster illustration, but the couple
+decided on a WPA-poster-style lighthouse-on-the-coast scene instead. It's
+hand-coded directly in the site's code (no image file to upload), so there's
+nothing to do here — it's already live. If you'd rather it show something
+else, just tell Claude Code what scene you'd like instead.
 
 ---
 

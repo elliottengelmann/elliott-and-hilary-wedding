@@ -1,4 +1,4 @@
-# CLAUDE.md — Hilary & Elliot's Wedding App
+# CLAUDE.md — Hilary & Elliott's Wedding App
 
 Guidance for Claude Code working in this repository. Read this fully before
 making changes. This project was adapted from a template built for another
@@ -6,7 +6,7 @@ wedding, so watch for anything still worded for the old couple.
 
 ## What this is
 
-A static, installable Progressive Web App (PWA) for **Hilary & Elliot's**
+A static, installable Progressive Web App (PWA) for **Hilary & Elliott's**
 wedding. It's a single `index.html` **generated** by `build.py` from a big
 `TEMPLATE` string plus data in `wedding.db` (SQLite). Hosted on Vercel; pushing
 to the `main` branch deploys it live automatically. No server, no runtime backend.
@@ -34,7 +34,7 @@ Guests fill a Google Form. Its columns map into the app like this (see
 |---|---|---|
 | First Name / Last Name | `first_name` / `last_name` | the guest's name |
 | Pronouns | `pronouns` | small line under the name |
-| How do you know the couple? | `how_we_know` | "How I know Hilary and Elliot" |
+| How do you know the couple? | `how_we_know` | "How I know Hilary and Elliott" |
 | What is one of your go-to karaoke songs? | `least_favorite` *(reused column)* | "[Name]'s go-to karaoke song" |
 | Share a photo… | `photo_url` | profile photo |
 
@@ -64,42 +64,45 @@ commit it too whenever it changes.
 
 ## Content still to fill in (placeholders)
 
-The template has clearly-marked blanks in square brackets, e.g.
-`[Wedding location]`, `[Your welcome note goes here...]`, `[Cause name]`,
-`[Your travel tip goes here.]`. These are the couple's own content to write.
-**Fill them only with words Hilary or Elliot actually give you** — do not invent
-their welcome note, registry causes, travel advice, or location. Ask them.
+Most of the couple's content (welcome note, schedule, FAQs, local guide,
+travel/lodging, registry, links) has been filled in from the couple's own
+Google Doc. Still open: the Zola registry link is wired up; the "Get to Know
+You" form question spec is pending a follow-up from the couple; the
+post-wedding "stay in touch" form is deferred (their call, TBD). Any new
+bracketed blank you find, e.g. `[Cause name]`, is the couple's own content to
+write — **fill it only with words Hilary or Elliott actually give you.**
 
-Also still couple-specific and worth reviewing: the "For a Good Time" tips, the
-app icons (still placeholders), and the date-based Travel↔Toasts tab swap
-(currently set to the old couple's date).
+Also worth reviewing: the app icons (still placeholders).
 
 **Visual design:** a simple coastal-Maine palette is applied — navy `#1F6E8C`
 (primary), warm cream `#F5F0EB` (background), lobster-red `#E24A2E` (accent).
 Tweak freely. Note: the CSS variables are still named `--primary-green` /
 `--accent-warm` etc. (legacy names, coastal values) — rename them if you tidy up.
 
-**Lobster motif — action needed:** the app references `images/lobster.png` (a
-hand-drawn two-lobsters-forming-a-heart illustration) for the welcome screen and
-background, but that file is not in the repo yet, so the motif is intentionally
-blank for now (it hides gracefully). See GETTING-STARTED.md to add it.
+**Motif — lighthouse & coastline:** the original template's plan was a
+hand-drawn two-lobsters-forming-a-heart illustration (`images/lobster.png`),
+but the couple opted instead for a WPA-poster-style lighthouse-on-the-coast
+scene. That's now hand-coded as inline SVG directly in `build.py` (splash
+screen, the PWA-update badge, and two small profile-page glyphs) rather than
+an image file — no `images/lobster.png` reference remains. If the couple
+wants a different scene, redraw the SVGs in place; no new asset file needed.
 
 ## NEVER fabricate guest content (absolute rule)
 
 Guest-profile fields — the "how you know us" story, karaoke answer, pronouns,
 photo, memories, relationships, and any future per-guest field — may only contain
 content that was **authored by the guest via the form**, or **authored by Hilary
-or Elliot by hand** (via `scripts/edit_guests.py`). Do **not** generate, invent,
+or Elliott by hand** (via `scripts/edit_guests.py`). Do **not** generate, invent,
 paraphrase, guess, or auto-fill any of it — not as a preview, not as demo data,
 not "to see how it looks," not marked `[placeholder]`. An honest-empty profile is
 always better than a fabricated one; these are real people who know each other.
 
 Do not infer relationships from shared surnames, a shared "plus one" column,
 shared addresses, or chains of reasoning. If it wasn't stated by the guest or by
-Hilary/Elliot, leave it blank and ask.
+Hilary/Elliott, leave it blank and ask.
 
 *(Note: the memory/relationship `source` tags in the database currently still
-accept the old couple's names. If Hilary & Elliot want to hand-author memories or
+accept the old couple's names. If Hilary & Elliott want to hand-author memories or
 "Here with" couple-links, update those source tags to their names first — it
 touches the `wedding.db` CHECK constraints, `scripts/edit_guests.py`, and the
 validators in `build.py`. Flag this to them before doing it.)*
