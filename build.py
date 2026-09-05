@@ -114,7 +114,7 @@ def esc(text):
 # ── Fragment builders ───────────────────────────────────────────────────
 
 WEDDING_YEAR = 2026
-WEDDING_TZ = "America/Mexico_City"
+WEDDING_TZ = "America/New_York"
 
 
 def _parse_clock(token: str):
@@ -3201,7 +3201,7 @@ TEMPLATE = r"""<!DOCTYPE html>
                         <img src="images/lobster.png" onerror="this.style.display='none'" alt="Two lobsters forming a heart" loading="eager" decoding="async">
                     </div>
                     <div class="splash-text">
-                        [Your welcome note goes here. Write a few warm sentences to your guests.]
+                        We are so, so excited that you are joining us for our commitment celebration! Some of the things that drew us together most early on were how important community is and our shared understanding that a best friend is in fact a tier not a person. While we are choosing not to get legally married, we couldn&rsquo;t pass up an opportunity to bring the people who mean the most to us to one of our favorite states to eat, dance, yap, dance some more, yap some more, etc. We hope you have an absolute blast and are so grateful to you for making the schlep!
                     </div>
                     <div class="splash-signature">Love, Hilary & Elliott</div>
                     <div class="splash-arrow" onclick="skipSplash()">
@@ -3342,7 +3342,7 @@ TEMPLATE = r"""<!DOCTYPE html>
                     <button class="hamburger" onclick="toggleMenu()"><svg width="22" height="16" viewBox="0 0 22 16" fill="none"><line x1="1" y1="1" x2="21" y2="1" stroke="#1F6E8C" stroke-width="1.5" stroke-linecap="round"/><line x1="1" y1="8" x2="21" y2="8" stroke="#1F6E8C" stroke-width="1.5" stroke-linecap="round"/><line x1="1" y1="15" x2="21" y2="15" stroke="#1F6E8C" stroke-width="1.5" stroke-linecap="round"/></svg></button>
                 </div>
                 <div class="screen-content">
-                    <div class="guide-intro">[A short intro to your local recommendations goes here.]</div>
+                    <div class="guide-intro">Hilary has been coming to Wiscasset since 2013 when her parents and uncle bought a house here. This area is known as &ldquo;the prettiest village in Maine,&rdquo; and lives up to it by being quaint as hell. With a small, walkable downtown and some hidden (and some not-so-hidden) gems, we encourage you to explore the area we&rsquo;ve fallen in love with!</div>
 {{GUIDE}}
                 </div>
             </div>
@@ -3359,30 +3359,29 @@ TEMPLATE = r"""<!DOCTYPE html>
 
                         <div class="goodtime-tip">
                             <span class="goodtime-tip-icon" aria-hidden="true">
-                                <!-- Hand-illustrated sneaker from the Noun Project,
-                                     selected by Elien. Tinted to primary green via CSS filter. -->
-                                <img class="goodtime-tip-img" src="images/icons/sneaker.png" alt="" width="48" height="48">
+                                <!-- Jacket / layer silhouette -->
+                                <svg viewBox="0 0 48 32"><path d="M19 5 L14 8 L10 13 L13 16 L16 14 L16 27 L32 27 L32 14 L35 16 L38 13 L34 8 L29 5 L24 9 Z" stroke-width="1.5"/></svg>
                             </span>
-                            <div class="goodtime-tip-name">Sneakers, Sandals</div>
-                            <div class="goodtime-tip-body">It's hilly and cobblestoned. If you have a shoe emergency there is a <a href="https://maps.app.goo.gl/tZTv6ooX4q2rLHzJ9" target="_blank" rel="noopener" class="goodtime-link">Birkenstock store</a> here.</div>
+                            <div class="goodtime-tip-name">Clothing</div>
+                            <div class="goodtime-tip-body">Bring layers as the temperature drops at night.</div>
                         </div>
 
                         <div class="goodtime-tip">
                             <span class="goodtime-tip-icon" aria-hidden="true">
-                                <!-- Hammock between two posts -->
-                                <svg viewBox="0 0 48 32"><line x1="6" y1="6" x2="6" y2="26" stroke-width="1.5"/><line x1="42" y1="6" x2="42" y2="26" stroke-width="1.5"/><path d="M6 12 Q24 27 42 12" stroke-width="1.5"/><path d="M6 12 Q24 22 42 12" stroke-width="1.1" opacity="0.55"/></svg>
+                                <!-- Hand-illustrated sandal from the Noun Project. Tinted to primary green via CSS filter. -->
+                                <img class="goodtime-tip-img" src="images/icons/sandal.png" alt="" width="48" height="48">
                             </span>
-                            <div class="goodtime-tip-name">Siesta</div>
-                            <div class="goodtime-tip-body">It's hot in the heat of the day! You'll be happy if you rest from 1&ndash;4ish.</div>
+                            <div class="goodtime-tip-name">Shoes</div>
+                            <div class="goodtime-tip-body">Prepare for lots of dancing at the venue and after party. The ceremony also takes place on grass.</div>
                         </div>
 
                         <div class="goodtime-tip">
                             <span class="goodtime-tip-icon" aria-hidden="true">
-                                <!-- Half-sun on the horizon, with rays -->
-                                <svg viewBox="0 0 48 32"><line x1="3" y1="22" x2="45" y2="22" stroke-width="1.5"/><path d="M16 22 A8 8 0 0 1 32 22" stroke-width="1.5"/><line x1="24" y1="5" x2="24" y2="9" stroke-width="1.2"/><line x1="13" y1="9" x2="15" y2="12" stroke-width="1.2"/><line x1="35" y1="9" x2="33" y2="12" stroke-width="1.2"/><line x1="5" y1="17" x2="9" y2="17" stroke-width="1.2"/><line x1="39" y1="17" x2="43" y2="17" stroke-width="1.2"/></svg>
+                                <!-- Paw print -->
+                                <svg viewBox="0 0 48 32"><ellipse cx="24" cy="23" rx="10" ry="7" stroke-width="1.5"/><circle cx="10" cy="12" r="3.2" stroke-width="1.5"/><circle cx="19" cy="6" r="3.2" stroke-width="1.5"/><circle cx="29" cy="6" r="3.2" stroke-width="1.5"/><circle cx="38" cy="12" r="3.2" stroke-width="1.5"/></svg>
                             </span>
-                            <div class="goodtime-tip-name">Sunset</div>
-                            <div class="goodtime-tip-body">All about the rooftops; arrive 45 min before sunset for golden hour. Ask us or <a href="#" onclick="switchScreen('guide', 2); return false;" class="goodtime-link">check this guide</a> for recommendations.</div>
+                            <div class="goodtime-tip-name">Georgie</div>
+                            <div class="goodtime-tip-body">Sadly, Georgie will not be in attendance. Sorry to disappoint.</div>
                         </div>
                     </div>
                 </div>
@@ -3409,7 +3408,7 @@ TEMPLATE = r"""<!DOCTYPE html>
                     <div class="album-card">
                         <div class="album-title">Our Shared Photo Album</div>
                         <div class="album-note">We'd love for you to add your photos from the weekend! Every moment matters—from getting ready to dancing until dawn.</div>
-                        <button class="btn btn-primary" onclick="alert('iCloud link would open in the real app')">Open Album</button>
+                        <a class="btn btn-primary" href="https://photos.app.goo.gl/Wd9K9bGdymA4u4mb8" target="_blank" rel="noopener" style="display: inline-block; text-decoration: none;">Open Album</a>
                     </div>
                 </div>
             </div>
@@ -3434,32 +3433,24 @@ TEMPLATE = r"""<!DOCTYPE html>
                 <div class="screen-content">
                     <div style="text-align: center; margin-bottom: 24px;">
                         <div style="font-family: 'Mea Culpa', cursive; font-size: 32px; color: var(--primary-green); margin-bottom: 8px;">Gifts</div>
-                        <div style="font-family: 'Bodoni Moda', serif; font-size: 14px; color: var(--dark); line-height: 1.7;">[Your registry note goes here.]</div>
+                        <div style="font-family: 'Bodoni Moda', serif; font-size: 14px; color: var(--dark); line-height: 1.7;">Your presence is literally a present, but if you want to buy a gift you can access our registry on Zola <a href="#" target="_blank" style="color: var(--primary-green);">[Zola registry link goes here.]</a>!</div>
                     </div>
 
                     <div style="margin-bottom: 24px;">
                         <div style="font-family: 'Mea Culpa', cursive; font-size: 20px; color: var(--primary-green); margin-bottom: 12px;">Causes Close to Our Hearts</div>
 
                         <div style="background: white; border: 1px solid var(--divider); border-radius: 12px; padding: 16px; margin-bottom: 12px;">
-                            <div style="font-family: 'Bodoni Moda', serif; font-size: 18px; font-weight: 600; color: var(--dark); margin-bottom: 6px;">[Cause name]</div>
-                            <div style="font-family: 'Nunito', sans-serif; font-size: 16px; color: var(--dark); line-height: 1.6; margin-bottom: 10px;">[Description of this cause.]</div>
-                            <a href="#" target="_blank" style="font-family: 'Nunito', sans-serif; font-size: 16px; color: var(--primary-green); word-break: break-all;">[link]</a>
+                            <div style="font-family: 'Bodoni Moda', serif; font-size: 18px; font-weight: 600; color: var(--dark); margin-bottom: 6px;">Pretrial Bail Freedom Fund</div>
+                            <div style="font-family: 'Nunito', sans-serif; font-size: 16px; color: var(--dark); line-height: 1.6; margin-bottom: 10px;">Responds to the daily violence of the criminal legal system by paying bail and bringing people home from pre-trial detention.</div>
+                            <a href="https://secure.actblue.com/donate/pretrialfreedom" target="_blank" style="font-family: 'Nunito', sans-serif; font-size: 16px; color: var(--primary-green); word-break: break-all;">secure.actblue.com/donate/pretrialfreedom</a>
                         </div>
 
                         <div style="background: white; border: 1px solid var(--divider); border-radius: 12px; padding: 16px; margin-bottom: 12px;">
-                            <div style="font-family: 'Bodoni Moda', serif; font-size: 18px; font-weight: 600; color: var(--dark); margin-bottom: 6px;">[Cause name]</div>
-                            <div style="font-family: 'Nunito', sans-serif; font-size: 16px; color: var(--dark); line-height: 1.6; margin-bottom: 10px;">[Description of this cause.]</div>
-                            <a href="#" target="_blank" style="font-family: 'Nunito', sans-serif; font-size: 16px; color: var(--primary-green); word-break: break-all;">[link]</a>
+                            <div style="font-family: 'Bodoni Moda', serif; font-size: 18px; font-weight: 600; color: var(--dark); margin-bottom: 6px;">Immigration Bond Freedom Fund</div>
+                            <div style="font-family: 'Nunito', sans-serif; font-size: 16px; color: var(--dark); line-height: 1.6; margin-bottom: 10px;">A system of community-led immigration bond funds that raise money to free our friends and neighbors from immigration detention, intervene in deportations, and ensure people can pursue their cases from a place of freedom &amp; keep their families and communities together.</div>
+                            <a href="https://secure.actblue.com/donate/immbondfreedom" target="_blank" style="font-family: 'Nunito', sans-serif; font-size: 16px; color: var(--primary-green); word-break: break-all;">secure.actblue.com/donate/immbondfreedom</a>
                         </div>
                     </div>
-
-                    <div style="background: white; border: 1px solid var(--divider); border-radius: 12px; padding: 16px; text-align: center;">
-                        <div style="font-family: 'Mea Culpa', cursive; font-size: 20px; color: var(--primary-green); margin-bottom: 8px;">Or, if Charity isn't Your Thing</div>
-                        <div style="font-family: 'Bodoni Moda', serif; font-size: 14px; color: var(--dark); line-height: 1.6; margin-bottom: 12px;">[Optional cash-gift note.]</div>
-                        <a href="#" target="_blank" class="btn btn-primary" style="display: inline-block; text-decoration: none;">[Payment link]</a>
-                    </div>
-
-                    <div style="font-family: 'Bodoni Moda', serif; font-size: 14px; color: var(--dark); line-height: 1.6; margin-top: 20px; text-align: center;"></div>
                 </div>
             </div>
 
@@ -3474,13 +3465,13 @@ TEMPLATE = r"""<!DOCTYPE html>
                     <!-- OUR RECOMMENDATION -->
                     <div style="margin-bottom: 20px;">
                         <div style="font-family: 'Mea Culpa', cursive; font-size: 20px; color: var(--primary-green); margin-bottom: 8px;">A quick note</div>
-                        <div style="font-family: 'Bodoni Moda', serif; font-size: 14px; color: var(--dark); line-height: 1.6; font-style: italic;">[Your travel tip goes here.]</div>
+                        <div style="font-family: 'Bodoni Moda', serif; font-size: 14px; color: var(--dark); line-height: 1.6; font-style: italic;">This area has a lot of great food, including lobster/seafood shacks (Red&rsquo;s Eats, Sprague&rsquo;s), ice cream (Blanchard&rsquo;s Creamery, Round Top Ice Cream, Sweetz &amp; More), and more sit-down dinner spots (Water Street Kitchen, Montsweag Roadhouse). There are great places for coffee &amp; pastries (Wild Oats Bakery &amp; Cafe, Treats), and oysters straight from the source (Glidden Point Oyster Farm, Eros Oyster Farm). If you&rsquo;re looking to buy a little gift, stop by Westport Island Pottery (a quaint little shack of homemade pottery) or Rock Paper Scissors downtown. For a dip into nature, check out the Coastal Maine Botanical Gardens, Fort Edgecomb, or Chewonki&rsquo;s Cushman Preserve.</div>
                     </div>
 
                     <!-- CAR SERVICES -->
                     <div style="margin-bottom: 24px;">
                         <div style="font-family: 'Mea Culpa', cursive; font-size: 20px; color: var(--primary-green); margin-bottom: 12px;">Car Services, Shuttles &amp; Rental Cars</div>
-                        <div style="font-family: 'Bodoni Moda', serif; font-size: 14px; color: var(--dark); line-height: 1.6; margin-bottom: 16px;">[Your note about car services and rentals goes here.]</div>
+                        <div style="font-family: 'Bodoni Moda', serif; font-size: 14px; color: var(--dark); line-height: 1.6; margin-bottom: 16px;">Rental cars are the best way to get around coastal Maine, though there are also shuttles and buses from Portland if you&rsquo;d prefer not to rent a car. On the wedding day we will have shuttles to take guests to and from the wedding, and taxis to take people home from the after party. Uber/Lyft may be possible, but is not reliable in this part of Maine.<br><br>As many people will be coming from Boston, Portland, and New York, we are creating a carpool spreadsheet for folks to fill out in case there are extra seats to be shared. If you are driving and open to taking more passengers, please fill this out!</div>
 
 {{CAR_SERVICES}}
                     </div>
@@ -3489,7 +3480,7 @@ TEMPLATE = r"""<!DOCTYPE html>
                     <div style="background: white; border: 1px solid var(--divider); border-radius: 12px; padding: 16px; margin-bottom: 24px; text-align: center;">
                         <div style="font-family: 'Mea Culpa', cursive; font-size: 20px; color: var(--primary-green); margin-bottom: 8px;">Share Your Travel Info</div>
                         <div style="font-family: 'Bodoni Moda', serif; font-size: 14px; color: var(--dark); line-height: 1.6; margin-bottom: 12px;">Help us know when you'll be in town by dropping your travel information here! (And in case people want to share car services to and from the airports as well.)</div>
-                        <a href="#" target="_blank" class="btn btn-primary" style="display: inline-block; text-decoration: none;">Add Arrival &amp; Departure Info</a>
+                        <a href="https://docs.google.com/spreadsheets/d/14hR2oTxASCtvXdpxfFavTYS_p_7wOgDBfxv_paEYN9Q/edit?gid=0#gid=0" target="_blank" class="btn btn-primary" style="display: inline-block; text-decoration: none;">Add Arrival &amp; Departure Info</a>
                     </div>
 
                     <!-- FLIGHTS -->
@@ -3502,10 +3493,7 @@ TEMPLATE = r"""<!DOCTYPE html>
                     <!-- HOUSES & HOTELS -->
                     <div style="margin-bottom: 24px;">
                         <div style="font-family: 'Mea Culpa', cursive; font-size: 20px; color: var(--primary-green); margin-bottom: 8px;">Houses &amp; Hotels</div>
-                        <div style="font-family: 'Bodoni Moda', serif; font-size: 14px; color: var(--dark); line-height: 1.6; margin-bottom: 12px;">[Your note about lodging goes here.]</div>
-                        <div style="text-align: center;">
-                            <a href="#" target="_blank" class="btn btn-primary" style="display: inline-block; text-decoration: none;">View Houses &amp; Hotels</a>
-                        </div>
+                        <div style="font-family: 'Bodoni Moda', serif; font-size: 14px; color: var(--dark); line-height: 1.6; margin-bottom: 12px;">We recommend Wiscasset Woods Lodge (code: LudlowEngelman for 10% off!) or the Cod Cove Inn. There are also a few Airbnb rooms available so reach out to Hilary or Elliott if you&rsquo;re still in need of lodging!</div>
                     </div>
                 </div>
             </div>
@@ -3522,14 +3510,14 @@ TEMPLATE = r"""<!DOCTYPE html>
                      on/after the Toasts item is visible (Travel hidden). Toggled
                      by initHamburgerDateSwap(). -->
                 <button class="menu-item install-menu-item" id="installMenuItem" onclick="installApp()">Download the App</button>
-                <a class="menu-item" href="#" target="_blank" rel="noopener noreferrer" onclick="closeMenu()" style="text-decoration:none;color:inherit;display:block;">Chat</a>
+                <a class="menu-item" href="https://chat.whatsapp.com/LYpQT10pMmt6Bm3rKztsu1?mode=gi_t" target="_blank" rel="noopener noreferrer" onclick="closeMenu()" style="text-decoration:none;color:inherit;display:block;">Chat</a>
                 <button class="menu-item" onclick="switchScreenFromMenu('extras')">Extra Activities</button>
                 <button class="menu-item menu-item--good-time" onclick="switchScreenFromMenu('goodtime')"><span>To Enjoy Your Time</span><span class="menu-item-icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><circle cx="8" cy="8" r="2.6"/><line x1="8" y1="2" x2="8" y2="3.4"/><line x1="8" y1="12.6" x2="8" y2="14"/><line x1="2" y1="8" x2="3.4" y2="8"/><line x1="12.6" y1="8" x2="14" y2="8"/><line x1="3.76" y1="3.76" x2="4.75" y2="4.75"/><line x1="11.25" y1="11.25" x2="12.24" y2="12.24"/><line x1="3.76" y1="12.24" x2="4.75" y2="11.25"/><line x1="11.25" y1="4.75" x2="12.24" y2="3.76"/></svg></span></button>
                 <button class="menu-item" onclick="switchScreen('facebook', 0)">Los Invitados</button>
                 <button class="menu-item" onclick="switchScreenFromMenu('registry')">Registry</button>
                 <button class="menu-item" onclick="switchScreen('guide', 2)">Local Guide</button>
                 <button class="menu-item" onclick="switchScreenFromMenu('schedule')">Schedule</button>
-                <button class="menu-item" id="hamburger-toasts" onclick="switchScreen('toasts', 1)">Toasts in Farsi</button>
+                <button class="menu-item" id="hamburger-toasts" onclick="switchScreen('toasts', 1)">Toasts</button>
                 <button class="menu-item" id="hamburger-travel" onclick="switchScreen('travel', 1)">Travel</button>
                 <div class="menu-version" aria-hidden="true">v{{VERSION}}</div>
             </div>
@@ -3632,7 +3620,7 @@ TEMPLATE = r"""<!DOCTYPE html>
                     </div>
                     <span class="tab-label">Guide</span>
                 </button>
-                <a class="tab" href="#" target="_blank" rel="noopener noreferrer" aria-label="Share photos to the shared album">
+                <a class="tab" href="https://photos.app.goo.gl/Wd9K9bGdymA4u4mb8" target="_blank" rel="noopener noreferrer" aria-label="Share photos to the shared album">
                     <div class="tab-icon">
                         <!-- Camera silhouette in the same line-art style as
                              the other tab icons: rounded body, viewfinder
