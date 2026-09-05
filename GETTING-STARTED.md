@@ -1,4 +1,4 @@
-# Getting Started — Hilary & Elliot's Wedding App
+# Getting Started — Hilary & Elliott's Wedding App
 
 Welcome! This is your wedding app: a phone-installable website with a guest
 "face book," a schedule, a local guide, a registry, and more. This guide gets
