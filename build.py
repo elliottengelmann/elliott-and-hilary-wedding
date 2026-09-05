@@ -3342,7 +3342,7 @@ TEMPLATE = r"""<!DOCTYPE html>
                     <button class="hamburger" onclick="toggleMenu()"><svg width="22" height="16" viewBox="0 0 22 16" fill="none"><line x1="1" y1="1" x2="21" y2="1" stroke="#1F6E8C" stroke-width="1.5" stroke-linecap="round"/><line x1="1" y1="8" x2="21" y2="8" stroke="#1F6E8C" stroke-width="1.5" stroke-linecap="round"/><line x1="1" y1="15" x2="21" y2="15" stroke="#1F6E8C" stroke-width="1.5" stroke-linecap="round"/></svg></button>
                 </div>
                 <div class="screen-content">
-                    <div class="guide-intro">Hilary has been coming to Wiscasset since 2013 when her parents and uncle bought a house here. This area is known as &ldquo;the prettiest village in Maine,&rdquo; and lives up to it by being quaint as hell. With a small, walkable downtown and some hidden (and some not-so-hidden) gems, we encourage you to explore the area we&rsquo;ve fallen in love with!</div>
+                    <div class="guide-intro">Hilary has been coming to Wiscasset since 2013 when her parents and uncle bought a house here. This area is known as &ldquo;the prettiest village in Maine,&rdquo; and lives up to it by being quaint as hell. With a small, walkable downtown and some hidden (and some <a href="https://newengland.com/travel/maine/reds-eats-lobster-roll/" target="_blank" style="color: var(--primary-green);">not-so-hidden</a>) gems, we encourage you to explore the area we&rsquo;ve fallen in love with!</div>
 {{GUIDE}}
                 </div>
             </div>
@@ -3433,7 +3433,7 @@ TEMPLATE = r"""<!DOCTYPE html>
                 <div class="screen-content">
                     <div style="text-align: center; margin-bottom: 24px;">
                         <div style="font-family: 'Mea Culpa', cursive; font-size: 32px; color: var(--primary-green); margin-bottom: 8px;">Gifts</div>
-                        <div style="font-family: 'Bodoni Moda', serif; font-size: 14px; color: var(--dark); line-height: 1.7;">Your presence is literally a present, but if you want to buy a gift you can access our registry on Zola <a href="#" target="_blank" style="color: var(--primary-green);">[Zola registry link goes here.]</a>!</div>
+                        <div style="font-family: 'Bodoni Moda', serif; font-size: 14px; color: var(--dark); line-height: 1.7;">Your presence is literally a present, but if you want to buy a gift you can access our registry on Zola <a href="https://www.zola.com/registry/hilaryandelliott" target="_blank" style="color: var(--primary-green);">here</a>!</div>
                     </div>
 
                     <div style="margin-bottom: 24px;">
@@ -3493,7 +3493,7 @@ TEMPLATE = r"""<!DOCTYPE html>
                     <!-- HOUSES & HOTELS -->
                     <div style="margin-bottom: 24px;">
                         <div style="font-family: 'Mea Culpa', cursive; font-size: 20px; color: var(--primary-green); margin-bottom: 8px;">Houses &amp; Hotels</div>
-                        <div style="font-family: 'Bodoni Moda', serif; font-size: 14px; color: var(--dark); line-height: 1.6; margin-bottom: 12px;">We recommend Wiscasset Woods Lodge (code: LudlowEngelman for 10% off!) or the Cod Cove Inn. There are also a few Airbnb rooms available so reach out to Hilary or Elliott if you&rsquo;re still in need of lodging!</div>
+                        <div style="font-family: 'Bodoni Moda', serif; font-size: 14px; color: var(--dark); line-height: 1.6; margin-bottom: 12px;">We recommend <a href="https://maps.app.goo.gl/ArArf5KeFNLubTV19" target="_blank" style="color: var(--primary-green);">Wiscasset Woods Lodge</a> (code: LudlowEngelman for 10% off!) or the <a href="https://maps.app.goo.gl/Eu4mr3eE5R1stZVF7" target="_blank" style="color: var(--primary-green);">Cod Cove Inn</a>. There are also a few Airbnb rooms available so reach out to Hilary or Elliott if you&rsquo;re still in need of lodging!</div>
                     </div>
                 </div>
             </div>
