@@ -54,8 +54,8 @@ ROMANTIC_LABELS = {
 MEMORY_TITLES = {
     "them": "A memory of {name}",
     "nima": "A memory of Hilary",
-    "elien": "A memory of Elliot",
-    "both":  "A memory of Hilary and Elliot",
+    "elien": "A memory of Elliott",
+    "both":  "A memory of Hilary and Elliott",
 }
 
 # Real guest photos live in images/guests/, resolved by merge_guests.py
@@ -444,7 +444,7 @@ GUIDE_SECTION_ORDER = [
 # more pinned links at the top before its cards — Elien's curated maps
 # for that category. Banned outside this dict; never auto-generated.
 GUIDE_SECTION_MAPS = {
-    # Optional pinned Google-Maps links per guide section — Hilary & Elliot's
+    # Optional pinned Google-Maps links per guide section — Hilary & Elliott's
     # own curated maps go here. Empty until they add theirs.
 }
 
@@ -1228,8 +1228,8 @@ TEMPLATE = r"""<!DOCTYPE html>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Hilary & Elliot's Wedding</title>
-    <meta name="description" content="Hilary & Elliot's wedding.">
+    <title>Hilary & Elliott's Wedding</title>
+    <meta name="description" content="Hilary & Elliott's wedding.">
 
     <!-- ?v={{VERSION}} on every icon URL is the only reliable cache-bust
          for installed PWAs. iOS keeps the apple-touch-icon it grabbed at
@@ -1249,7 +1249,7 @@ TEMPLATE = r"""<!DOCTYPE html>
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    <meta name="apple-mobile-web-app-title" content="Hilary & Elliot">
+    <meta name="apple-mobile-web-app-title" content="Hilary & Elliott">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -3166,7 +3166,7 @@ TEMPLATE = r"""<!DOCTYPE html>
             <!-- LOGIN SCREEN -->
             <div class="screen login-screen active" id="login">
                 <div class="login-card">
-                    <h1 style="font-family: 'Mea Culpa', cursive; font-size: 56px; font-weight: 400;">Hilary & Elliot</h1>
+                    <h1 style="font-family: 'Mea Culpa', cursive; font-size: 56px; font-weight: 400;">Hilary & Elliott</h1>
                     <p>[Wedding location]</p>
                     <form id="loginForm" onsubmit="event.preventDefault(); handleLogin();" novalidate>
                         <div class="input-group">
@@ -3203,7 +3203,7 @@ TEMPLATE = r"""<!DOCTYPE html>
                     <div class="splash-text">
                         [Your welcome note goes here. Write a few warm sentences to your guests.]
                     </div>
-                    <div class="splash-signature">Love, Hilary & Elliot</div>
+                    <div class="splash-signature">Love, Hilary & Elliott</div>
                     <div class="splash-arrow" onclick="skipSplash()">
                         <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
                             <path d="M12 10 C16 16, 26 17, 32 20 C26 23, 16 24, 12 30" stroke="#1F6E8C" stroke-width="2.5" fill="none" stroke-linecap="round"/>
@@ -4445,7 +4445,7 @@ TEMPLATE = r"""<!DOCTYPE html>
                 ? `<div class="invitado-hometown">Grew up in ${invitadoEscape(guest.hometown)}</div>`
                 : '';
             const storyHtml = guest.story
-                ? `<div class="invitado-story-label">How I know Hilary and Elliot</div>
+                ? `<div class="invitado-story-label">How I know Hilary and Elliott</div>
                    <div class="invitado-story">${invitadoEscape(guest.story)}</div>`
                 : '';
             const leastHtml = guest.leastFavorite

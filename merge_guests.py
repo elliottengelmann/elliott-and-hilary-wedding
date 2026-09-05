@@ -390,7 +390,7 @@ def read_form_responses():
             responses[key] = {
                 "how_we_know":    _first_matching_column(row, "How do you know"),
                 "photo_url":      _first_matching_column(row, "Share a photo", "Please Upload a Photo", "Photo URL"),
-                # Hilary & Elliot's form asks for a go-to karaoke song instead of a
+                # Hilary & Elliott's form asks for a go-to karaoke song instead of a
                 # "least favorite thing about weddings". We carry it in the existing
                 # least_favorite column; the profile label reads as karaoke (build.py).
                 "least_favorite": _first_matching_column(row, "What is one of your go-to karaoke", "*Bonus* Life is Editing", "Least Favorite"),
