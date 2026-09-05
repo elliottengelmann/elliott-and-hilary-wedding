@@ -3167,7 +3167,7 @@ TEMPLATE = r"""<!DOCTYPE html>
             <div class="screen login-screen active" id="login">
                 <div class="login-card">
                     <h1 style="font-family: 'Mea Culpa', cursive; font-size: 56px; font-weight: 400;">Hilary & Elliott</h1>
-                    <p>[Wedding location]</p>
+                    <p>Wiscasset, Maine</p>
                     <form id="loginForm" onsubmit="event.preventDefault(); handleLogin();" novalidate>
                         <div class="input-group">
                             <label for="nameInput" class="sr-only">Full name</label>
@@ -3355,7 +3355,7 @@ TEMPLATE = r"""<!DOCTYPE html>
                 </div>
                 <div class="screen-content">
                     <div class="goodtime-content">
-                        <div class="goodtime-heading">[Your City] Is<br>Best With:</div>
+                        <div class="goodtime-heading">Wiscasset Is<br>Best With:</div>
 
                         <div class="goodtime-tip">
                             <span class="goodtime-tip-icon" aria-hidden="true">
@@ -3518,7 +3518,7 @@ TEMPLATE = r"""<!DOCTYPE html>
                      are mirrored here so they're reachable from the menu too;
                      they call switchScreen(id, tabIndex) so the active tab
                      indicator updates. The Toasts/Travel slot is date-gated:
-                     before 2026-04-28 the Travel item is visible (Toasts hidden),
+                     before 2026-09-19 the Travel item is visible (Toasts hidden),
                      on/after the Toasts item is visible (Travel hidden). Toggled
                      by initHamburgerDateSwap(). -->
                 <button class="menu-item install-menu-item" id="installMenuItem" onclick="installApp()">Download the App</button>
@@ -3579,7 +3579,7 @@ TEMPLATE = r"""<!DOCTYPE html>
 
             <!-- TAB BAR
                  4 tabs: Los Invitados (the app's home), a date-gated
-                 Travel/Toasts slot (Travel before 2026-04-28, Toasts
+                 Travel/Toasts slot (Travel before 2026-09-19, Toasts
                  on/after — see initTravelToastsTab()), San Miguel Guide,
                  and Share Photos (an external link to the shared Google
                  Photos album, opens in a new tab — never gets the
@@ -4077,13 +4077,13 @@ TEMPLATE = r"""<!DOCTYPE html>
         }
 
         // Date-gated Travel / Toasts tab.
-        //   Before 2026-04-28 00:00 local time: the tab shows a plane icon
+        //   Before 2026-09-19 00:00 local time: the tab shows a plane icon
         //     labeled "Travel" and navigates to the #travel screen.
-        //   On or after 2026-04-28 00:00: the tab shows the microphone icon
+        //   On or after 2026-09-19 00:00: the tab shows the microphone icon
         //     labeled "Toasts" and navigates to the #toasts screen.
         // The switch honors the comment in microphone-icon.svg about the
         // Toasts feature only being relevant once guests are on site.
-        const TOASTS_CUTOVER = new Date(2026, 3, 28, 0, 0, 0); // JS months are 0-indexed: 3 = April
+        const TOASTS_CUTOVER = new Date(2026, 8, 19, 0, 0, 0); // JS months are 0-indexed: 8 = September
         function isToastsTime() {
             return new Date() >= TOASTS_CUTOVER;
         }
@@ -4125,8 +4125,8 @@ TEMPLATE = r"""<!DOCTYPE html>
         }
         // Hamburger mirror of the date-swap: whichever of Toasts/Travel is
         // NOT in the tab bar stays accessible via the hamburger menu.
-        //   Before 2026-04-28: tab bar has Travel → hamburger shows Toasts.
-        //   On/after 2026-04-28: tab bar has Toasts → hamburger shows Travel.
+        //   Before 2026-09-19: tab bar has Travel → hamburger shows Toasts.
+        //   On/after 2026-09-19: tab bar has Toasts → hamburger shows Travel.
         function initHamburgerDateSwap() {
             const travelItem = document.getElementById('hamburger-travel');
             const toastsItem = document.getElementById('hamburger-toasts');
