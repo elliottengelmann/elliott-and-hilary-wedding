@@ -84,13 +84,25 @@ that's usually why.)*
 
 ---
 
-## The motif: lighthouse & coastline
+## The motif: lighthouse splash screen + lobster background art
 
-The site originally planned a hand-drawn lobster illustration, but the couple
-decided on a WPA-poster-style lighthouse-on-the-coast scene instead. It's
-hand-coded directly in the site's code (no image file to upload), so there's
-nothing to do here — it's already live. If you'd rather it show something
-else, just tell Claude Code what scene you'd like instead.
+The welcome-screen illustration is a WPA-poster-style lighthouse scene,
+hand-coded directly in the site's code — nothing to do there, it's already
+live.
+
+The soft background circles that appear behind other screens are a different
+piece: a real lobster image, still needed. To add it:
+
+1. Get the lobster image (Hilary or Elien has it) and save it as a file named
+   **exactly** `lobster.png`.
+2. Put it in the app's `images` folder. In **Finder**: menu **Go → Go to
+   Folder…**, paste this and press Return, then drag `lobster.png` in:
+   ```
+   ~/code/elliott-and-hilary-wedding/images
+   ```
+3. Open Claude Code in the app folder and say: **"I added the lobster image —
+   build and publish it."** It rebuilds and pushes, and it appears on the live
+   site in about a minute.
 
 ---
 

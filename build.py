@@ -3166,8 +3166,8 @@ TEMPLATE = r"""<!DOCTYPE html>
         </svg>
     </div>
     <div class="app-container">
-            <img src="images/nasturtiums.png" onerror="this.style.display='none'" alt="" class="bg-nasturtiums" id="bgNasturtiums">
-            <img src="images/rosa-rugosa.png" onerror="this.style.display='none'" alt="" class="bg-rose" id="bgRose">
+            <img src="images/lobster.png" onerror="this.style.display='none'" alt="" class="bg-nasturtiums" id="bgNasturtiums">
+            <img src="images/lobster.png" onerror="this.style.display='none'" alt="" class="bg-rose" id="bgRose">
             <!-- LOGIN SCREEN -->
             <div class="screen login-screen active" id="login">
                 <div class="login-card">

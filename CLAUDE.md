@@ -79,13 +79,22 @@ Also worth reviewing: the app icons (still placeholders).
 Tweak freely. Note: the CSS variables are still named `--primary-green` /
 `--accent-warm` etc. (legacy names, coastal values) — rename them if you tidy up.
 
-**Motif — lighthouse & coastline:** the original template's plan was a
-hand-drawn two-lobsters-forming-a-heart illustration (`images/lobster.png`),
-but the couple opted instead for a WPA-poster-style lighthouse-on-the-coast
-scene. That's now hand-coded as inline SVG directly in `build.py` (splash
-screen, the PWA-update badge, and two small profile-page glyphs) rather than
-an image file — no `images/lobster.png` reference remains. If the couple
-wants a different scene, redraw the SVGs in place; no new asset file needed.
+**Motif — two separate pieces, don't conflate them:**
+
+- **Splash screen + small accent glyphs:** a WPA-poster-style
+  lighthouse-on-the-coast scene, hand-coded as inline SVG directly in
+  `build.py` (splash screen, the PWA-update badge, two small profile-page
+  glyphs). No image file involved — if the couple wants a different scene,
+  redraw the SVGs in place.
+- **Background circles** (`.bg-nasturtiums` / `.bg-rose`, top-right and
+  bottom-left on most screens): the couple decided they want real lobster
+  imagery here after all (not the rosa-rugosa/nasturtium flower photos that
+  were there before, and not the lighthouse). Both circles point to
+  `images/lobster.png`, **not yet in the repo** — the site hides them
+  gracefully until it's added. See GETTING-STARTED.md for how to add it.
+  (`images/nasturtiums.png` and `images/rosa-rugosa.png` are still real
+  assets in the repo, just currently unused for the background circles — the
+  guest-profile "shared contacts" thumb badge still uses rosa-rugosa.png.)
 
 ## NEVER fabricate guest content (absolute rule)
 
