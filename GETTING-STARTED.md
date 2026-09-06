@@ -84,19 +84,18 @@ that's usually why.)*
 
 ---
 
-## The motif: lighthouse splash screen + lobster background art
+## The motif: lighthouse splash screen + Popham Beach background art
 
 The welcome-screen illustration is a WPA-poster-style lighthouse scene,
 hand-coded directly in the site's code — nothing to do there, it's already
 live.
 
 The soft background circles that appear behind other screens are a different
-piece: a real lobster image, still needed. To add it:
+piece: a watercolor image of Popham Beach, still needed. To add it:
 
-1. Get the lobster image (Hilary or Elien has it) and save it as a file named
-   **exactly** `lobster.png`.
+1. Save the watercolor image as a file named **exactly** `popham.png`.
 2. Put it in the app's `images` folder. In **Finder**: menu **Go → Go to
-   Folder…**, paste this and press Return, then drag `lobster.png` in:
+   Folder…**, paste this and press Return, then drag `popham.png` in:
    ```
    ~/code/elliott-and-hilary-wedding/images
    ```

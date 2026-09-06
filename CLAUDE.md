@@ -87,12 +87,15 @@ Tweak freely. Note: the CSS variables are still named `--primary-green` /
   glyphs). No image file involved — if the couple wants a different scene,
   redraw the SVGs in place.
 - **Background circles** (`.bg-nasturtiums` / `.bg-rose`, top-right and
-  bottom-left on most screens): the couple decided they want real lobster
-  imagery here after all (not the rosa-rugosa/nasturtium flower photos that
-  were there before, and not the lighthouse). Both circles point to
-  `images/lobster.png`, **not yet in the repo** — the site hides them
-  gracefully until it's added. See GETTING-STARTED.md for how to add it.
-  (`images/nasturtiums.png` and `images/rosa-rugosa.png` are still real
+  bottom-left on most screens): the couple wants a watercolor image of
+  Popham Beach here (not the rosa-rugosa/nasturtium flower photos that were
+  there before, and not the lighthouse). The existing `opacity: 0.12` in
+  `.bg-nasturtiums.visible`/`.bg-rose.visible` already gives it the subtle
+  watermark look they wanted — no extra transparency editing needed on the
+  source file. Both circles point to `images/popham.png`, **not yet in the
+  repo** — the site hides them gracefully until it's added. See
+  GETTING-STARTED.md for how to add it. (`images/nasturtiums.png` and
+  `images/rosa-rugosa.png` are still real
   assets in the repo, just currently unused for the background circles — the
   guest-profile "shared contacts" thumb badge still uses rosa-rugosa.png.)
 
