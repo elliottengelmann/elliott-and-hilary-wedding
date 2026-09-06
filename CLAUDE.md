@@ -119,11 +119,19 @@ validators in `build.py`. Flag this to them before doing it.)*
 
 ## Data pipeline
 
-`merge_guests.py` reads the form responses (and optionally a guest-list export)
-and writes `wedding.db`; then `build.py` regenerates `index.html`. Guest photos
-submitted through the form are Google Drive links — fetch them with the **Google
-Drive connector**, never `curl`/`wget`/`gdown` (private files fail). The core
-build needs **only Python 3's standard library** — no pip packages. (Photo
+`merge_guests.py` reads `form_responses.csv` — a CSV export of the Google
+Form's linked response sheet — and writes the `guests` table in `wedding.db`;
+then `build.py` regenerates `index.html`. There is no separate RSVP/guest-list
+export to reconcile against: the form is the *only* source, matching the
+"anyone who fills out the form gets a profile" rule above. To sync: pull the
+latest rows from the linked Google Sheet via the **Google Drive connector**,
+write them out as `form_responses.csv` (gitignored, transient — regenerate
+each time, don't commit it), run `python3 merge_guests.py`, then
+`python3 build.py`. Guest photos submitted through the form are Google Drive
+links — fetch them with the Drive connector too, never `curl`/`wget`/`gdown`
+(private files fail); until a photo is pulled down into `images/guests/`, the
+guest's profile keeps the raw (non-rendering) Drive share link. The core build
+needs **only Python 3's standard library** — no pip packages. (Photo
 face-cropping is the one optional exception and has its own setup script.)
 
 ## Typography & readability minimums

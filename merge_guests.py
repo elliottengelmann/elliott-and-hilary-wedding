@@ -1,22 +1,30 @@
 #!/usr/bin/env python3
 """
-Merge guest data from multiple sources into the wedding.db SQLite database.
+Sync guest data from the Google Form into wedding.db.
 
-1. export.csv                  — Most up-to-date guest list & per-event RSVPs
-2. full_list.csv               — Supplementary RSVP sheet
-3. master_list.csv             — Contact details: email, food choice, address
-4. form_responses.csv          — "How do you know us", photo URL, fun answers
-5. contact_form_responses.csv  — Post-wedding contact info (phone, email, socials)
+This wedding has no RSVP tracking and no seating chart — the guest
+directory is driven purely by the Google Form: **anyone who fills it
+out gets a profile.** There is no separate guest-list export to
+cross-reference against.
 
-Reads from local CSVs. To refresh, re-export from Google Sheets / the app.
+1. form_responses.csv          — the form's answers: name, pronouns,
+                                  "how you know us", karaoke song, photo
+2. contact_form_responses.csv  — optional; post-wedding contact info
+                                  (phone, email, socials) from a
+                                  separate "Get to Know You" form
+
+Reads from local CSVs. To refresh: pull the latest rows from the
+linked Google Sheet (via the Google Drive connector — never
+curl/wget/gdown, the sheet is private) and write them out as
+form_responses.csv, then run this script.
 
 IMPORTANT — DO NOT DROP THE CURATION TABLES.
 
 wedding.db also contains four tables managed by `scripts/edit_guests.py`:
     guest_locations, guest_memories, relationships, guest_contacts
 
-These hold Elien's / Nima's hand-authored curation (current city,
-hometown, memories, Here-with pairings) plus form-sourced contact
+These hold Hilary/Elliott's hand-authored curation (current city,
+hometown, memories, "Here with" pairings) plus form-sourced contact
 info that survives every merge. They're keyed by normalized
 first_last names. This script only DROPs `guests` — the curation
 tables stay intact on every run. Don't change that.
@@ -26,7 +34,7 @@ The `guest_contacts` table is populated from contact_form_responses.csv
 or 'nima'). On each merge run, form-sourced rows are refreshed from the
 CSV; rows tagged 'elien' or 'nima' are NEVER overwritten by the form sync.
 
-See CLAUDE.md → "Curation lives in wedding.db" for the full picture.
+See CLAUDE.md → "The guest form and how fields map" for the full picture.
 """
 
 import csv
@@ -37,9 +45,6 @@ import sqlite3
 
 DIR = os.path.dirname(os.path.abspath(__file__))
 DB_PATH = os.path.join(DIR, "wedding.db")
-EXPORT_CSV = os.path.join(DIR, "export.csv")
-FULL_LIST_CSV = os.path.join(DIR, "full_list.csv")
-MASTER_CSV = os.path.join(DIR, "master_list.csv")
 FORM_CSV = os.path.join(DIR, "form_responses.csv")
 CONTACT_FORM_CSV = os.path.join(DIR, "contact_form_responses.csv")
 
@@ -50,289 +55,22 @@ def normalize(name):
 
 
 # ── Manual name mappings ────────────────────────────────────────────────
-# Form response name -> export/full list name (for mismatched names)
-FORM_NAME_MAP = {
-    ("alexa", "meyer"):                   ("alexandra", "meyer"),
-    ("alice", "ollier"):                   ("alice", "george"),
-    ("ashutosh", "desai"):                 ("ashu", "desai"),
-    ("asma", "amani"):                     ("asma", "ahmed"),
-    ("lisa", "galano friedman"):           ("lisa galano", "friedman"),
-    ("barbara", "soalheiro"):              ("barbara", "gwercman"),
-    ("joshua", "katz"):                    ("josh", "katz"),
-    ("jessica", "yu"):                     ("jess", "yu"),
-    ("lena", "elkousy"):                   ("lena", "elsouky"),
-    ("liz", "sia"):                        ("elizabeth", "sia"),
-    ("mariam", "aghdaee"):                 ("maryam", "aghdaee"),
-    ("nina", "remiker-scheinman"):         ("nina", "scheinman"),
-    ("olivia", "menezes"):                 ("olivia", "benjamin"),
-    ("omat", "elsayed"):                   ("omar", "elsayed"),
-    ("sani", "hussain"):                   ("sanaria", "hussain"),
-    ("sepand", "norouzi"):                 ("sep", "norouzi"),
-    ("seth", "bannon \u2728"):             ("seth", "bannon"),
-    ("suzanne", "shaheen"):                ("suzy", "shaheen"),
-    ("victoria", "hooker"):               ("vic", "hooker"),
-    ("wiz", "khuzai"):                     ("wiz", "abdulla"),
-    ("zuzana", "krejciova-rajaniemi"):     ("zuzana", "krejciova"),
-    ("diana", "klatt"):                    ("diana", "klatt"),
-    ("hope angel", "williams"):            ("hope", "angel williams"),
-    ("elien blue", "becque"):              ("elien", "becque"),
-    ("isaac", "clark"):                    ("isaac", "clark"),
-    ("claire", "bostrom"):                 ("claire", "bostrom"),
-    ("sara", "dutson"):                    ("sara", "dutson"),
-}
-
-# Master list name -> canonical name (for mismatched names)
-MASTER_NAME_MAP = {
-    ("fish", "galano friedman"):           ("lisa galano", "friedman"),
-    ("lisa", "galano friedman"):           ("lisa galano", "friedman"),
-    ("liz", "sia"):                        ("elizabeth", "sia"),
-}
-
-
-def derive_status(thu, fri, wedding, sunday):
-    """Derive an overall RSVP status from per-event responses."""
-    events = [thu, fri, wedding, sunday]
-    if any(e == "Attending" for e in events):
-        if all(e in ("Declined", "No Response") for e in events if e != "Attending"):
-            return "Attending"
-        return "Attending"
-    if all(e == "Declined" for e in events):
-        return "Declined"
-    if all(e == "No Response" for e in events):
-        return "No Response"
-    if any(e == "Declined" for e in events):
-        return "Mixed/Incomplete"
-    return "No Response"
+# Keyed by normalized (first, last) as submitted on the form. Use this
+# only to unify two form submissions from the same person (e.g. a typo
+# fix re-submission) onto one canonical (first, last) — empty until
+# Hilary/Elliott need one. Do NOT auto-add by inference.
+FORM_NAME_MAP = {}
 
 
 def clean_guest_row(first, last):
     """Clean and validate a guest row. Returns (first, last) or None to skip."""
     if not first and not last:
         return None
-    # Skip unnamed plus-one placeholders
-    if first.lower() == "guest" and not last:
-        return None
     # Fix names where full name ended up in first_name with empty last_name
     if " " in first and not last:
         parts = first.rsplit(" ", 1)
         first, last = parts[0], parts[1]
     return first, last
-
-
-def read_export():
-    """Read export.csv — the most up-to-date guest list & RSVPs."""
-    guests = []
-    with open(EXPORT_CSV, newline="", encoding="utf-8") as f:
-        reader = csv.DictReader(f)
-        for row in reader:
-            first = row.get("First Name", "").strip()
-            last = row.get("Last Name", "").strip()
-            cleaned = clean_guest_row(first, last)
-            if not cleaned:
-                continue
-            first, last = cleaned
-
-            thu = row.get("Thursday Welcome Dinner & Cocktails", "").strip()
-            fri = row.get("Friday Welcome Dinner & Cocktails", "").strip()
-            wedding = row.get("Wedding Ceremony & Party", "").strip()
-            sunday = row.get("Come Down Dinner", "").strip()
-
-            guests.append({
-                "first_name": first,
-                "last_name": last,
-                "full_name": f"{first} {last}",
-                "title": row.get("Title", "").strip(),
-                "suffix": row.get("Suffix", "").strip(),
-                "rsvp_thursday": thu,
-                "rsvp_friday": fri,
-                "rsvp_wedding": wedding,
-                "rsvp_sunday": sunday,
-                "rsvp_status": derive_status(thu, fri, wedding, sunday),
-            })
-    return guests
-
-
-def read_full_list():
-    """Read full_list.csv for supplementary data (Status, Plus One)."""
-    extras = {}
-    if not os.path.exists(FULL_LIST_CSV):
-        return extras
-    with open(FULL_LIST_CSV, newline="", encoding="utf-8") as f:
-        reader = csv.DictReader(f)
-        for row in reader:
-            first = row.get("First Name", "").strip()
-            last = row.get("Last Name", "").strip()
-            cleaned = clean_guest_row(first, last)
-            if not cleaned:
-                continue
-            first, last = cleaned
-            key = (normalize(first), normalize(last))
-            extras[key] = {
-                "is_plus_one": row.get("Plus One?", "").strip().upper() == "YES",
-            }
-    return extras
-
-
-def read_master():
-    """Read master list for contact details and metadata."""
-    master = {}
-    with open(MASTER_CSV, newline="", encoding="utf-8") as f:
-        reader = csv.DictReader(f)
-        for row in reader:
-            first = row.get("FirstName", "").strip()
-            last = row.get("Last Name", "").strip()
-            if not first and not last:
-                continue
-            key = (normalize(first), normalize(last))
-            key = MASTER_NAME_MAP.get(key, key)
-            master[key] = {
-                "email": row.get("Email", "").strip(),
-                "group_house": row.get("Group House?", "").strip(),
-                "guest_name": row.get("Guest Name", "").strip(),
-                "address": row.get("Address", "").strip(),
-                "phone": row.get("Phone", "").strip(),
-                "person": row.get("Person", "").strip(),
-                "food_choice_raw": row.get("Food Choice", "").strip(),
-                "main_first": first,
-                "main_last": last,
-            }
-    return master
-
-
-KNOWN_FOODS = {"fish": "Fish", "kebab": "Kebab", "chille": "Chille"}
-
-
-def normalize_food(f):
-    f = f.strip()
-    return KNOWN_FOODS.get(f.lower(), f)
-
-
-def split_food_and_note(token):
-    """Split 'Fish NO TOMATO' -> ('Fish', 'NO TOMATO'). Returns (food, note_or_None)."""
-    m = re.match(r"^([A-Za-z]+)\s+(NO\s+.+)$", token.strip(), re.IGNORECASE)
-    if m:
-        return normalize_food(m.group(1)), m.group(2).strip()
-    return normalize_food(token), None
-
-
-def parse_food_spec(raw):
-    """
-    Parse a Food Choice cell.
-
-    Returns a tuple:
-      (main_food, main_note, guest_food, guest_note, kids_foods, labeled_by_name)
-
-    - main_food/guest_food: (food, note) or (None, None)
-    - kids_foods: list of (food, note) for children, in order (empty if 0 or 1-2 foods)
-    - labeled_by_name: {first_name_lower: (food, note)} for explicit labeled form
-    """
-    raw = (raw or "").strip()
-    if not raw:
-        return (None, None, None, None, [], {})
-
-    # Labeled form: "Chille (Neha) Kebab (James)"
-    labeled = re.findall(r"([A-Za-z]+)\s*\(([^)]+)\)", raw)
-    if labeled and len(labeled) >= 2:
-        mapping = {}
-        for food, name in labeled:
-            mapping[name.strip().lower()] = (normalize_food(food), None)
-        return (None, None, None, None, [], mapping)
-
-    if "," not in raw:
-        food, note = split_food_and_note(raw)
-        return (food, note, None, None, [], {})
-
-    parts = [p.strip() for p in raw.split(",") if p.strip()]
-    parsed = [split_food_and_note(p) for p in parts]
-    main = parsed[0] if len(parsed) >= 1 else (None, None)
-    guest = parsed[1] if len(parsed) >= 2 else (None, None)
-    kids = parsed[2:] if len(parsed) > 2 else []
-    return (main[0], main[1], guest[0], guest[1], kids, {})
-
-
-def split_full_name(full):
-    full = (full or "").strip()
-    if not full:
-        return "", ""
-    parts = full.rsplit(" ", 1)
-    if len(parts) == 1:
-        return parts[0], ""
-    return parts[0], parts[1]
-
-
-def compute_food_assignments(export_guests, master):
-    """
-    Returns {(first_norm, last_norm): (food, note)} plus a list of warnings.
-    """
-    assignments = {}
-    warnings = []
-
-    # Build set of keys that are a "main" or "guest" in master (to exclude from kid matching)
-    master_main_keys = set(master.keys())
-    master_guest_keys = set()
-    for mkey, m in master.items():
-        gfirst, glast = split_full_name(m["guest_name"])
-        if gfirst or glast:
-            master_guest_keys.add((normalize(gfirst), normalize(glast)))
-
-    reserved = master_main_keys | master_guest_keys
-
-    for mkey, m in master.items():
-        raw = m["food_choice_raw"]
-        if not raw:
-            continue
-        main_first = m["main_first"]
-        main_last = m["main_last"]
-        guest_first, guest_last = split_full_name(m["guest_name"])
-
-        main_food, main_note, guest_food, guest_note, kids, labeled = parse_food_spec(raw)
-
-        if labeled:
-            # Match by first name across main and guest
-            for name_lower, (food, note) in labeled.items():
-                if normalize(main_first) == name_lower:
-                    assignments[mkey] = (food, note)
-                elif guest_first and normalize(guest_first) == name_lower:
-                    assignments[(normalize(guest_first), normalize(guest_last))] = (food, note)
-                else:
-                    warnings.append(
-                        f"Labeled food name {name_lower!r} did not match "
-                        f"main ({main_first}) or guest ({guest_first}) for row {main_first} {main_last}"
-                    )
-            continue
-
-        if main_food is not None:
-            assignments[mkey] = (main_food, main_note)
-        if guest_food is not None and (guest_first or guest_last):
-            assignments[(normalize(guest_first), normalize(guest_last))] = (guest_food, guest_note)
-
-        # Kids: scan export.csv rows for last-name matches
-        if kids:
-            wanted_lasts = {normalize(main_last)}
-            if guest_last:
-                wanted_lasts.add(normalize(guest_last))
-
-            matched = []
-            for g in export_guests:
-                gk = (normalize(g["first_name"]), normalize(g["last_name"]))
-                if gk in reserved:
-                    continue
-                if g.get("rsvp_wedding") != "Attending":
-                    continue
-                if normalize(g["last_name"]) in wanted_lasts:
-                    matched.append(gk)
-                    if len(matched) == len(kids):
-                        break
-
-            if len(matched) < len(kids):
-                warnings.append(
-                    f"{main_first} {main_last}: expected {len(kids)} kid(s) by last-name "
-                    f"match but found {len(matched)} (foods: {[k[0] for k in kids]})"
-                )
-            for kid_key, (food, note) in zip(matched, kids):
-                assignments[kid_key] = (food, note)
-
-    return assignments, warnings
 
 
 GUEST_IMAGES_DIR = os.path.join(DIR, "images", "guests")
@@ -373,27 +111,32 @@ def _first_matching_column(row, *prefixes):
 
 
 def read_form_responses():
-    """Read form responses (how they know the couple, photo, etc.).
-
-    The Google Form's question text gets edited periodically (e.g.
-    adding "Please answer in detail"), so we match column headers by
-    their stable opening phrase rather than exact full text.
-    """
+    """Read form_responses.csv — the single source of truth for the
+    guest list. Returns {(first_norm, last_norm): {...}}, keyed so a
+    later duplicate submission (e.g. a typo re-submit) overwrites an
+    earlier one, since Google Sheets appends new rows at the bottom."""
     responses = {}
     with open(FORM_CSV, newline="", encoding="utf-8") as f:
         reader = csv.DictReader(f)
         for row in reader:
             first = row.get("First Name", "").strip()
             last = row.get("Last Name", "").strip()
+            cleaned = clean_guest_row(first, last)
+            if not cleaned:
+                continue
+            first, last = cleaned
             key = (normalize(first), normalize(last))
             key = FORM_NAME_MAP.get(key, key)
             responses[key] = {
+                "first_raw":      first,
+                "last_raw":       last,
+                "email":          _first_matching_column(row, "Email Address", "Email"),
                 "how_we_know":    _first_matching_column(row, "How do you know"),
                 "photo_url":      _first_matching_column(row, "Share a photo", "Please Upload a Photo", "Photo URL"),
                 # Hilary & Elliott's form asks for a go-to karaoke song instead of a
                 # "least favorite thing about weddings". We carry it in the existing
                 # least_favorite column; the profile label reads as karaoke (build.py).
-                "least_favorite": _first_matching_column(row, "What is one of your go-to karaoke", "*Bonus* Life is Editing", "Least Favorite"),
+                "least_favorite": _first_matching_column(row, "What is one of your go-to karaoke", "Least Favorite"),
                 "pronouns":       _first_matching_column(row, "Pronoun"),
                 "form_current_city": _first_matching_column(row, "What city or town do you live in now"),
                 "form_hometown":     _first_matching_column(row, "Where did you grow up"),
@@ -402,11 +145,10 @@ def read_form_responses():
     return responses
 
 
-def merge_and_write(export_guests, full_list_extras, master, form_responses):
+def merge_and_write(form_responses):
     conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
 
-    food_assignments, food_warnings = compute_food_assignments(export_guests, master)
     local_photos = _build_local_photo_index()
 
     c.execute("DROP TABLE IF EXISTS guests")
@@ -443,79 +185,22 @@ def merge_and_write(export_guests, full_list_extras, master, form_responses):
         )
     """)
 
-    master_matched = 0
-    form_matched = 0
-    unmatched_form = set(form_responses.keys())
+    with_photo = 0
+    with_story = 0
 
-    for g in export_guests:
-        key = (normalize(g["first_name"]), normalize(g["last_name"]))
-
-        # Look up supplementary data from full_list
-        fl = full_list_extras.get(key, {})
-
-        # Look up master list data
-        m = master.get(key, {})
-        if m:
-            master_matched += 1
-
-        # Look up form response
-        form = form_responses.get(key, {})
-        if form:
-            form_matched += 1
-            unmatched_form.discard(key)
-
-        initials = ""
-        if g["last_name"] and g["first_name"]:
-            initials = g["last_name"][0].upper() + g["first_name"][0].upper()
-
-        food_choice, food_note = food_assignments.get(key, (None, None))
-
-        c.execute("""
-            INSERT INTO guests (
-                first_name, last_name, full_name, title, suffix,
-                email, group_house, guest_name, address, phone,
-                person, food_choice, food_note,
-                rsvp_status, rsvp_thursday, rsvp_friday, rsvp_wedding, rsvp_sunday,
-                is_plus_one,
-                how_we_know, photo_url, least_favorite,
-                form_current_city, form_hometown, form_memory,
-                pronouns,
-                initials
-            ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
-        """, (
-            g["first_name"], g["last_name"], g["full_name"],
-            g["title"], g["suffix"],
-            m.get("email", ""), m.get("group_house", ""),
-            m.get("guest_name", ""), m.get("address", ""),
-            m.get("phone", ""), m.get("person", ""),
-            food_choice or "", food_note or "",
-            g["rsvp_status"], g["rsvp_thursday"], g["rsvp_friday"],
-            g["rsvp_wedding"], g["rsvp_sunday"],
-            1 if fl.get("is_plus_one", False) else 0,
-            form.get("how_we_know", ""),
-            resolve_photo(g["first_name"], g["last_name"],
-                          form.get("photo_url", ""), local_photos),
-            form.get("least_favorite", ""),
-            form.get("form_current_city", ""),
-            form.get("form_hometown", ""),
-            form.get("form_memory", ""),
-            form.get("pronouns", ""),
-            initials,
-        ))
-
-    # Form respondents not in the export list — add them as attending
-    for key in list(unmatched_form):
+    for key in sorted(form_responses):
         form = form_responses[key]
-        first, last = key
-        first_cap = first.title()
-        last_cap = last.title()
+        first, last = form["first_raw"], form["last_raw"]
 
         initials = ""
-        if last_cap and first_cap:
-            initials = last_cap[0].upper() + first_cap[0].upper()
+        if last and first:
+            initials = last[0].upper() + first[0].upper()
 
-        m = master.get(key, {})
-        food_choice, food_note = food_assignments.get(key, (None, None))
+        photo = resolve_photo(first, last, form.get("photo_url", ""), local_photos)
+        if photo:
+            with_photo += 1
+        if form.get("how_we_know", ""):
+            with_story += 1
 
         c.execute("""
             INSERT INTO guests (
@@ -530,16 +215,19 @@ def merge_and_write(export_guests, full_list_extras, master, form_responses):
                 initials
             ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
         """, (
-            first_cap, last_cap, f"{first_cap} {last_cap}", "", "",
-            m.get("email", ""), m.get("group_house", ""),
-            m.get("guest_name", ""), m.get("address", ""),
-            m.get("phone", ""), m.get("person", ""),
-            food_choice or "", food_note or "",
+            first, last, f"{first} {last}".strip(), "", "",
+            form.get("email", ""), "", "", "", "",
+            "", "", "",
+            # No RSVP concept for this wedding — filling out the form
+            # means you're coming. rsvp_thursday/friday/wedding/sunday
+            # stay blank on purpose: build.py's per-event RSVP chips
+            # (a leftover from the template) only render if these are
+            # set, and this wedding shows every guest the full schedule
+            # instead.
             "Attending", "", "", "", "",
             0,
             form.get("how_we_know", ""),
-            resolve_photo(first_cap, last_cap,
-                          form.get("photo_url", ""), local_photos),
+            photo,
             form.get("least_favorite", ""),
             form.get("form_current_city", ""),
             form.get("form_hometown", ""),
@@ -547,60 +235,24 @@ def merge_and_write(export_guests, full_list_extras, master, form_responses):
             form.get("pronouns", ""),
             initials,
         ))
-        form_matched += 1
-        unmatched_form.discard(key)
 
     conn.commit()
 
     c.execute("SELECT COUNT(*) FROM guests")
     total = c.fetchone()[0]
-    c.execute("SELECT COUNT(*) FROM guests WHERE rsvp_status = 'Attending'")
-    attending = c.fetchone()[0]
-    c.execute("SELECT COUNT(*) FROM guests WHERE how_we_know != ''")
-    with_form = c.fetchone()[0]
-    c.execute("SELECT COUNT(*) FROM guests WHERE rsvp_status = 'Declined'")
-    declined = c.fetchone()[0]
-    c.execute("SELECT COUNT(*) FROM guests WHERE rsvp_status = 'No Response'")
-    no_resp = c.fetchone()[0]
-    c.execute("SELECT COUNT(*) FROM guests WHERE rsvp_status = 'Mixed/Incomplete'")
-    mixed = c.fetchone()[0]
-    c.execute("SELECT COUNT(*) FROM guests WHERE food_choice != ''")
-    food_count = c.fetchone()[0]
-    c.execute("SELECT COUNT(*) FROM guests WHERE photo_url LIKE 'images/%'")
-    local_photo_count = c.fetchone()[0]
-    c.execute("SELECT COUNT(*) FROM guests WHERE form_current_city != ''")
-    form_city_count = c.fetchone()[0]
-    c.execute("SELECT COUNT(*) FROM guests WHERE form_hometown != ''")
-    form_hometown_count = c.fetchone()[0]
-    c.execute("SELECT COUNT(*) FROM guests WHERE form_memory != ''")
-    form_memory_count = c.fetchone()[0]
-
     conn.close()
 
-    print(f"Merged {total} guests into wedding.db")
-    print(f"  {attending} attending, {declined} declined, {no_resp} no response, {mixed} mixed")
-    print(f"  {master_matched} matched to master list (contact details)")
-    print(f"  {with_form} have form responses")
-    print(f"  {form_matched} form responses matched")
-    if unmatched_form:
-        print(f"  {len(unmatched_form)} form responses with no match:")
-        for first, last in sorted(unmatched_form):
-            print(f"    - {first} {last}")
-
-    print(f"  {food_count} have food_choice assigned")
-    print(f"  {local_photo_count} have local photos")
-    print(f"  form fields: {form_city_count} current_city, "
-          f"{form_hometown_count} hometown, {form_memory_count} memory")
-    if food_warnings:
-        print(f"  Food-parsing warnings ({len(food_warnings)}):")
-        for w in food_warnings:
-            print(f"    - {w}")
+    print(f"Synced {total} guest(s) from the form into wedding.db")
+    print(f"  {with_story} have a \"how we know each other\" story")
+    print(f"  {with_photo} have a photo")
 
 
 # ── Contact-form ingestion ──────────────────────────────────────────────
 # Reads contact_form_responses.csv (post-wedding contact info: phone,
 # email, Instagram, LinkedIn, Twitter, BlueSky, Soundcloud) and writes
-# matched rows into wedding.db's `guest_contacts` table.
+# matched rows into wedding.db's `guest_contacts` table. This is a
+# separate, optional form from the main guest form above (see CLAUDE.md
+# — the "Get to Know You" form for the guest Facebook feature).
 #
 # Free-text form fields are messy in the wild — handles vs. @handles
 # vs. full URLs with tracking params, phone formatting variants, "N/A"
@@ -611,17 +263,9 @@ def merge_and_write(export_guests, full_list_extras, master, form_responses):
 # (first_norm, last_norm) guest key. Used when fuzzy splitting the
 # contact form's single "Full Name" field can't reach an existing guest
 # row on its own — e.g. married-name drift, typos, first-name-only
-# submissions. Keep entries here narrow and verified by Elien/Nima; do
-# NOT auto-add by inference.
-CONTACT_FORM_NAME_MAP = {
-    "asma amani":                  ("asma", "ahmed"),
-    "zuzana krejciova-rajaniemi":  ("zuzana", "krejciova"),
-    "sep":                          ("sep", "norouzi"),
-    "alexa meywr":                  ("alexandra", "meyer"),
-    "lena elkousy":                 ("lena", "elsouky"),
-    "barbara soalheiro gwercman":   ("barbara", "gwercman"),
-    "hope angel williams":          ("hope", "angel williams"),
-}
+# submissions. Keep entries here narrow and verified by Hilary/Elliott;
+# do NOT auto-add by inference. Empty until they need one.
+CONTACT_FORM_NAME_MAP = {}
 
 
 def to_guest_key(first, last):
@@ -684,7 +328,7 @@ def normalize_linkedin(raw):
         - full https URL (preferred form, just strips ?utm_...)
         - 'www.linkedin.com/in/foo' (no scheme)
         - 'LinkedIn.com/u/Foo' (alt path)
-        - '/in/foo' (path-only, no host) — seen in Anna Spisak's submission
+        - '/in/foo' (path-only, no host)
         - bare slug 'viksit' → assume /in/<slug>"""
     s = (raw or "").strip()
     if not s or s.lower() in ("n/a", "na", "none"):
@@ -777,9 +421,8 @@ def read_contact_form_responses():
 
 def _candidate_splits(full_norm):
     """Yield (first_norm, last_norm) candidates from a normalized full
-    name. Tries every plausible split so a name like 'Barbara Soalheiro
-    Gwercman' can reach both (barbara, soalheiro gwercman) and (barbara
-    soalheiro, gwercman) — whichever the guest table has."""
+    name. Tries every plausible split so a multi-word last name can
+    reach whichever split the guest table actually has."""
     tokens = full_norm.split()
     if not tokens:
         return
@@ -811,7 +454,7 @@ def match_contact_name(full_name, known_keys):
 
     # 2) Try every plausible (first, last) split against known keys
     #    directly, then against FORM_NAME_MAP for the existing form-side
-    #    aliases (married-name drift etc.).
+    #    aliases (typo re-submits etc.).
     for first, last in _candidate_splits(full_norm):
         key = to_guest_key(first, last)
         if key in known_keys:
@@ -931,24 +574,14 @@ def merge_contacts(contact_rows):
 
 
 def main():
-    for path, label in [
-        (EXPORT_CSV, "export.csv"),
-        (MASTER_CSV, "master_list.csv"),
-        (FORM_CSV, "form_responses.csv"),
-    ]:
-        if not os.path.exists(path):
-            print(f"Missing {label}")
-            return
+    if not os.path.exists(FORM_CSV):
+        print("Missing form_responses.csv")
+        return
 
-    export_guests = read_export()
-    full_list_extras = read_full_list()
-    master = read_master()
     form_responses = read_form_responses()
-    merge_and_write(export_guests, full_list_extras, master, form_responses)
+    merge_and_write(form_responses)
 
     # Contact form is optional — skip silently if the CSV isn't there.
-    # This is how Nima's sync routine treats the original form CSV too:
-    # download if available, run merge regardless.
     if os.path.exists(CONTACT_FORM_CSV):
         contact_rows = read_contact_form_responses()
         merge_contacts(contact_rows)
