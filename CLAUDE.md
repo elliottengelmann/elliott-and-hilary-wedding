@@ -21,9 +21,13 @@ Two features from the original template were intentionally removed. **Do not
 add them back** unless the owners explicitly ask:
 
 - **No seating chart.** No `edit_seating.py`, no `seating_*` tables, no seating UI.
-- **No RSVPs.** No attendance tracking, no RSVP-gated schedule, no "Who's Coming."
-  Every guest sees the full schedule. The guest directory is driven purely by the
-  form: **anyone who fills out the Google Form gets a profile.**
+- **No RSVPs.** No attendance tracking, no RSVP-gated schedule. Every guest sees
+  the full schedule. The guest directory is driven purely by the form:
+  **anyone who fills out the Google Form gets a profile.** Note: the guest
+  directory screen is titled "Who's Coming" in the UI (renamed from "Los
+  Invitados" at the couple's request) — that's just a label, not attendance
+  tracking; it lists everyone who filled out the form, regardless of whether
+  they're actually coming.
 
 ## The guest form and how fields map
 

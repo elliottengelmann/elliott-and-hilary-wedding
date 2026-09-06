@@ -287,8 +287,8 @@ def build_extras(conn):
     aren't part of the formal wedding-weekend schedule. Same card visual
     as Schedule (.event-card / .event-header / .event-details so the
     existing toggleEvent expand-on-tap and styling apply for free), but
-    no RSVP wiring, no dress code, no "Who's Coming" — these events are
-    additive and open to everyone who wants to come.
+    no RSVP wiring, no dress code, no attendance tracking — these events
+    are additive and open to everyone who wants to come.
 
     Schema: id, event_date, day_label, title, time, venue,
     location_label, location_url, note, sort_order. day_label uses the
@@ -838,7 +838,7 @@ def build_herewith_for(key, overrides, name_by_key):
 
 
 def build_guest_json(conn):
-    # Anyone who filled out the form gets a profile in Los Invitados,
+    # Anyone who filled out the form gets a profile in Who's Coming,
     # regardless of their RSVP status. Whether they've formally ticked
     # "Attending" on the RSVP is not the gate — a submitted form
     # answer is. (An admin story override also unlocks a profile, for
@@ -952,7 +952,7 @@ def build_guest_json(conn):
         # so this is sent over as an array of strings. Only "Attending"
         # counts as a yes; anything else reads as no. Phrasing is fixed
         # copy ("Saturday Wedding Ceremony", "Sunday Come Down Dinner")
-        # so the Los Invitados search filter can still match by
+        # so the Who's Coming search filter can still match by
         # day-of-week (substring match against the array's toString()).
         attending_events = []
         if thu.lower() == "attending":
@@ -1919,7 +1919,7 @@ TEMPLATE = r"""<!DOCTYPE html>
             padding: 0 24px 100px;
         }
 
-        /* Los Invitados screen title — override the default Bodoni
+        /* Who's Coming screen title — override the default Bodoni
            header style for this one screen with a Mea Culpa flourish. */
         .invitado-screen-title {
             font-family: 'Mea Culpa', cursive;
@@ -2479,7 +2479,7 @@ TEMPLATE = r"""<!DOCTYPE html>
         }
         .goodtime-heading {
             font-family: 'Mea Culpa', cursive;
-            /* Match the Los Invitados screen title (.invitado-screen-title). */
+            /* Match the Who's Coming screen title (.invitado-screen-title). */
             font-size: 36px;
             font-weight: 400;
             color: var(--primary-green);
@@ -3230,14 +3230,14 @@ TEMPLATE = r"""<!DOCTYPE html>
                         <!-- Stylized back chevron: stroked with rounded caps for a
                              drawn-but-precise feel. Shown only when a profile is
                              open (returns to the browse grid); hidden on the
-                             browse grid itself, since Los Invitados is the app's
+                             browse grid itself, since Who's Coming is the app's
                              home. invitadoShowProfile / invitadoShowBrowse toggle
                              the inline display style. -->
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                             <path d="M14 6 L8 12 L14 18" stroke="#1F6E8C" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
                         </svg>
                     </button>
-                    <h1 class="header-title invitado-screen-title">Los Invitados</h1>
+                    <h1 class="header-title invitado-screen-title">Who's Coming</h1>
                     <button class="hamburger" onclick="toggleMenu()"><svg width="22" height="16" viewBox="0 0 22 16" fill="none"><line x1="1" y1="1" x2="21" y2="1" stroke="#1F6E8C" stroke-width="1.5" stroke-linecap="round"/><line x1="1" y1="8" x2="21" y2="8" stroke="#1F6E8C" stroke-width="1.5" stroke-linecap="round"/><line x1="1" y1="15" x2="21" y2="15" stroke="#1F6E8C" stroke-width="1.5" stroke-linecap="round"/></svg></button>
                 </div>
 
@@ -3480,7 +3480,7 @@ TEMPLATE = r"""<!DOCTYPE html>
             <div class="menu-overlay" id="menuOverlay" onclick="closeMenu()"></div>
             <div class="menu-drawer" id="menuDrawer">
                 <!-- Items are alphabetized. The four bottom-tab destinations
-                     (Schedule, Los Invitados, San Miguel Guide, Travel/Toasts)
+                     (Schedule, Who's Coming, San Miguel Guide, Travel/Toasts)
                      are mirrored here so they're reachable from the menu too;
                      they call switchScreen(id, tabIndex) so the active tab
                      indicator updates. The Toasts/Travel slot is date-gated:
@@ -3491,7 +3491,7 @@ TEMPLATE = r"""<!DOCTYPE html>
                 <a class="menu-item" href="https://chat.whatsapp.com/LYpQT10pMmt6Bm3rKztsu1?mode=gi_t" target="_blank" rel="noopener noreferrer" onclick="closeMenu()" style="text-decoration:none;color:inherit;display:block;">Chat</a>
                 <button class="menu-item" onclick="switchScreenFromMenu('extras')">Extra Activities</button>
                 <button class="menu-item menu-item--good-time" onclick="switchScreenFromMenu('goodtime')"><span>To Enjoy Your Time</span><span class="menu-item-icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><circle cx="8" cy="8" r="2.6"/><line x1="8" y1="2" x2="8" y2="3.4"/><line x1="8" y1="12.6" x2="8" y2="14"/><line x1="2" y1="8" x2="3.4" y2="8"/><line x1="12.6" y1="8" x2="14" y2="8"/><line x1="3.76" y1="3.76" x2="4.75" y2="4.75"/><line x1="11.25" y1="11.25" x2="12.24" y2="12.24"/><line x1="3.76" y1="12.24" x2="4.75" y2="11.25"/><line x1="11.25" y1="4.75" x2="12.24" y2="3.76"/></svg></span></button>
-                <button class="menu-item" onclick="switchScreen('facebook', 0)">Los Invitados</button>
+                <button class="menu-item" onclick="switchScreen('facebook', 0)">Who's Coming</button>
                 <button class="menu-item" onclick="switchScreenFromMenu('registry')">Registry</button>
                 <button class="menu-item" onclick="switchScreen('guide', 2)">Local Guide</button>
                 <button class="menu-item" onclick="switchScreenFromMenu('schedule')">Schedule</button>
@@ -3544,7 +3544,7 @@ TEMPLATE = r"""<!DOCTYPE html>
             </div>
 
             <!-- TAB BAR
-                 4 tabs: Los Invitados (the app's home), a date-gated
+                 4 tabs: Who's Coming (the app's home), a date-gated
                  Travel/Toasts slot (Travel before 2026-09-19, Toasts
                  on/after — see initTravelToastsTab()), San Miguel Guide,
                  and Share Photos (an external link to the shared Google
@@ -3565,7 +3565,7 @@ TEMPLATE = r"""<!DOCTYPE html>
                             <path d="M27 22 C27 18, 25 15, 21 15 C19 15, 18 15.5, 17.5 16" stroke-width="1.8" stroke-linecap="round" fill="none"/>
                         </svg>
                     </div>
-                    <span class="tab-label">Los Invitados</span>
+                    <span class="tab-label">Who's Coming</span>
                 </button>
                 <button class="tab" id="travelToastsTab" onclick="onTravelToastsTap()">
                     <div class="tab-icon" id="travelToastsIcon">
@@ -3656,7 +3656,7 @@ TEMPLATE = r"""<!DOCTYPE html>
         // Tab indexes for the bottom bar. Travel and Toasts both occupy
         // slot 2 — which one renders depends on the date-gated swap.
         // Tab indexes for the bottom bar after the design-system v3 reorder:
-        // Los Invitados (0), Travel/Toasts (1, date-gated), San Miguel (2),
+        // Who's Coming (0), Travel/Toasts (1, date-gated), San Miguel (2),
         // Photos (3, external link — never highlighted). Schedule no longer
         // has a tab; it routes via switchScreenFromMenu so no tab is marked
         // active when a hamburger user lands there.
@@ -3804,7 +3804,7 @@ TEMPLATE = r"""<!DOCTYPE html>
                         document.querySelector('.tab-bar').style.display = 'none';
                         currentScreen = 'splash';
                     } else {
-                        // Default home is Los Invitados (the browse grid).
+                        // Default home is Who's Coming (the browse grid).
                         // Mark the screen + tab active synchronously so
                         // the first paint is correct. The grid-render
                         // hook (invitadoEnsureGridRendered) and the
@@ -3833,7 +3833,7 @@ TEMPLATE = r"""<!DOCTYPE html>
             document.getElementById(screenId).classList.add('active');
             currentScreen = screenId;
 
-            // Tapping the Los Invitados tab icon always returns the user
+            // Tapping the Who's Coming tab icon always returns the user
             // to the browse grid, even if they're already on the tab with
             // a profile open. Otherwise the tap would feel like a no-op.
             if (screenId === 'facebook' && typeof invitadoShowBrowse === 'function') {
@@ -4078,7 +4078,7 @@ TEMPLATE = r"""<!DOCTYPE html>
         }
         function onTravelToastsTap() {
             // Tab index 1 after the design-system v3 reorder
-            // (Los Invitados 0, Travel/Toasts 1, San Miguel 2, Photos 3).
+            // (Who's Coming 0, Travel/Toasts 1, San Miguel 2, Photos 3).
             if (isToastsTime()) {
                 switchScreen('toasts', 1);
             } else {
@@ -4107,7 +4107,7 @@ TEMPLATE = r"""<!DOCTYPE html>
         initHamburgerDateSwap();
         initToastAudios();
 
-        // Los Invitados — browse grid + profile view
+        // Who's Coming — browse grid + profile view
         let invitadoIndex = 0;
         const invitadoKeyToIndex = {};
         guests.forEach((g, i) => { invitadoKeyToIndex[g.key] = i; });
@@ -4285,7 +4285,7 @@ TEMPLATE = r"""<!DOCTYPE html>
             });
         }
 
-        // Jump from a Schedule event card into Los Invitados with the
+        // Jump from a Schedule event card into Who's Coming with the
         // list pre-filtered to guests attending that welcome dinner.
         // Called from the "Who's coming" button on Thursday/Friday event
         // cards. dayWord is "thursday" or "friday" — it goes straight
@@ -4498,7 +4498,7 @@ TEMPLATE = r"""<!DOCTYPE html>
             document.getElementById('invitadoBrowse').style.display = '';
             document.querySelector('#facebook .header-title').style.display = '';
             invitadoPartnerOnly = false;
-            // Los Invitados is now the app's home, so the browse grid has
+            // Who's Coming is now the app's home, so the browse grid has
             // nothing meaningful to back out to — hide the chevron.
             const backBtn = document.getElementById('invitadoBackBtn');
             if (backBtn) backBtn.style.display = 'none';
@@ -4558,10 +4558,10 @@ TEMPLATE = r"""<!DOCTYPE html>
         }
 
         function invitadoBack() {
-            // Back chevron in the Los Invitados header. Only meaningful
+            // Back chevron in the Who's Coming header. Only meaningful
             // when a profile is open — close it and return to the browse
             // grid. The button is hidden on the browse grid itself
-            // (Los Invitados is the app's home, no further "back"); the
+            // (Who's Coming is the app's home, no further "back"); the
             // ESC keybinding still calls this and quietly does nothing
             // when no profile is showing.
             const profileVisible =
