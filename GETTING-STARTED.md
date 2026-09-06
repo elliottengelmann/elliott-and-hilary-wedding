@@ -84,24 +84,14 @@ that's usually why.)*
 
 ---
 
-## The motif: lighthouse splash screen + Popham Beach background art
+## The motif: lighthouse splash screen + Popham Beach background
 
 The welcome-screen illustration is a WPA-poster-style lighthouse scene,
-hand-coded directly in the site's code — nothing to do there, it's already
-live.
-
-The soft background circles that appear behind other screens are a different
-piece: a watercolor image of Popham Beach, still needed. To add it:
-
-1. Save the watercolor image as a file named **exactly** `popham.png`.
-2. Put it in the app's `images` folder. In **Finder**: menu **Go → Go to
-   Folder…**, paste this and press Return, then drag `popham.png` in:
-   ```
-   ~/code/elliott-and-hilary-wedding/images
-   ```
-3. Open Claude Code in the app folder and say: **"I added the lobster image —
-   build and publish it."** It rebuilds and pushes, and it appears on the live
-   site in about a minute.
+hand-coded directly in the site's code. Behind every screen, the full page
+background is a watercolor of Popham Beach (`images/popham.png`), washed out
+under a light cream tint so text stays readable on top of it. Both are
+already live — nothing to do here. If you'd rather change either one, just
+tell Claude Code what you have in mind.
 
 ---
 

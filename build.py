@@ -1309,67 +1309,17 @@ TEMPLATE = r"""<!DOCTYPE html>
             }
         }
 
-        /* Anchored to the viewport (not .app-container) so it can extend
-           up behind the iOS status bar in installed PWA mode — otherwise
-           .app-container's overflow:hidden clips the top of the circle
-           right at the safe-area boundary, leaving a visible flat edge. */
-        .bg-nasturtiums {
-            position: fixed;
-            width: 300px;
-            height: 300px;
-            top: -60px;
-            right: -60px;
-            object-fit: cover;
-            border-radius: 50%;
-            opacity: 0;
-            pointer-events: none;
-            z-index: 0;
-            transition: opacity 0.6s ease;
-        }
-
-        /* On desktop, align the fixed flower with the centered 480px
-           app column instead of the viewport's right edge. */
-        @media (min-width: 640px) {
-            .bg-nasturtiums {
-                right: calc((100vw - 480px) / 2 - 60px);
-            }
-        }
-
-        /* In installed PWA mode on iOS, the area above safe-area-inset-top
-           is either clipped (with status-bar-style: default) or sits behind
-           a translucent system overlay — either way, a `top: -60px` peek
-           shows up as a visible hard horizontal cut right at the status
-           bar bottom. Align the bbox top with safe-area-inset-top so the
-           circle's top (a single point) meets the status bar bottom
-           cleanly. Sacrifices the peek-from-above effect in PWA, but
-           the hard edge that triggered this fix is gone. */
-        @media (display-mode: standalone) {
-            .bg-nasturtiums {
-                top: env(safe-area-inset-top, 0px);
-            }
-        }
-
-        /* Rose bookend: mirrored treatment to .bg-nasturtiums but pinned
-           to the bottom-left corner so the schedule page reads as a
-           balanced watercolor composition — orange up top, pink down
-           bottom. Same opacity (0.12 when visible), same soft fade-in. */
-        .bg-rose {
-            position: absolute;
-            width: 300px;
-            height: 300px;
-            bottom: -60px;
-            left: -60px;
-            object-fit: cover;
-            border-radius: 50%;
-            opacity: 0;
-            pointer-events: none;
-            z-index: 0;
-            transition: opacity 0.6s ease;
-        }
-
-        .bg-nasturtiums.visible,
-        .bg-rose.visible {
-            opacity: 0.12;
+        /* Popham Beach watercolor as a full-bleed backdrop behind every
+           screen. Washed out under a cream tint (same ~0.12 visible
+           strength the old corner badges used) so body text laid directly
+           on the background — day-labels, event titles, etc. — stays
+           legible. .app-container doesn't scroll (only .screen-content
+           does), so this stays put behind scrolling content for free. */
+        .app-container {
+            background:
+                linear-gradient(rgba(245, 240, 235, 0.88), rgba(245, 240, 235, 0.88)),
+                url('images/popham.png') center/cover no-repeat,
+                var(--light-bg);
         }
 
         /* Watercolor accent blobs */
@@ -3166,8 +3116,6 @@ TEMPLATE = r"""<!DOCTYPE html>
         </svg>
     </div>
     <div class="app-container">
-            <img src="images/popham.png" onerror="this.style.display='none'" alt="" class="bg-nasturtiums" id="bgNasturtiums">
-            <img src="images/popham.png" onerror="this.style.display='none'" alt="" class="bg-rose" id="bgRose">
             <!-- LOGIN SCREEN -->
             <div class="screen login-screen active" id="login">
                 <div class="login-card">
@@ -3784,8 +3732,6 @@ TEMPLATE = r"""<!DOCTYPE html>
 
         function skipSplash() {
             localStorage.removeItem('splashPending');
-            document.getElementById('bgNasturtiums').classList.add('visible');
-            document.getElementById('bgRose').classList.add('visible');
             // If the user landed on a deep link, route there instead of the home.
             const hash = (window.location.hash || '').replace(/^#\/?/, '');
             const head = hash.split('/').filter(Boolean)[0];
@@ -3877,8 +3823,6 @@ TEMPLATE = r"""<!DOCTYPE html>
                             if (typeof invitadoEnsureGridRendered === 'function') invitadoEnsureGridRendered();
                             if (typeof invitadoShowBrowse === 'function') invitadoShowBrowse();
                         });
-                        document.getElementById('bgNasturtiums').classList.add('visible');
-                        document.getElementById('bgRose').classList.add('visible');
                     }
                 }
             }

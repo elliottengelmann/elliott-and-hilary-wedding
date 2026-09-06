@@ -86,18 +86,16 @@ Tweak freely. Note: the CSS variables are still named `--primary-green` /
   `build.py` (splash screen, the PWA-update badge, two small profile-page
   glyphs). No image file involved — if the couple wants a different scene,
   redraw the SVGs in place.
-- **Background circles** (`.bg-nasturtiums` / `.bg-rose`, top-right and
-  bottom-left on most screens): the couple wants a watercolor image of
-  Popham Beach here (not the rosa-rugosa/nasturtium flower photos that were
-  there before, and not the lighthouse). The existing `opacity: 0.12` in
-  `.bg-nasturtiums.visible`/`.bg-rose.visible` already gives it the subtle
-  watermark look they wanted — no extra transparency editing needed on the
-  source file. Both circles point to `images/popham.png`, **not yet in the
-  repo** — the site hides them gracefully until it's added. See
-  GETTING-STARTED.md for how to add it. (`images/nasturtiums.png` and
-  `images/rosa-rugosa.png` are still real
-  assets in the repo, just currently unused for the background circles — the
-  guest-profile "shared contacts" thumb badge still uses rosa-rugosa.png.)
+- **Full-page background:** `.app-container`'s `background` is a Popham
+  Beach watercolor (`images/popham.png`), washed out under a ~0.88-opacity
+  cream tint (a two-layer CSS `background`: gradient over the image) so text
+  laid directly on it stays legible. This replaced an earlier two-circle
+  treatment (`.bg-nasturtiums` / `.bg-rose`, top-right/bottom-left corner
+  badges) — those classes, their JS fade-in toggles, and the corner `<img>`
+  elements are gone; don't re-add them without asking. (`images/nasturtiums.png`
+  and `images/rosa-rugosa.png` are still real assets in the repo, unused for
+  the background now — the guest-profile "shared contacts" thumb badge still
+  uses rosa-rugosa.png.)
 
 ## NEVER fabricate guest content (absolute rule)
 
