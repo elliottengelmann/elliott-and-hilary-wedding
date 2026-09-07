@@ -76,30 +76,39 @@ post-wedding "stay in touch" form is deferred (their call, TBD). Any new
 bracketed blank you find, e.g. `[Cause name]`, is the couple's own content to
 write — **fill it only with words Hilary or Elliott actually give you.**
 
-Also worth reviewing: the app icons (still placeholders).
-
 **Visual design:** a simple coastal-Maine palette is applied — navy `#1F6E8C`
 (primary), warm cream `#F5F0EB` (background), lobster-red `#E24A2E` (accent).
 Tweak freely. Note: the CSS variables are still named `--primary-green` /
 `--accent-warm` etc. (legacy names, coastal values) — rename them if you tidy up.
 
-**Motif — two separate pieces, don't conflate them:**
+**Motif — three separate pieces, don't conflate them:**
 
-- **Splash screen + small accent glyphs:** a WPA-poster-style
-  lighthouse-on-the-coast scene, hand-coded as inline SVG directly in
-  `build.py` (splash screen, the PWA-update badge, two small profile-page
-  glyphs). No image file involved — if the couple wants a different scene,
-  redraw the SVGs in place.
+- **Splash screen + app icons + small accent glyphs:** the couple's own
+  hand-drawn "two lobsters forming a heart" illustration
+  (`images/lobsters.jpg` — the raw file they uploaded; don't overwrite it).
+  A cropped/background-removed transparent derivative lives at
+  `images/lobsters.png` and is what the splash screen actually references
+  (`<img>` in the `.splash-image` div). The app icons
+  (`icons/icon.svg`, `icon-192.png`, `icon-512.png`,
+  `icon-maskable-512.png`, `apple-touch-icon.png`) are generated from the
+  same artwork composited onto the cream (`#F5F0EB`) background, matching
+  the site's existing icon style (rounded square for "any"/apple-touch,
+  edge-to-edge for maskable — safe-zone content stays within the center
+  ~50% for the maskable variant). The two small accent glyphs (the
+  PWA-update badge and the tiny bud icon next to a guest's "Stay in Touch"
+  label) are hand-coded inline SVGs redrawn as mini lobster-claw/heart
+  shapes to match — not derived from the image file. If the couple wants
+  to swap in different artwork, regenerate all of these together (there's
+  no script for it — it was done by hand with `sips` for cropping and the
+  `scripts/remove-paper-bg.mjs` + `sharp` for background removal/icon
+  compositing; see git history on this file for the exact commands).
 - **Full-page background:** `.app-container`'s `background` is a Popham
   Beach watercolor (`images/popham.png`), washed out under a ~0.88-opacity
   cream tint (a two-layer CSS `background`: gradient over the image) so text
-  laid directly on it stays legible. This replaced an earlier two-circle
-  treatment (`.bg-nasturtiums` / `.bg-rose`, top-right/bottom-left corner
-  badges) — those classes, their JS fade-in toggles, and the corner `<img>`
-  elements are gone; don't re-add them without asking. (`images/nasturtiums.png`
-  and `images/rosa-rugosa.png` are still real assets in the repo, unused for
-  the background now — the guest-profile "shared contacts" thumb badge still
-  uses rosa-rugosa.png.)
+  laid directly on it stays legible. `images/nasturtiums.png` and
+  `images/rosa-rugosa.png` are still real assets in the repo, unused for
+  the background — the guest-profile "shared contacts" thumb badge still
+  uses rosa-rugosa.png.
 
 ## NEVER fabricate guest content (absolute rule)
 

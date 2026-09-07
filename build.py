@@ -2870,10 +2870,12 @@ TEMPLATE = r"""<!DOCTYPE html>
 <body>
     <div class="update-indicator" id="updateIndicator" role="status" aria-live="polite" aria-label="Updating app">
         <svg class="update-flower" viewBox="0 0 48 48" role="presentation" aria-hidden="true">
-            <path d="M20 34 L18 12 L30 12 L28 34 Z" fill="#F5F0EB" stroke="#1F6E8C" stroke-width="2"/>
-            <rect x="17" y="20" width="14" height="6" fill="#E24A2E"/>
-            <rect x="19" y="6" width="10" height="8" fill="#1F6E8C"/>
-            <path d="M17 6 L24 0 L31 6 Z" fill="#E24A2E"/>
+            <circle cx="9" cy="10" r="4" fill="#E24A2E"/>
+            <circle cx="39" cy="10" r="4" fill="#E24A2E"/>
+            <path d="M11 12 L17 18 L21 22" stroke="#E24A2E" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+            <path d="M37 12 L31 18 L27 22" stroke="#E24A2E" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+            <ellipse cx="24" cy="28" rx="8" ry="14" fill="#E24A2E"/>
+            <path d="M18 40 L24 34 L30 40 L24 47 Z" fill="#E24A2E"/>
         </svg>
     </div>
     <div class="app-container">
@@ -2912,32 +2914,7 @@ TEMPLATE = r"""<!DOCTYPE html>
             <div class="screen splash-screen" id="splash">
                 <div class="splash-content">
                     <div class="splash-image">
-                        <svg viewBox="0 0 320 240" role="img" aria-label="A lighthouse on the Maine coast">
-                            <rect x="0" y="0" width="320" height="240" rx="16" fill="#F5F0EB"/>
-                            <circle cx="160" cy="88" r="46" fill="#E24A2E"/>
-                            <g stroke="#E24A2E" stroke-width="6" stroke-linecap="round">
-                                <line x1="160" y1="14" x2="160" y2="30"/>
-                                <line x1="160" y1="146" x2="160" y2="130"/>
-                                <line x1="86" y1="88" x2="102" y2="88"/>
-                                <line x1="218" y1="88" x2="234" y2="88"/>
-                                <line x1="108" y1="36" x2="118" y2="46"/>
-                                <line x1="212" y1="36" x2="202" y2="46"/>
-                                <line x1="108" y1="140" x2="118" y2="130"/>
-                                <line x1="212" y1="140" x2="202" y2="130"/>
-                            </g>
-                            <path d="M0 170 Q80 158 160 170 T320 170 V240 H0 Z" fill="#1F6E8C"/>
-                            <path d="M0 190 Q80 180 160 190 T320 190" stroke="#F5F0EB" stroke-width="4" fill="none" opacity="0.5"/>
-                            <path d="M0 210 Q80 200 160 210 T320 210" stroke="#F5F0EB" stroke-width="4" fill="none" opacity="0.35"/>
-                            <path d="M190 240 L200 150 L245 130 L280 150 L300 240 Z" fill="#123047"/>
-                            <path d="M232 150 L226 60 L254 60 L248 150 Z" fill="#F5F0EB" stroke="#123047" stroke-width="3"/>
-                            <rect x="226" y="80" width="28" height="14" fill="#E24A2E"/>
-                            <rect x="226" y="110" width="28" height="14" fill="#E24A2E"/>
-                            <rect x="230" y="42" width="20" height="18" fill="#123047"/>
-                            <path d="M228 42 L240 24 L252 42 Z" fill="#E24A2E"/>
-                            <path d="M240 50 L150 20 L150 34 Z" fill="#FBDE9C" opacity="0.85"/>
-                            <path d="M60 70 Q66 62 72 70 Q78 62 84 70" stroke="#1F6E8C" stroke-width="3" fill="none" stroke-linecap="round"/>
-                            <path d="M90 50 Q95 44 100 50 Q105 44 110 50" stroke="#1F6E8C" stroke-width="3" fill="none" stroke-linecap="round"/>
-                        </svg>
+                        <img src="images/lobsters.png" onerror="this.style.display='none'" alt="Two lobsters forming a heart" loading="eager" decoding="async">
                     </div>
                     <div class="splash-text">
                         We are so, so excited that you are joining us for our commitment celebration! Some of the things that drew us together most early on were how important community is and our shared understanding that a best friend is in fact a tier not a person. While we are choosing not to get legally married, we couldn&rsquo;t pass up an opportunity to bring the people who mean the most to us to one of our favorite states to eat, dance, yap, dance some more, yap some more, etc. We hope you have an absolute blast and are so grateful to you for making the schlep!
@@ -3799,10 +3776,12 @@ TEMPLATE = r"""<!DOCTYPE html>
             return `
                 <div class="invitado-contact-label">
                     <svg class="invitado-contact-label-bud" viewBox="0 0 24 24" role="presentation" aria-hidden="true">
-                        <path d="M10 17 L9 6 L15 6 L14 17 Z" fill="#F5F0EB" stroke="#1F6E8C" stroke-width="1"/>
-                        <rect x="9" y="9.5" width="6" height="3" fill="#E24A2E"/>
-                        <rect x="9.5" y="3" width="5" height="4" fill="#1F6E8C"/>
-                        <path d="M9 3 L12 0 L15 3 Z" fill="#E24A2E"/>
+                        <circle cx="6" cy="6" r="2" fill="#E24A2E"/>
+                        <circle cx="18" cy="6" r="2" fill="#E24A2E"/>
+                        <path d="M7 7 L10 10 L11.5 11.5" stroke="#E24A2E" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+                        <path d="M17 7 L14 10 L12.5 11.5" stroke="#E24A2E" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+                        <ellipse cx="12" cy="14" rx="4" ry="7" fill="#E24A2E"/>
+                        <path d="M9 20 L12 17 L15 20 L12 23.5 Z" fill="#E24A2E"/>
                     </svg>
                     Stay in Touch
                 </div>

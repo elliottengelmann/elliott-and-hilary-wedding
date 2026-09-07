@@ -84,14 +84,14 @@ that's usually why.)*
 
 ---
 
-## The motif: lighthouse splash screen + Popham Beach background
+## The motif: lobster splash screen + app icons + Popham Beach background
 
-The welcome-screen illustration is a WPA-poster-style lighthouse scene,
-hand-coded directly in the site's code. Behind every screen, the full page
-background is a watercolor of Popham Beach (`images/popham.png`), washed out
-under a light cream tint so text stays readable on top of it. Both are
-already live — nothing to do here. If you'd rather change either one, just
-tell Claude Code what you have in mind.
+The welcome-screen illustration and the app's icons are the couple's own
+hand-drawn "two lobsters forming a heart" artwork. Behind every screen, the
+full page background is a watercolor of Popham Beach (`images/popham.png`),
+washed out under a light cream tint so text stays readable on top of it. All
+of this is already live — nothing to do here. If you'd rather change any of
+it, just tell Claude Code what you have in mind.
 
 ---
 
