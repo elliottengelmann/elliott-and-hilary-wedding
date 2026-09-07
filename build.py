@@ -353,79 +353,6 @@ def build_extras(conn):
     return "\n\n".join(parts)
 
 
-DAY_LABELS = [
-    ("thursday", "Thursday"),
-    ("friday", "Friday"),
-    ("saturday", "Saturday"),
-]
-
-
-def build_toasts(conn):
-    """
-    Toasts are split by night (thursday vs friday vs saturday). Each card
-    collapses by default; tapping the speaker header expands the toast
-    body. The audio player (a real <audio> element wired up by
-    initToastAudios in the page JS) only renders when an `audio_url` is
-    present and is rendered FIRST (above the text) so listening is the
-    primary affordance and the long Persian translation reads as
-    accompanying material below. The CSS uses an `.audio-player +
-    .toast-text` sibling rule for the divider between the two; when a
-    toast has audio but no body text (e.g. someone whose Farsi
-    translation isn't on file yet), we drop the empty toast-text div.
-    Schema: id, speaker, text, duration, audio_url, day, sort_order.
-    """
-    toasts = query(
-        conn,
-        "SELECT * FROM toasts ORDER BY day, sort_order, id",
-    )
-    sections = []
-    for day_key, day_label in DAY_LABELS:
-        day_toasts = [t for t in toasts if (t["day"] or "") == day_key]
-        if not day_toasts:
-            continue
-        cards = []
-        for t in day_toasts:
-            audio_url = (t["audio_url"] or "").strip() if "audio_url" in t.keys() else ""
-            duration = (t["duration"] or "").strip()
-            if audio_url:
-                player_html = f"""
-                            <div class="audio-player" onclick="event.stopPropagation()">
-                                <button class="play-btn" type="button" aria-label="Play" onclick="toggleToastAudio(this, event)">▶</button>
-                                <div class="progress-bar" onclick="seekToastAudio(this, event)"><div class="progress-fill"></div></div>
-                                <div class="duration">{esc(duration)}</div>
-                                <audio preload="none" src="{esc(audio_url)}"></audio>
-                            </div>"""
-            else:
-                player_html = ""
-            paragraphs = [p.strip() for p in (t["text"] or "").split("\n\n") if p.strip()]
-            text_html = "\n                                ".join(
-                f"<p>{esc(p).replace(chr(10), '<br>')}</p>" for p in paragraphs
-            )
-            text_block = (
-                f"""<div class="toast-text">
-                                {text_html}
-                            </div>"""
-                if paragraphs
-                else ""
-            )
-            cards.append(
-                f"""                    <div class="toast-card" onclick="toggleToast(this)">
-                        <div class="toast-header">
-                            <div class="toast-speaker">{esc(t["speaker"])}</div>
-                            <div class="toast-toggle">▼</div>
-                        </div>
-                        <div class="toast-body">
-                            {player_html}{text_block}
-                        </div>
-                    </div>"""
-            )
-        sections.append(
-            f"""                    <h3 class="toast-day">{esc(day_label)}</h3>
-{chr(10).join(cards)}"""
-        )
-    return "\n\n".join(sections)
-
-
 # San Miguel Guide section ordering. "Coffee & Espresso" is sourced from
 # the cafes table; everything else from guide_places.category. Sections
 # with zero visible items don't render at all (and are dropped from the
@@ -654,17 +581,6 @@ def build_faqs(conn):
                         </div>
                         <div class="accordion-content">{esc(f["answer"])}</div>
                     </div>""")
-    return "\n\n".join(parts)
-
-
-def build_airports(conn):
-    airports = query(conn, "SELECT * FROM airports ORDER BY id")
-    parts = []
-    for a in airports:
-        parts.append(f"""                        <div style="background: white; border: 1px solid var(--divider); border-radius: 12px; padding: 16px; margin-bottom: 12px;">
-                            <div style="font-family: 'Bodoni Moda', serif; font-size: 15px; font-weight: 600; color: var(--dark); margin-bottom: 4px;">{esc(a["name"])} ({esc(a["code"])})</div>
-                            <div style="font-family: 'Nunito', sans-serif; font-size: 14px; color: var(--dark); line-height: 1.6;">{esc(a["description"])}</div>
-                        </div>""")
     return "\n\n".join(parts)
 
 
@@ -1111,10 +1027,8 @@ def main():
 
     events_html = build_events(conn)
     extras_html = build_extras(conn)
-    toasts_html = build_toasts(conn)
     guide_html = build_guide(conn)
     faqs_html = build_faqs(conn)
-    airports_html = build_airports(conn)
     car_services_html = build_car_services(conn)
     guest_json, partner_profiles_json = build_guest_json(conn)
     guest_lookup_json = build_guest_lookup_json(conn)
@@ -1123,10 +1037,8 @@ def main():
 
     output = TEMPLATE.replace("{{EVENTS}}", events_html)
     output = output.replace("{{EXTRAS}}", extras_html)
-    output = output.replace("{{TOASTS}}", toasts_html)
     output = output.replace("{{GUIDE}}", guide_html)
     output = output.replace("{{FAQS}}", faqs_html)
-    output = output.replace("{{AIRPORTS}}", airports_html)
     output = output.replace("{{CAR_SERVICES}}", car_services_html)
     output = output.replace("{{GUESTS_JSON}}", guest_json)
     output = output.replace("{{PARTNER_PROFILES_JSON}}", partner_profiles_json)
@@ -2198,157 +2110,6 @@ TEMPLATE = r"""<!DOCTYPE html>
             opacity: 0.6;
         }
 
-        /* TOASTS SCREEN — night-split, expandable cards (RTL Persian text). */
-        .toast-day {
-            font-family: 'Mea Culpa', cursive;
-            font-size: 28px;
-            color: var(--primary-green);
-            margin: 8px 0 12px 0;
-            font-weight: 400;
-        }
-
-        .toast-day + .toast-day,
-        .toast-card + .toast-day {
-            margin-top: 24px;
-        }
-
-        .toast-card {
-            background: white;
-            padding: 16px;
-            border-radius: 8px;
-            margin-bottom: 12px;
-            border: 1px solid var(--divider);
-            cursor: pointer;
-            transition: background 0.2s ease;
-        }
-
-        .toast-card:hover {
-            background: rgba(74, 124, 89, 0.02);
-        }
-
-        .toast-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .toast-speaker {
-            font-family: 'Bodoni Moda', serif;
-            font-size: 16px;
-            color: var(--dark);
-            font-weight: 600;
-        }
-
-        .toast-toggle {
-            color: var(--light-text);
-            font-size: 16px;
-            transition: transform 0.2s ease;
-            flex-shrink: 0;
-        }
-
-        .toast-card.open .toast-toggle {
-            transform: rotate(180deg);
-        }
-
-        .toast-body {
-            display: none;
-            padding-top: 12px;
-            margin-top: 12px;
-            border-top: 1px solid var(--divider);
-        }
-
-        .toast-card.open .toast-body {
-            display: block;
-        }
-
-        .toast-text {
-            font-family: 'Bodoni Moda', serif;
-            font-size: 15px; /* +12% from 13 — readability pass */
-            color: var(--dark);
-            line-height: 1.8;
-            direction: rtl;
-            text-align: right;
-        }
-
-        .toast-text p {
-            margin: 0 0 12px 0;
-        }
-
-        .toast-text p:last-child {
-            margin-bottom: 0;
-        }
-
-        /* Audio-first layout: player renders above the Persian text so
-           listening is the primary affordance. The toast-body itself
-           carries the top divider (separating the body from the speaker
-           header), so the player needs no top border of its own. The
-           divider between player and text is on `.audio-player +
-           .toast-text` below. */
-        .audio-player {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .audio-player + .toast-text {
-            padding-top: 12px;
-            margin-top: 12px;
-            border-top: 1px solid var(--divider);
-        }
-
-        .play-btn {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            background: var(--accent-warm);
-            border: none;
-            color: white;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 14px;
-            line-height: 1;
-            transition: background 0.2s ease;
-            flex-shrink: 0;
-            padding: 0;
-        }
-
-        .play-btn:hover {
-            background: #d6734d;
-        }
-
-        .progress-bar {
-            flex: 1;
-            height: 4px;
-            background: var(--divider);
-            border-radius: 2px;
-            cursor: pointer;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .progress-fill {
-            position: absolute;
-            top: 0;
-            left: 0;
-            bottom: 0;
-            width: 0%;
-            background: var(--accent-warm);
-            border-radius: 2px;
-            pointer-events: none;
-        }
-
-        .duration {
-            font-family: 'Nunito', sans-serif;
-            font-size: 12px;
-            color: var(--light-text);
-            min-width: 30px;
-            text-align: right;
-            font-variant-numeric: tabular-nums;
-        }
-
         /* SAN MIGUEL GUIDE SCREEN
            Layout: italic intro → pill jump-nav → stacked sections.
            Each section has an h3 heading, optional pinned Google-Maps
@@ -3302,17 +3063,6 @@ TEMPLATE = r"""<!DOCTYPE html>
                 </div>
             </div>
 
-            <!-- TOASTS SCREEN -->
-            <div class="screen" id="toasts">
-                <div class="header">
-                    <h1 class="header-title">Toasts</h1>
-                    <button class="hamburger" onclick="toggleMenu()"><svg width="22" height="16" viewBox="0 0 22 16" fill="none"><line x1="1" y1="1" x2="21" y2="1" stroke="#1F6E8C" stroke-width="1.5" stroke-linecap="round"/><line x1="1" y1="8" x2="21" y2="8" stroke="#1F6E8C" stroke-width="1.5" stroke-linecap="round"/><line x1="1" y1="15" x2="21" y2="15" stroke="#1F6E8C" stroke-width="1.5" stroke-linecap="round"/></svg></button>
-                </div>
-                <div class="screen-content">
-{{TOASTS}}
-                </div>
-            </div>
-
             <!-- SAN MIGUEL GUIDE SCREEN -->
             <div class="screen" id="guide">
                 <div class="header">
@@ -3461,13 +3211,6 @@ TEMPLATE = r"""<!DOCTYPE html>
                         <a href="https://docs.google.com/spreadsheets/d/14hR2oTxASCtvXdpxfFavTYS_p_7wOgDBfxv_paEYN9Q/edit?gid=0#gid=0" target="_blank" class="btn btn-primary" style="display: inline-block; text-decoration: none;">Add Arrival &amp; Departure Info</a>
                     </div>
 
-                    <!-- FLIGHTS -->
-                    <div style="margin-bottom: 24px;">
-                        <div style="font-family: 'Mea Culpa', cursive; font-size: 20px; color: var(--primary-green); margin-bottom: 12px;">Airports &amp; Flights</div>
-
-{{AIRPORTS}}
-                    </div>
-
                     <!-- HOUSES & HOTELS -->
                     <div style="margin-bottom: 24px;">
                         <div style="font-family: 'Mea Culpa', cursive; font-size: 20px; color: var(--primary-green); margin-bottom: 8px;">Houses &amp; Hotels</div>
@@ -3480,13 +3223,10 @@ TEMPLATE = r"""<!DOCTYPE html>
             <div class="menu-overlay" id="menuOverlay" onclick="closeMenu()"></div>
             <div class="menu-drawer" id="menuDrawer">
                 <!-- Items are alphabetized. The four bottom-tab destinations
-                     (Schedule, Who's Coming, San Miguel Guide, Travel/Toasts)
+                     (Schedule, Who's Coming, San Miguel Guide, Travel)
                      are mirrored here so they're reachable from the menu too;
                      they call switchScreen(id, tabIndex) so the active tab
-                     indicator updates. The Toasts/Travel slot is date-gated:
-                     before 2026-09-19 the Travel item is visible (Toasts hidden),
-                     on/after the Toasts item is visible (Travel hidden). Toggled
-                     by initHamburgerDateSwap(). -->
+                     indicator updates. -->
                 <button class="menu-item install-menu-item" id="installMenuItem" onclick="installApp()">Download the App</button>
                 <a class="menu-item" href="https://chat.whatsapp.com/LYpQT10pMmt6Bm3rKztsu1?mode=gi_t" target="_blank" rel="noopener noreferrer" onclick="closeMenu()" style="text-decoration:none;color:inherit;display:block;">Chat</a>
                 <button class="menu-item" onclick="switchScreenFromMenu('extras')">Extra Activities</button>
@@ -3495,8 +3235,7 @@ TEMPLATE = r"""<!DOCTYPE html>
                 <button class="menu-item" onclick="switchScreenFromMenu('registry')">Registry</button>
                 <button class="menu-item" onclick="switchScreen('guide', 2)">Local Guide</button>
                 <button class="menu-item" onclick="switchScreenFromMenu('schedule')">Schedule</button>
-                <button class="menu-item" id="hamburger-toasts" onclick="switchScreen('toasts', 1)">Toasts</button>
-                <button class="menu-item" id="hamburger-travel" onclick="switchScreen('travel', 1)">Travel</button>
+                <button class="menu-item" onclick="switchScreen('travel', 1)">Travel</button>
                 <div class="menu-version" aria-hidden="true">v{{VERSION}}</div>
             </div>
 
@@ -3544,11 +3283,9 @@ TEMPLATE = r"""<!DOCTYPE html>
             </div>
 
             <!-- TAB BAR
-                 4 tabs: Who's Coming (the app's home), a date-gated
-                 Travel/Toasts slot (Travel before 2026-09-19, Toasts
-                 on/after — see initTravelToastsTab()), San Miguel Guide,
-                 and Share Photos (an external link to the shared Google
-                 Photos album, opens in a new tab — never gets the
+                 4 tabs: Who's Coming (the app's home), Travel, San Miguel
+                 Guide, and Share Photos (an external link to the shared
+                 Google Photos album, opens in a new tab — never gets the
                  .active highlight). Schedule is no longer in the tab
                  bar; it's accessible via the hamburger menu. -->
             <div class="tab-bar">
@@ -3567,18 +3304,16 @@ TEMPLATE = r"""<!DOCTYPE html>
                     </div>
                     <span class="tab-label">Who's Coming</span>
                 </button>
-                <button class="tab" id="travelToastsTab" onclick="onTravelToastsTap()">
-                    <div class="tab-icon" id="travelToastsIcon">
-                        <!-- Default (rendered on first paint before JS runs):
-                             hand-drawn top-down airplane silhouette per the
-                             design-system v2 spec. Swept wings, twin tailplanes,
-                             pointed nose. Line art only, stroke overridden by
-                             the .tab-icon CSS. -->
+                <button class="tab" onclick="switchScreen('travel', 1)">
+                    <div class="tab-icon">
+                        <!-- Hand-drawn top-down airplane silhouette. Swept
+                             wings, twin tailplanes, pointed nose. Line art
+                             only, stroke overridden by the .tab-icon CSS. -->
                         <svg viewBox="0 0 28 28" fill="none">
                             <path d="M14 2.5 L15 3 L15 10.5 L25 15 L25 16.5 L15 14.5 L15 20 L18.5 22 L18.5 23.5 L14.5 22.5 L14 23 L13.5 22.5 L9.5 23.5 L9.5 22 L13 20 L13 14.5 L3 16.5 L3 15 L13 10.5 L13 3 Z" stroke-width="1.8" fill="none" stroke-linejoin="round" stroke-linecap="round"/>
                         </svg>
                     </div>
-                    <span class="tab-label" id="travelToastsLabel">Travel</span>
+                    <span class="tab-label">Travel</span>
                 </button>
                 <button class="tab" onclick="switchScreen('guide', 2)">
                     <div class="tab-icon">
@@ -3634,13 +3369,12 @@ TEMPLATE = r"""<!DOCTYPE html>
         let currentGuest = null;
 
         // Hash-based deep-link router.
-        // Routes: #/schedule, #/invitados, #/invitados/<guest-key>, #/toasts,
+        // Routes: #/schedule, #/invitados, #/invitados/<guest-key>,
         // #/guide, #/coffee, #/travel, #/registry, #/album, #/faq, #/goodtime,
         // #/extras. login and splash are intentionally unroutable.
         const SCREEN_HASHES = {
             schedule: 'schedule',
             facebook: 'invitados',
-            toasts: 'toasts',
             guide: 'guide',
             coffee: 'coffee',
             travel: 'travel',
@@ -3653,14 +3387,12 @@ TEMPLATE = r"""<!DOCTYPE html>
         const HASH_TO_SCREEN = Object.fromEntries(
             Object.entries(SCREEN_HASHES).map(([k, v]) => [v, k])
         );
-        // Tab indexes for the bottom bar. Travel and Toasts both occupy
-        // slot 2 — which one renders depends on the date-gated swap.
         // Tab indexes for the bottom bar after the design-system v3 reorder:
-        // Who's Coming (0), Travel/Toasts (1, date-gated), San Miguel (2),
-        // Photos (3, external link — never highlighted). Schedule no longer
-        // has a tab; it routes via switchScreenFromMenu so no tab is marked
-        // active when a hamburger user lands there.
-        const TAB_INDEX = { facebook: 0, travel: 1, toasts: 1, guide: 2 };
+        // Who's Coming (0), Travel (1), San Miguel (2), Photos (3, external
+        // link — never highlighted). Schedule no longer has a tab; it routes
+        // via switchScreenFromMenu so no tab is marked active when a
+        // hamburger user lands there.
+        const TAB_INDEX = { facebook: 0, travel: 1, guide: 2 };
         let isApplyingHash = false;
 
         // Guest lookup for fuzzy matching and RSVP filtering (from wedding.db)
@@ -3898,95 +3630,6 @@ TEMPLATE = r"""<!DOCTYPE html>
             element.classList.toggle('open');
         }
 
-        // Tap a toast-card header to expand its body (Persian text + audio).
-        function toggleToast(element) {
-            element.classList.toggle('open');
-        }
-
-        // Audio playback for a toast's <audio> element. The .audio-player
-        // wrapper stops click-bubbling so taps on the controls don't also
-        // collapse the surrounding toast-card. Only one toast plays at a
-        // time — kicking off play() pauses any other currently-playing
-        // toast first.
-        function toggleToastAudio(btn, event) {
-            if (event) event.stopPropagation();
-            const player = btn.closest('.audio-player');
-            const audio = player && player.querySelector('audio');
-            if (!audio) return;
-            if (audio.paused) {
-                document.querySelectorAll('.audio-player audio').forEach((a) => {
-                    if (a !== audio && !a.paused) a.pause();
-                });
-                const p = audio.play();
-                if (p && typeof p.catch === 'function') p.catch(() => {});
-            } else {
-                audio.pause();
-            }
-        }
-
-        // Click anywhere on the progress bar to seek. Maps the click X
-        // within the bar to a fraction of the audio's known duration.
-        // Bails out if duration isn't known yet (audio not loaded).
-        function seekToastAudio(bar, event) {
-            if (event) event.stopPropagation();
-            const player = bar.closest('.audio-player');
-            const audio = player && player.querySelector('audio');
-            if (!audio || !isFinite(audio.duration) || audio.duration <= 0) return;
-            const rect = bar.getBoundingClientRect();
-            const ratio = Math.max(0, Math.min(1, (event.clientX - rect.left) / rect.width));
-            audio.currentTime = ratio * audio.duration;
-        }
-
-        // Wire each toast <audio> once: keep the play-btn icon, progress
-        // fill, and duration text in sync with playback. The duration
-        // text starts as the static "m:ss" rendered from the DB so the
-        // card looks right before audio metadata loads; once the user
-        // hits play we switch to "current / total". Re-running this is
-        // a no-op (per-element data-toast-init guard).
-        function initToastAudios() {
-            const audios = document.querySelectorAll('.audio-player audio');
-            audios.forEach((audio) => {
-                if (audio.dataset.toastInit) return;
-                audio.dataset.toastInit = '1';
-                const player = audio.closest('.audio-player');
-                const btn = player.querySelector('.play-btn');
-                const fill = player.querySelector('.progress-fill');
-                const durEl = player.querySelector('.duration');
-                const baseDuration = durEl ? durEl.textContent : '';
-                const fmt = (t) => {
-                    if (!isFinite(t)) return baseDuration;
-                    const m = Math.floor(t / 60);
-                    const s = Math.floor(t % 60);
-                    return m + ':' + (s < 10 ? '0' : '') + s;
-                };
-                audio.addEventListener('play', () => {
-                    if (btn) {
-                        btn.textContent = '⏸';
-                        btn.setAttribute('aria-label', 'Pause');
-                    }
-                });
-                audio.addEventListener('pause', () => {
-                    if (btn) {
-                        btn.textContent = '▶';
-                        btn.setAttribute('aria-label', 'Play');
-                    }
-                });
-                audio.addEventListener('ended', () => {
-                    if (fill) fill.style.width = '0%';
-                    if (durEl) durEl.textContent = baseDuration;
-                    audio.currentTime = 0;
-                });
-                audio.addEventListener('timeupdate', () => {
-                    if (fill && audio.duration) {
-                        fill.style.width = (audio.currentTime / audio.duration * 100) + '%';
-                    }
-                    if (durEl && audio.duration) {
-                        durEl.textContent = fmt(audio.currentTime) + ' / ' + fmt(audio.duration);
-                    }
-                });
-            });
-        }
-
         // Tap a place-card header to expand its body (description +
         // Get Directions). Mirrors the Travel page's event-card pattern.
         function togglePlaceCard(card) {
@@ -4037,75 +3680,6 @@ TEMPLATE = r"""<!DOCTYPE html>
         function toggleCategory(section) {
             section.classList.toggle('expanded');
         }
-
-        // Date-gated Travel / Toasts tab.
-        //   Before 2026-09-19 00:00 local time: the tab shows a plane icon
-        //     labeled "Travel" and navigates to the #travel screen.
-        //   On or after 2026-09-19 00:00: the tab shows the microphone icon
-        //     labeled "Toasts" and navigates to the #toasts screen.
-        // The switch honors the comment in microphone-icon.svg about the
-        // Toasts feature only being relevant once guests are on site.
-        const TOASTS_CUTOVER = new Date(2026, 8, 19, 0, 0, 0); // JS months are 0-indexed: 8 = September
-        function isToastsTime() {
-            return new Date() >= TOASTS_CUTOVER;
-        }
-        const TRAVEL_ICON_SVG = `
-            <svg viewBox="0 0 28 28" fill="none">
-                <path d="M14 2.5 L15 3 L15 10.5 L25 15 L25 16.5 L15 14.5 L15 20 L18.5 22 L18.5 23.5 L14.5 22.5 L14 23 L13.5 22.5 L9.5 23.5 L9.5 22 L13 20 L13 14.5 L3 16.5 L3 15 L13 10.5 L13 3 Z" stroke-width="1.8" fill="none" stroke-linejoin="round" stroke-linecap="round"/>
-            </svg>`;
-        const MIC_ICON_SVG = `
-            <svg viewBox="0 0 28 28" fill="none">
-                <g transform="rotate(20, 14, 13)">
-                    <circle cx="14" cy="7" r="5" stroke-width="1.8" fill="none"/>
-                    <line x1="11" y1="5" x2="17" y2="5" stroke-width="1.8" stroke-linecap="round"/>
-                    <line x1="10" y1="7" x2="18" y2="7" stroke-width="1.8" stroke-linecap="round"/>
-                    <line x1="10" y1="9" x2="18" y2="9" stroke-width="1.8" stroke-linecap="round"/>
-                    <rect x="12" y="12" width="4" height="8" rx="1.5" stroke-width="1.8" fill="none"/>
-                    <path d="M14 20 C14 22, 12 23, 9 24" stroke-width="1.8" stroke-linecap="round"/>
-                </g>
-            </svg>`;
-        function initTravelToastsTab() {
-            const iconEl = document.getElementById('travelToastsIcon');
-            const labelEl = document.getElementById('travelToastsLabel');
-            if (!iconEl || !labelEl) return;
-            if (isToastsTime()) {
-                iconEl.innerHTML = MIC_ICON_SVG;
-                labelEl.textContent = 'Toasts';
-            } else {
-                iconEl.innerHTML = TRAVEL_ICON_SVG;
-                labelEl.textContent = 'Travel';
-            }
-        }
-        function onTravelToastsTap() {
-            // Tab index 1 after the design-system v3 reorder
-            // (Who's Coming 0, Travel/Toasts 1, San Miguel 2, Photos 3).
-            if (isToastsTime()) {
-                switchScreen('toasts', 1);
-            } else {
-                switchScreen('travel', 1);
-            }
-        }
-        // Hamburger mirror of the date-swap: whichever of Toasts/Travel is
-        // NOT in the tab bar stays accessible via the hamburger menu.
-        //   Before 2026-09-19: tab bar has Travel → hamburger shows Toasts.
-        //   On/after 2026-09-19: tab bar has Toasts → hamburger shows Travel.
-        function initHamburgerDateSwap() {
-            const travelItem = document.getElementById('hamburger-travel');
-            const toastsItem = document.getElementById('hamburger-toasts');
-            if (!travelItem || !toastsItem) return;
-            if (isToastsTime()) {
-                toastsItem.style.display = 'none';
-                travelItem.style.display = '';
-            } else {
-                toastsItem.style.display = '';
-                travelItem.style.display = 'none';
-            }
-        }
-
-        // Run both on load so the correct icons/labels render before first paint.
-        initTravelToastsTab();
-        initHamburgerDateSwap();
-        initToastAudios();
 
         // Who's Coming — browse grid + profile view
         let invitadoIndex = 0;
