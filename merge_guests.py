@@ -95,6 +95,63 @@ def resolve_photo(first, last, raw_url, local_index):
     return raw_url
 
 
+def warn_orphaned_photos(guest_rows):
+    """Flag local photo files in images/guests/ that don't match any
+    current guest's expected filename.
+
+    This happens when a guest's name changes between form submissions
+    (adding a last name, fixing a typo) after their photo was already
+    fetched and saved under the old name: resolve_photo() then looks
+    for a filename that no longer exists, silently falls back to the
+    raw (non-rendering) Drive link, and nothing else would surface the
+    break — the guest still "has a photo" by every count this script
+    prints. Without this, catching it depends on a human noticing a
+    guest's photo went missing on the live site.
+
+    guest_rows: list of (first, last, resolved_photo) as inserted into
+    the guests table this run.
+    """
+    if not os.path.isdir(GUEST_IMAGES_DIR):
+        return
+
+    expected_stems = {
+        f"{first}_{last}".lower().replace(" ", "_") for first, last, _ in guest_rows
+    }
+    orphaned = {}
+    for fname in os.listdir(GUEST_IMAGES_DIR):
+        full = os.path.join(GUEST_IMAGES_DIR, fname)
+        if not os.path.isfile(full):
+            continue
+        stem, ext = os.path.splitext(fname)
+        if ext.lower() not in (".jpg", ".jpeg", ".png"):
+            continue
+        if stem not in expected_stems:
+            orphaned[stem] = fname
+
+    if not orphaned:
+        return
+
+    # Guests whose photo didn't resolve locally this run — an orphaned
+    # file sharing their first name is the likely match.
+    unresolved = [
+        (first, last) for first, last, photo in guest_rows
+        if not photo.startswith("images/guests/")
+    ]
+
+    print(f"  {len(orphaned)} orphaned photo file(s) in images/guests/ "
+          f"(name changed since the photo was fetched?):")
+    for stem, fname in sorted(orphaned.items()):
+        orphan_first = stem.split("_")[0]
+        matches = [
+            f"{first} {last}" for first, last in unresolved
+            if first.lower() == orphan_first
+        ]
+        hint = f" — likely belongs to: {', '.join(matches)}" if matches else " — no obvious match by first name"
+        print(f"    - {fname}{hint}")
+    print("    Rename the file (+ its images/guests/derived/ derivatives) to match, "
+          "then re-run this script.")
+
+
 def _first_matching_column(row, *prefixes):
     """Return the first cell whose column header starts with one of the
     given prefixes (case-insensitive, trims each header). Used because
@@ -187,6 +244,7 @@ def merge_and_write(form_responses):
 
     with_photo = 0
     with_story = 0
+    guest_rows = []  # (first, last, photo) for warn_orphaned_photos()
 
     for key in sorted(form_responses):
         form = form_responses[key]
@@ -197,6 +255,7 @@ def merge_and_write(form_responses):
             initials = last[0].upper() + first[0].upper()
 
         photo = resolve_photo(first, last, form.get("photo_url", ""), local_photos)
+        guest_rows.append((first, last, photo))
         if photo:
             with_photo += 1
         if form.get("how_we_know", ""):
@@ -245,6 +304,7 @@ def merge_and_write(form_responses):
     print(f"Synced {total} guest(s) from the form into wedding.db")
     print(f"  {with_story} have a \"how we know each other\" story")
     print(f"  {with_photo} have a photo")
+    warn_orphaned_photos(guest_rows)
 
 
 # ── Contact-form ingestion ──────────────────────────────────────────────
