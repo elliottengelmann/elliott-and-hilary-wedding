@@ -304,10 +304,14 @@ def build_extras(conn):
         details = ""
 
         if e["note"]:
+            # *word* -> <strong>word</strong>. Applied after esc() so the
+            # escaped inner text is what ends up inside <strong> — safe
+            # since "*" isn't an HTML-special character.
+            note_html = re.sub(r"\*(.+?)\*", r"<strong>\1</strong>", esc(e["note"]))
             details += f"""
                                 <div class="detail-row">
                                     <div class="detail-label">From Us</div>
-                                    <div class="detail-note">{esc(e["note"])}</div>
+                                    <div class="detail-note">{note_html}</div>
                                 </div>"""
 
         if e["location_label"] and e["location_url"]:
@@ -2231,85 +2235,6 @@ TEMPLATE = r"""<!DOCTYPE html>
             gap: 10px;
         }
 
-        /* "For a Good Time" screen — illustrated trio. Each S-word is its
-           own editorial unit: small line-art icon, script S-name, body. */
-        .goodtime-content {
-            max-width: 340px;
-            margin: 12px auto 0;
-            padding: 0 8px;
-        }
-        .goodtime-heading {
-            font-family: 'Mea Culpa', cursive;
-            /* Match the Who's Coming screen title (.invitado-screen-title). */
-            font-size: 36px;
-            font-weight: 400;
-            color: var(--primary-green);
-            text-align: center;
-            margin: 8px 0 40px;
-            line-height: 1;
-        }
-        .goodtime-tip {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-            margin-bottom: 36px;
-        }
-        .goodtime-tip:last-child { margin-bottom: 0; }
-        .goodtime-tip-icon {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            min-height: 48px;
-            color: var(--primary-green);
-            margin-bottom: 6px;
-        }
-        .goodtime-tip-icon svg {
-            width: 44px;
-            height: 44px;
-            stroke: currentColor;
-            fill: none;
-            stroke-linecap: round;
-            stroke-linejoin: round;
-        }
-        /* Black-line PNGs from the Noun Project tinted to the primary green
-           via filter — converts black pixels to a green close to var(--primary-green: #1F6E8C).
-           See: https://codepen.io/sosuke/pen/Pjoqqp for the multi-step filter recipe. */
-        .goodtime-tip-icon img.goodtime-tip-img {
-            width: 48px;
-            height: 48px;
-            object-fit: contain;
-            filter: brightness(0) saturate(100%)
-                    invert(45%) sepia(15%) saturate(800%) hue-rotate(85deg) brightness(92%) contrast(85%);
-        }
-        .goodtime-tip-name {
-            font-family: 'Lateef', serif;
-            font-size: 32px;
-            font-weight: 700;
-            color: var(--primary-green);
-            line-height: 1.05;
-            margin-bottom: 8px;
-        }
-        .goodtime-tip-body {
-            font-family: 'Bodoni Moda', serif;
-            font-size: 16px; /* +12% from 14 — readability pass */
-            color: var(--dark);
-            line-height: 1.6;
-            font-style: italic;
-            max-width: 320px;
-        }
-        .goodtime-link {
-            font-family: 'Bodoni Moda', serif;
-            font-size: inherit;
-            color: var(--primary-green);
-            text-decoration: underline;
-            text-decoration-thickness: 1px;
-            text-underline-offset: 2px;
-            font-style: italic;
-        }
-        .goodtime-link:hover { color: var(--deep-green); }
-
         /* Travel-style collapsible place-card. Header surfaces name +
            address; tapping expands the body for the description and
            Get Directions. Static variant (.place-card-header--static)
@@ -2574,6 +2499,29 @@ TEMPLATE = r"""<!DOCTYPE html>
             stroke: none;
         }
 
+        /* Local Guide tab icon is a flat raster PNG (not a stroke-based
+           inline SVG like the others), so it can't recolor via stroke/fill.
+           CSS masking reproduces the same light-blue/active-red swap
+           exactly, using the PNG purely as a shape mask. */
+        .tab-icon .lighthouse-icon {
+            width: 28px;
+            height: 28px;
+            background-color: #7FB5C9;
+            -webkit-mask-image: url('icons/lighthouse.png');
+            mask-image: url('icons/lighthouse.png');
+            -webkit-mask-size: contain;
+            mask-size: contain;
+            -webkit-mask-repeat: no-repeat;
+            mask-repeat: no-repeat;
+            -webkit-mask-position: center;
+            mask-position: center;
+            transition: background-color 0.2s ease;
+        }
+
+        .tab.active .tab-icon .lighthouse-icon {
+            background-color: var(--accent-warm);
+        }
+
 
         .tab-label {
             display: none;
@@ -2715,31 +2663,6 @@ TEMPLATE = r"""<!DOCTYPE html>
 
         .menu-item:hover {
             background: rgba(74, 124, 89, 0.05);
-        }
-
-        /* Sun icon next to "For a Good Time" only — visual cue that this
-           is the editorial / vibe page, not a navigational utility.
-           Sun sits immediately to the right of the label, separated only
-           by the flex gap, so the pair reads as one unit. */
-        .menu-item--good-time {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .menu-item-icon {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 18px;
-            height: 18px;
-            color: var(--accent-warm);
-            flex-shrink: 0;
-        }
-
-        .menu-item-icon svg {
-            width: 100%;
-            height: 100%;
         }
 
         /* Build hash, pinned to the bottom-left of the drawer. Lets us
@@ -2917,7 +2840,7 @@ TEMPLATE = r"""<!DOCTYPE html>
                         <img src="images/lobsters.png" onerror="this.style.display='none'" alt="Two lobsters forming a heart" loading="eager" decoding="async">
                     </div>
                     <div class="splash-text">
-                        We are so, so excited that you are joining us for our commitment celebration! Some of the things that drew us together most early on were how important community is and our shared understanding that a best friend is in fact a tier not a person. While we are choosing not to get legally married, we couldn&rsquo;t pass up an opportunity to bring the people who mean the most to us to one of our favorite states to eat, dance, yap, dance some more, yap some more, etc. We hope you have an absolute blast and are so grateful to you for making the schlep!
+                        We are so, so excited that you are joining us for our commitment celebration! While we are choosing not to get legally married, we couldn&rsquo;t pass up an opportunity to bring the people who mean the most to us to one of our favorite states to eat, dance, yap, dance some more, yap some more, etc. We hope you have an absolute blast and are so grateful to you for making the schlep!
                     </div>
                     <div class="splash-signature">Love, Hilary & Elliott</div>
                     <div class="splash-arrow" onclick="skipSplash()">
@@ -3052,46 +2975,6 @@ TEMPLATE = r"""<!DOCTYPE html>
                 </div>
             </div>
 
-            <!-- FOR A GOOD TIME SCREEN (hamburger menu) -->
-            <div class="screen" id="goodtime">
-                <div class="header">
-                    <span></span>
-                    <button class="hamburger" onclick="toggleMenu()"><svg width="22" height="16" viewBox="0 0 22 16" fill="none"><line x1="1" y1="1" x2="21" y2="1" stroke="#1F6E8C" stroke-width="1.5" stroke-linecap="round"/><line x1="1" y1="8" x2="21" y2="8" stroke="#1F6E8C" stroke-width="1.5" stroke-linecap="round"/><line x1="1" y1="15" x2="21" y2="15" stroke="#1F6E8C" stroke-width="1.5" stroke-linecap="round"/></svg></button>
-                </div>
-                <div class="screen-content">
-                    <div class="goodtime-content">
-                        <div class="goodtime-heading">Wiscasset Is<br>Best With:</div>
-
-                        <div class="goodtime-tip">
-                            <span class="goodtime-tip-icon" aria-hidden="true">
-                                <!-- Jacket / layer silhouette -->
-                                <svg viewBox="0 0 48 32"><path d="M19 5 L14 8 L10 13 L13 16 L16 14 L16 27 L32 27 L32 14 L35 16 L38 13 L34 8 L29 5 L24 9 Z" stroke-width="1.5"/></svg>
-                            </span>
-                            <div class="goodtime-tip-name">Clothing</div>
-                            <div class="goodtime-tip-body">Bring layers as the temperature drops at night.</div>
-                        </div>
-
-                        <div class="goodtime-tip">
-                            <span class="goodtime-tip-icon" aria-hidden="true">
-                                <!-- Hand-illustrated sandal from the Noun Project. Tinted to primary green via CSS filter. -->
-                                <img class="goodtime-tip-img" src="images/icons/sandal.png" alt="" width="48" height="48">
-                            </span>
-                            <div class="goodtime-tip-name">Shoes</div>
-                            <div class="goodtime-tip-body">Prepare for lots of dancing at the venue and after party. The ceremony also takes place on grass.</div>
-                        </div>
-
-                        <div class="goodtime-tip">
-                            <span class="goodtime-tip-icon" aria-hidden="true">
-                                <!-- Paw print -->
-                                <svg viewBox="0 0 48 32"><ellipse cx="24" cy="23" rx="10" ry="7" stroke-width="1.5"/><circle cx="10" cy="12" r="3.2" stroke-width="1.5"/><circle cx="19" cy="6" r="3.2" stroke-width="1.5"/><circle cx="29" cy="6" r="3.2" stroke-width="1.5"/><circle cx="38" cy="12" r="3.2" stroke-width="1.5"/></svg>
-                            </span>
-                            <div class="goodtime-tip-name">Georgie</div>
-                            <div class="goodtime-tip-body">Sadly, Georgie will not be in attendance. Sorry to disappoint.</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
             <!-- FAQ SCREEN (HAMBURGER) -->
             <div class="screen" id="faq">
                 <div class="header">
@@ -3170,7 +3053,7 @@ TEMPLATE = r"""<!DOCTYPE html>
                     <!-- OUR RECOMMENDATION -->
                     <div style="margin-bottom: 20px;">
                         <div style="font-family: 'Mea Culpa', cursive; font-size: 20px; color: var(--primary-green); margin-bottom: 8px;">A quick note</div>
-                        <div style="font-family: 'Bodoni Moda', serif; font-size: 14px; color: var(--dark); line-height: 1.6; font-style: italic;">This area has a lot of great food, including lobster/seafood shacks (Red&rsquo;s Eats, Sprague&rsquo;s), ice cream (Blanchard&rsquo;s Creamery, Round Top Ice Cream, Sweetz &amp; More), and more sit-down dinner spots (Water Street Kitchen, Montsweag Roadhouse). There are great places for coffee &amp; pastries (Wild Oats Bakery &amp; Cafe, Treats), and oysters straight from the source (Glidden Point Oyster Farm, Eros Oyster Farm). If you&rsquo;re looking to buy a little gift, stop by Westport Island Pottery (a quaint little shack of homemade pottery) or Rock Paper Scissors downtown. For a dip into nature, check out the Coastal Maine Botanical Gardens, Fort Edgecomb, or Chewonki&rsquo;s Cushman Preserve.</div>
+                        <div style="font-family: 'Bodoni Moda', serif; font-size: 14px; color: var(--dark); line-height: 1.6; font-style: italic;">Midcoast Maine has incredible seafood, ice cream, nature, and cute kitschy little somethings. We highly recommend you wander downtown, walk to the water, and partake in a lobster roll or oyster or two if you&rsquo;re into that sort of thing! If you have a car (or make a fellow wedding guest friend with a car!) there is also lots to explore in a 20-30 min driving radius!</div>
                     </div>
 
                     <!-- CAR SERVICES -->
@@ -3207,7 +3090,6 @@ TEMPLATE = r"""<!DOCTYPE html>
                 <button class="menu-item install-menu-item" id="installMenuItem" onclick="installApp()">Download the App</button>
                 <a class="menu-item" href="https://chat.whatsapp.com/LYpQT10pMmt6Bm3rKztsu1?mode=gi_t" target="_blank" rel="noopener noreferrer" onclick="closeMenu()" style="text-decoration:none;color:inherit;display:block;">Chat</a>
                 <button class="menu-item" onclick="switchScreenFromMenu('extras')">Extra Activities</button>
-                <button class="menu-item menu-item--good-time" onclick="switchScreenFromMenu('goodtime')"><span>To Enjoy Your Time</span><span class="menu-item-icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><circle cx="8" cy="8" r="2.6"/><line x1="8" y1="2" x2="8" y2="3.4"/><line x1="8" y1="12.6" x2="8" y2="14"/><line x1="2" y1="8" x2="3.4" y2="8"/><line x1="12.6" y1="8" x2="14" y2="8"/><line x1="3.76" y1="3.76" x2="4.75" y2="4.75"/><line x1="11.25" y1="11.25" x2="12.24" y2="12.24"/><line x1="3.76" y1="12.24" x2="4.75" y2="11.25"/><line x1="11.25" y1="4.75" x2="12.24" y2="3.76"/></svg></span></button>
                 <button class="menu-item" onclick="switchScreen('facebook', 0)">Who's Coming</button>
                 <button class="menu-item" onclick="switchScreenFromMenu('registry')">Registry</button>
                 <button class="menu-item" onclick="switchScreen('guide', 2)">Local Guide</button>
@@ -3294,19 +3176,7 @@ TEMPLATE = r"""<!DOCTYPE html>
                 </button>
                 <button class="tab" onclick="switchScreen('guide', 2)">
                     <div class="tab-icon">
-                        <!-- La Parroquia silhouette: three narrow gothic spires
-                             rising from a shared base, with a tall central spire
-                             topped by a small cross. San Miguel's signature skyline.
-                             (Kept over design-system v2's "folded map" at Elien's
-                             request — v2 icon swap skipped.) -->
-                        <svg viewBox="0 0 28 28" fill="none">
-                            <polyline points="4,24 4,15 7,11 10,15 10,24" stroke-width="1.8" fill="none" stroke-linejoin="round" stroke-linecap="round"/>
-                            <polyline points="11,24 11,10 14,4 17,10 17,24" stroke-width="1.8" fill="none" stroke-linejoin="round" stroke-linecap="round"/>
-                            <polyline points="18,24 18,15 21,11 24,15 24,24" stroke-width="1.8" fill="none" stroke-linejoin="round" stroke-linecap="round"/>
-                            <line x1="14" y1="1" x2="14" y2="4" stroke-width="1.8" stroke-linecap="round"/>
-                            <line x1="12.5" y1="2.5" x2="15.5" y2="2.5" stroke-width="1.8" stroke-linecap="round"/>
-                            <line x1="2" y1="24" x2="26" y2="24" stroke-width="1.8" stroke-linecap="round"/>
-                        </svg>
+                        <span class="lighthouse-icon" aria-hidden="true"></span>
                     </div>
                     <span class="tab-label">Guide</span>
                 </button>
@@ -3347,7 +3217,7 @@ TEMPLATE = r"""<!DOCTYPE html>
 
         // Hash-based deep-link router.
         // Routes: #/schedule, #/invitados, #/invitados/<guest-key>,
-        // #/guide, #/coffee, #/travel, #/registry, #/album, #/faq, #/goodtime,
+        // #/guide, #/coffee, #/travel, #/registry, #/album, #/faq,
         // #/extras. login and splash are intentionally unroutable.
         const SCREEN_HASHES = {
             schedule: 'schedule',
@@ -3358,7 +3228,6 @@ TEMPLATE = r"""<!DOCTYPE html>
             registry: 'registry',
             album: 'album',
             faq: 'faq',
-            goodtime: 'goodtime',
             extras: 'extras',
         };
         const HASH_TO_SCREEN = Object.fromEntries(
