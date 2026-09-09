@@ -31,7 +31,7 @@
       880,
       211
     ],
-    "override_sig": "",
+    "override_sig": "{\"cx\": 750, \"cy\": 620, \"size\": 1200}",
     "sha256": "3ba8de384fddf16d7d2f9042cddcc429c298368200ce382a3f614e36c7698221"
   },
   "ben_johnson": {
@@ -59,6 +59,16 @@
     "override_sig": "",
     "sha256": "a9190159b0506bc95fcb324bd475572891c425ebab4a66edf384148103fef6be"
   },
+  "diana_engelmann": {
+    "face": [
+      569,
+      1081,
+      1228,
+      422
+    ],
+    "override_sig": "",
+    "sha256": "6bd7868c2422722f9c649714e699183547c2b03ff6374ce31c92118212b25726"
+  },
   "douglas_sun": {
     "face": [
       385,
@@ -78,6 +88,21 @@
     ],
     "override_sig": "",
     "sha256": "c7b9dc1cd21d147aa638b11953adc97d7c946ef86f94c00041913e648be08255"
+  },
+  "emma_hochfelder": {
+    "face": null,
+    "override_sig": "",
+    "sha256": "0bbcac531dad09a01adb2611a94eb359db9c72b2eeb432eed5b47fcf79f94ec7"
+  },
+  "emma_scudder": {
+    "face": [
+      622,
+      392,
+      880,
+      134
+    ],
+    "override_sig": "",
+    "sha256": "e7e8e9272cab06f33430b8051cba06d7507016ba5b9df1f28581e45c2f45bb7f"
   },
   "eric_wilburn": {
     "face": [
@@ -213,6 +238,16 @@
     ],
     "override_sig": "",
     "sha256": "f8e68bf3388ce21f8f95f81f8a0df1acb73fb425706ed120c0c3469bb6f9e3da"
+  },
+  "sienna_mintz": {
+    "face": [
+      948,
+      2071,
+      2212,
+      807
+    ],
+    "override_sig": "",
+    "sha256": "7f592e21d9b42819d85e91adc741604ddd79ae4fe091d78788862cff034bee70"
   },
   "suah_kim": {
     "face": [
