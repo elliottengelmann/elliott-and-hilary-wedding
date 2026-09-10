@@ -9,6 +9,31 @@
     "override_sig": "",
     "sha256": "05e1e8376302a595ac35174b831d9861a9aeefda87e1283420c57afa541fd263"
   },
+  "alex_\u201cbeede_or_beenus\u201d_beede": {
+    "face": null,
+    "override_sig": "{\"cx\": 1650, \"cy\": 680, \"size\": 1150}",
+    "sha256": "8239e78fb8049a5feba9be1890c870f99e876d37ed744ccbd351d14a2fccd675"
+  },
+  "alice_cavanaugh_berners-lee": {
+    "face": [
+      1260,
+      2316,
+      2424,
+      1260
+    ],
+    "override_sig": "",
+    "sha256": "6490b97f0e332034a7a67411af29bce54fd71dd534c4ab4c0a708fe076470b0c"
+  },
+  "althea_cavanaugh_berners-lee": {
+    "face": [
+      250,
+      1052,
+      508,
+      794
+    ],
+    "override_sig": "",
+    "sha256": "c4f2e6fa0c489be43064744aba7e0157aa412b25279596f13a849bda2bb8c6d8"
+  },
   "amanda_borow": {
     "face": null,
     "override_sig": "",
@@ -59,6 +84,26 @@
     "override_sig": "",
     "sha256": "a9190159b0506bc95fcb324bd475572891c425ebab4a66edf384148103fef6be"
   },
+  "catherine_par\u00e9": {
+    "face": [
+      2376,
+      1220,
+      2732,
+      860
+    ],
+    "override_sig": "{\"cx\": 1550, \"cy\": 1450, \"size\": 1300}",
+    "sha256": "5a13427898f73e22961853ea8de166d797cb25152668b06e412d680b989e3d8c"
+  },
+  "chad_bookwrm": {
+    "face": [
+      2555,
+      2212,
+      3165,
+      1606
+    ],
+    "override_sig": "",
+    "sha256": "7c7fc2e718f1be3a1ec4fbb2c180d2544fe146e19f79cc8fd0bba722981afc5b"
+  },
   "diana_engelmann": {
     "face": [
       569,
@@ -104,6 +149,16 @@
     "override_sig": "",
     "sha256": "e7e8e9272cab06f33430b8051cba06d7507016ba5b9df1f28581e45c2f45bb7f"
   },
+  "emma_van_dervort": {
+    "face": [
+      189,
+      2126,
+      1158,
+      1158
+    ],
+    "override_sig": "",
+    "sha256": "6f892d584a2198e899d03b63d03185a44dc449d16f8a1d4fb0034905d072e331"
+  },
   "eric_wilburn": {
     "face": [
       1323,
@@ -123,6 +178,16 @@
     ],
     "override_sig": "",
     "sha256": "553a38146aa434c9f6828547c14d8b0a583703a6aedf5d5b6c1333e37af749a5"
+  },
+  "jack_melcher": {
+    "face": [
+      1147,
+      1143,
+      1761,
+      525
+    ],
+    "override_sig": "",
+    "sha256": "10834870d73d90aed3d31ef5aea62106edf4335ad740c0bf085af0db1255413f"
   },
   "jake_kramer": {
     "face": [
@@ -204,6 +269,16 @@
     "override_sig": "",
     "sha256": "b0ab73e0243acaebbbe42282bbdf348babac810596e626de20cb365d14238c0f"
   },
+  "lucas_berry": {
+    "face": [
+      1588,
+      1300,
+      2104,
+      784
+    ],
+    "override_sig": "",
+    "sha256": "65afe435118438958df6a29739a5b6900401cec41d2551963af02c5dadc906ce"
+  },
   "marco_marrazza": {
     "face": [
       153,
@@ -213,6 +288,21 @@
     ],
     "override_sig": "",
     "sha256": "5b65d6fabcf8251d7142b984223b5dc7ee0f392851e0b7adb09e0b98b46de309"
+  },
+  "noah_jefferson": {
+    "face": [
+      553,
+      1232,
+      1064,
+      722
+    ],
+    "override_sig": "",
+    "sha256": "79570ef8cad021319055f6a2f5ebe2ed28c288b188968f889edaa7067b432e94"
+  },
+  "piers_macnaughton": {
+    "face": null,
+    "override_sig": "",
+    "sha256": "e301155c04a155b4bc3e6329081769e25a1647b2f51e8e2e19d1909f35e4f105"
   },
   "richard_fisher": {
     "face": [
@@ -248,6 +338,16 @@
     ],
     "override_sig": "",
     "sha256": "7f592e21d9b42819d85e91adc741604ddd79ae4fe091d78788862cff034bee70"
+  },
+  "sofia_urquiola": {
+    "face": [
+      306,
+      936,
+      564,
+      678
+    ],
+    "override_sig": "",
+    "sha256": "6f3051d3103c0227ad29b339571a54ce01ec777e5d5388c7a84cdd13d33fff4c"
   },
   "suah_kim": {
     "face": [
