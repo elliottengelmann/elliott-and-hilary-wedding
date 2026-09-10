@@ -785,7 +785,14 @@ def build_guest_json(conn):
     # filled out the form but are referenced as the romantic partner of a
     # story-having guest. They never appear in the browse grid; they only
     # exist as link targets when a partner chip points at them.
-    all_guests = query(conn, "SELECT * FROM guests ORDER BY last_name, first_name")
+    # NOCASE: SQLite's default BINARY collation sorts uppercase before
+    # lowercase, which flung a guest who typed their name in lowercase to
+    # the end of the directory and an all-caps surname to the front.
+    all_guests = query(
+        conn,
+        "SELECT * FROM guests "
+        "ORDER BY last_name COLLATE NOCASE, first_name COLLATE NOCASE",
+    )
     overrides = load_curation(conn)
     field_overrides = overrides.get("fieldOverrides", {})
     contacts_by_key = overrides.get("contacts", {})
