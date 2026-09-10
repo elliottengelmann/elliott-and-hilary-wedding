@@ -2433,7 +2433,7 @@ TEMPLATE = r"""<!DOCTYPE html>
             display: none;
             padding: 0 0 16px 0;
             font-family: 'Bodoni Moda', serif;
-            font-size: 13px;
+            font-size: 14px;
             color: var(--dark);
             line-height: 1.6;
         }
@@ -3123,14 +3123,17 @@ TEMPLATE = r"""<!DOCTYPE html>
             <!-- HAMBURGER MENU -->
             <div class="menu-overlay" id="menuOverlay" onclick="closeMenu()"></div>
             <div class="menu-drawer" id="menuDrawer">
-                <!-- Items are alphabetized. The four bottom-tab destinations
-                     (Schedule, Who's Coming, San Miguel Guide, Travel)
-                     are mirrored here so they're reachable from the menu too;
-                     they call switchScreen(id, tabIndex) so the active tab
-                     indicator updates. -->
+                <!-- Items are alphabetized. The three bottom-tab destinations
+                     (Who's Coming, Local Guide, Travel) are mirrored here so
+                     they're reachable from the menu too; they call
+                     switchScreen(id, tabIndex) so the active tab indicator
+                     updates. Menu-only screens (Extra Activities, FAQs,
+                     Registry, Schedule) use switchScreenFromMenu, which
+                     leaves no tab marked active. -->
                 <button class="menu-item install-menu-item" id="installMenuItem" onclick="installApp()">Download the App</button>
                 <a class="menu-item" href="https://chat.whatsapp.com/LYpQT10pMmt6Bm3rKztsu1?mode=gi_t" target="_blank" rel="noopener noreferrer" onclick="closeMenu()" style="text-decoration:none;color:inherit;display:block;">Chat</a>
                 <button class="menu-item" onclick="switchScreenFromMenu('extras')">Extra Activities</button>
+                <button class="menu-item" onclick="switchScreenFromMenu('faq')">FAQs</button>
                 <button class="menu-item" onclick="switchScreen('facebook', 0)">Who's Coming</button>
                 <button class="menu-item" onclick="switchScreenFromMenu('registry')">Registry</button>
                 <button class="menu-item" onclick="switchScreen('guide', 2)">Local Guide</button>
