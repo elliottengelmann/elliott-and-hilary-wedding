@@ -15,7 +15,7 @@ then commit the updated wedding.db (and index.html) and push.
 
 IMPORTANT — NO FABRICATED CONTENT
 Every value entered through this tool (memories, hometowns, cities,
-relationships, labels) must be human-authored by Elien or Nima. Do
+relationships, labels) must be human-authored by Hilary or Elliott. Do
 not paste in AI-generated text, do not guess at facts you don't
 know, do not use placeholder content "to see how the design looks."
 See CLAUDE.md for the full rule.
@@ -44,7 +44,7 @@ MAX_PHOTO_BYTES = 20 * 1024 * 1024  # 20 MB
 # Anything Pillow-less we can serve without conversion. Keep the list
 # short and image-only — we don't want arbitrary file uploads.
 ALLOWED_PHOTO_EXTS = {".jpg", ".jpeg", ".png", ".gif", ".webp", ".heic", ".heif"}
-# Guide photos (currently Shopping only). Nima's convention from
+# Guide photos (currently Shopping only). Convention from
 # process_guest_images.py: Pillow pipeline, EXIF-rotated, WebP primary
 # with JPEG fallback. These are storefront / product shots — wide-ish
 # 3:2 center crop, max 1080×720, sized to fill a place-card body
@@ -58,7 +58,7 @@ GUIDE_PHOTO_JPG_Q = 85
 # Every relationship + memory row must carry a source from this set.
 # Enforced at save time by this tool, at build time by build.py, and
 # at the schema level by CHECK constraints in wedding.db.
-ALLOWED_SOURCES = {"elien", "nima"}
+ALLOWED_SOURCES = {"elliott", "hilary"}
 
 CURATION_SCHEMA = """
 CREATE TABLE IF NOT EXISTS guest_locations (
@@ -70,32 +70,34 @@ CREATE TABLE IF NOT EXISTS guest_locations (
 CREATE TABLE IF NOT EXISTS guest_memories (
     id         INTEGER PRIMARY KEY AUTOINCREMENT,
     guest_key  TEXT NOT NULL,
-    subject    TEXT NOT NULL CHECK (subject IN ('them','nima','elien','both')),
+    subject    TEXT NOT NULL CHECK (subject IN ('them','hilary','elliott','both')),
     text       TEXT NOT NULL,
-    source     TEXT NOT NULL CHECK (source IN ('elien','nima')),
+    source     TEXT NOT NULL CHECK (source IN ('elliott','hilary')),
     UNIQUE (guest_key, subject)
 );
 
 CREATE TABLE IF NOT EXISTS relationships (
     id            INTEGER PRIMARY KEY AUTOINCREMENT,
     guest_a_key   TEXT NOT NULL,
+    guest_a_name  TEXT NOT NULL DEFAULT '',
     guest_b_key   TEXT NOT NULL,
+    guest_b_name  TEXT NOT NULL DEFAULT '',
     label         TEXT NOT NULL DEFAULT '',
-    source        TEXT NOT NULL CHECK (source IN ('elien','nima'))
+    source        TEXT NOT NULL CHECK (source IN ('elliott','hilary'))
 );
 
 CREATE TABLE IF NOT EXISTS guest_field_overrides (
     guest_key  TEXT NOT NULL,
     field      TEXT NOT NULL CHECK (field IN ('how_we_know','least_favorite','photo_url','rsvp_thursday','rsvp_friday','display_name')),
     value      TEXT NOT NULL,
-    source     TEXT NOT NULL CHECK (source IN ('elien','nima')),
+    source     TEXT NOT NULL CHECK (source IN ('elliott','hilary')),
     PRIMARY KEY (guest_key, field)
 );
 
 -- Post-wedding contact info. Populated from contact_form_responses.csv
 -- by merge_guests.merge_contacts() (rows tagged source='form') and from
--- this editor (source='elien' or 'nima'). When the form sync next runs,
--- rows tagged elien/nima are preserved untouched — that's the manual
+-- this editor (source='elliott' or 'hilary'). When the form sync next runs,
+-- rows tagged elliott/hilary are preserved untouched — that's the manual
 -- override mechanism. To "release" a manual override and let the form
 -- take over again, delete the row from the editor.
 CREATE TABLE IF NOT EXISTS guest_contacts (
@@ -107,7 +109,7 @@ CREATE TABLE IF NOT EXISTS guest_contacts (
     twitter      TEXT DEFAULT '',
     bluesky      TEXT DEFAULT '',
     soundcloud   TEXT DEFAULT '',
-    source       TEXT NOT NULL CHECK(source IN ('form','elien','nima')),
+    source       TEXT NOT NULL CHECK(source IN ('form','elliott','hilary')),
     submitted_at TEXT DEFAULT '',
     updated_at   TEXT NOT NULL
 );
@@ -150,7 +152,7 @@ def ensure_schema():
                 guest_key  TEXT NOT NULL,
                 field      TEXT NOT NULL CHECK (field IN ('how_we_know','least_favorite','photo_url','rsvp_thursday','rsvp_friday','display_name')),
                 value      TEXT NOT NULL,
-                source     TEXT NOT NULL CHECK (source IN ('elien','nima')),
+                source     TEXT NOT NULL CHECK (source IN ('elliott','hilary')),
                 PRIMARY KEY (guest_key, field)
             );
             INSERT INTO guest_field_overrides_new SELECT * FROM guest_field_overrides;
@@ -172,7 +174,7 @@ def ensure_schema():
 
     # Migration: add `has_rooftop` to guide_places (restaurants and any
     # other place that can carry the rooftop tag). Cafes intentionally
-    # do NOT get this flag — per Elien, rooftop is a restaurant concept.
+    # do NOT get this flag — by design, rooftop is a restaurant concept.
     cols = {r[1] for r in conn.execute("PRAGMA table_info(guide_places)").fetchall()}
     if "has_rooftop" not in cols:
         conn.execute(
@@ -208,7 +210,7 @@ def load_guests() -> list[dict[str, Any]]:
     conn = sqlite3.connect(DB_PATH)
     conn.row_factory = sqlite3.Row
     # Editor shows guests who are either (a) currently attending — so
-    # Elien can pre-curate content that takes effect when they submit
+    # Hilary or Elliott can pre-curate content that takes effect when they submit
     # the form — or (b) have already filled out the form, even if they
     # later declined or haven't RSVP'd. A guest who has an admin
     # story override is also visible (without that they'd disappear
@@ -284,7 +286,7 @@ def load_guests() -> list[dict[str, Any]]:
     return out
 
 
-# Baseline of cities where Elien's guests are likely to live — so the
+# Baseline of cities where the couple's guests are likely to live — so the
 # datalist has useful suggestions even before other guests fill anything
 # in. Merged at runtime with whatever cities already appear in the data.
 _BASELINE_CITIES = (
@@ -334,7 +336,7 @@ _BASELINE_CITIES = (
 
 
 # Known typo / variant → canonical. Applied only to the autocomplete
-# dropdown so Elien sees one tidy entry per place, not five variants.
+# dropdown so the couple sees one tidy entry per place, not five variants.
 # The underlying form data stays as each guest wrote it.
 _CITY_CANONICAL = {
     "san fransisco":  "San Francisco",
@@ -351,7 +353,7 @@ def _canonicalize_city(s: str) -> str:
 
 def load_known_cities() -> list[str]:
     """
-    Every distinct city string currently in the data — from Elien's
+    Every distinct city string currently in the data — from the
     curation tables and the guests' own form answers — plus a small
     baseline of likely cities. Used to populate the city autocomplete
     datalist in the editor. Variants like "nyc" / "new york city" /
@@ -374,7 +376,7 @@ def load_known_cities() -> list[str]:
                         cities.add(v)
             except sqlite3.OperationalError:
                 # Column may not exist yet (e.g. merge_guests.py hasn't
-                # re-run since Nima added form_current_city). Skip.
+                # re-run since an editor added form_current_city). Skip.
                 continue
     finally:
         conn.close()
@@ -457,9 +459,14 @@ def load_curation() -> dict[str, Any]:
     ]
 
     relationships = [
-        {"a": r["guest_a_key"], "b": r["guest_b_key"], "label": r["label"] or "", "source": r["source"]}
+        {
+            "a": r["guest_a_key"], "aName": r["guest_a_name"] or "",
+            "b": r["guest_b_key"], "bName": r["guest_b_name"] or "",
+            "label": r["label"] or "", "source": r["source"],
+        }
         for r in conn.execute(
-            "SELECT guest_a_key, guest_b_key, label, source FROM relationships ORDER BY id"
+            "SELECT guest_a_key, guest_a_name, guest_b_key, guest_b_name, label, source "
+            "FROM relationships ORDER BY id"
         )
     ]
 
@@ -563,9 +570,16 @@ def save_curation(data: dict[str, Any]) -> None:
             )
 
         for r in (data.get("relationships") or []):
+            # aName/bName: fallback display name for a side with no guest
+            # profile at all (e.g. a plus-one who never filled the guest
+            # form) — see build.build_herewith_for(). This editor's UI
+            # only ever picks existing guests, so it always leaves these
+            # blank; they're populated by hand-authored imports instead.
             conn.execute(
-                "INSERT INTO relationships (guest_a_key, guest_b_key, label, source) VALUES (?, ?, ?, ?)",
-                (r["a"], r["b"], (r.get("label") or "").strip(), r["source"]),
+                "INSERT INTO relationships (guest_a_key, guest_a_name, guest_b_key, guest_b_name, label, source) "
+                "VALUES (?, ?, ?, ?, ?, ?)",
+                (r["a"], (r.get("aName") or "").strip(), r["b"], (r.get("bName") or "").strip(),
+                 (r.get("label") or "").strip(), r["source"]),
             )
 
         for guest_key, fields in (data.get("fieldOverrides") or {}).items():
@@ -590,7 +604,7 @@ def save_curation(data: dict[str, Any]) -> None:
             src = (contact or {}).get("source")
             if src not in ALLOWED_SOURCES:
                 # Editor should only ever send back rows it manages
-                # (elien/nima). Defence-in-depth — silently skip
+                # (elliott/hilary). Defence-in-depth — silently skip
                 # malformed rows rather than promoting a form row to
                 # manual without an explicit edit.
                 continue
@@ -1249,8 +1263,8 @@ INDEX_HTML = r"""<!doctype html>
       <div class="signed-in">
         Signed in as
         <select id="signed-in-as" onchange="setSignedInAs(this.value)">
-          <option value="elien">Elien</option>
-          <option value="nima">Nima</option>
+          <option value="elliott">Elliott</option>
+          <option value="hilary">Hilary</option>
         </select>
         <button id="save-btn" onclick="save()" disabled>Save</button>
         <span id="status">loading…</span>
@@ -1297,10 +1311,10 @@ INDEX_HTML = r"""<!doctype html>
     'lover', 'lovers', 'sweetheart', 'sweethearts', 'significant other',
   ]);
 
-  const state = { guests: [], guestsByKey: {}, curation: null, selectedKey: null, signedInAs: 'elien', dirty: false, guide: [], knownCategories: [], cafes: [], collapsedGuideCats: new Set() };
+  const state = { guests: [], guestsByKey: {}, curation: null, selectedKey: null, signedInAs: 'elliott', dirty: false, guide: [], knownCategories: [], cafes: [], collapsedGuideCats: new Set() };
 
   function setSignedInAs(who) {
-    if (who !== 'elien' && who !== 'nima') return;
+    if (who !== 'elliott' && who !== 'hilary') return;
     state.signedInAs = who;
     localStorage.setItem('losInvitados.signedInAs', who);
     document.getElementById('signed-in-as').value = who;
@@ -1308,7 +1322,7 @@ INDEX_HTML = r"""<!doctype html>
 
   function restoreSignedInAs() {
     const saved = localStorage.getItem('losInvitados.signedInAs');
-    if (saved === 'elien' || saved === 'nima') {
+    if (saved === 'elliott' || saved === 'hilary') {
       setSignedInAs(saved);
     }
   }
@@ -1529,7 +1543,7 @@ INDEX_HTML = r"""<!doctype html>
     if (!g) { editor.innerHTML = '<div class="empty">Pick a guest on the left to edit.</div>'; return; }
     const loc = state.curation.locations[g.key] || {};
     const memsBySubject = Object.fromEntries(
-      ['them', 'nima', 'elien', 'both'].map(s => [
+      ['them', 'hilary', 'elliott', 'both'].map(s => [
         s, (state.curation.memories.find(m => m.guest === g.key && m.subject === s) || {}).text || ''
       ])
     );
@@ -1564,13 +1578,13 @@ INDEX_HTML = r"""<!doctype html>
         <label>Grew up in</label>
         <input type="text" list="city-names" autocomplete="off" value="${escapeAttr(loc.hometown || '')}" oninput="updateLocation('${g.key}', 'hometown', this.value)">
       </div>
-      ${formFieldGroup(g, 'how_we_know', 'How they know Elien and Nima', storyValue, !!fo.how_we_know, g.formStory)}
+      ${formFieldGroup(g, 'how_we_know', 'How they know Hilary and Elliott', storyValue, !!fo.how_we_know, g.formStory)}
       ${formFieldGroup(g, 'least_favorite', "Go-to karaoke song", leastValue, !!fo.least_favorite, g.formLeastFavorite)}
       ${hereWithBlock(g)}
       ${memoryGroup(g, 'them', `A memory of ${g.name}`, memsBySubject.them)}
-      ${memoryGroup(g, 'nima', 'A memory of Nima', memsBySubject.nima)}
-      ${memoryGroup(g, 'elien', 'A memory of Elien', memsBySubject.elien)}
-      ${memoryGroup(g, 'both', 'A memory of Elien and Nima', memsBySubject.both)}
+      ${memoryGroup(g, 'hilary', 'A memory of Hilary', memsBySubject.hilary)}
+      ${memoryGroup(g, 'elliott', 'A memory of Elliott', memsBySubject.elliott)}
+      ${memoryGroup(g, 'both', 'A memory of Hilary and Elliott', memsBySubject.both)}
       ${eventsBlock(g)}
       ${contactBlock(g)}
     `;
@@ -1775,10 +1789,10 @@ INDEX_HTML = r"""<!doctype html>
     if (!partnerKey) { alert('Pick a guest from the suggestions.'); return; }
     if (partnerKey === guestKey) { alert('A guest cannot be their own partner.'); return; }
     // Label is optional — "Here with" already conveys romantic intent. If
-    // Elien leaves it blank, we default to "partner" internally so the
+    // Hilary or Elliott leaves it blank, we default to "partner" internally so the
     // render pipeline still surfaces this row under Here with. The chip
     // on the profile only shows the name, not the label, so "partner"
-    // stays invisible unless Elien types something more specific here.
+    // stays invisible unless they type something more specific here.
     if (typedLabel && !ROMANTIC_LABELS.has(typedLabel.toLowerCase())) {
       alert(`"${typedLabel}" isn't on the romantic-label list. Leave blank or pick from the dropdown (spouses, wife, partner, boyfriend, girlfriend, fiancé, date). For non-romantic connections, use the Relationships tab.`);
       return;
@@ -1820,7 +1834,7 @@ INDEX_HTML = r"""<!doctype html>
     else delete loc[field];
     if (Object.keys(loc).length) state.curation.locations[key] = loc;
     else delete state.curation.locations[key];
-    // Keep the city autocomplete fresh as Elien types new places.
+    // Keep the city autocomplete fresh as the couple types new places.
     if (v && !state.knownCities.some(c => c.toLowerCase() === v.toLowerCase())) {
       state.knownCities = [...state.knownCities, v].sort((a, b) => a.toLowerCase().localeCompare(b.toLowerCase()));
       populateCityDatalist();

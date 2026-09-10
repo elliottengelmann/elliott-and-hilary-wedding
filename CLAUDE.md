@@ -122,13 +122,27 @@ always better than a fabricated one; these are real people who know each other.
 
 Do not infer relationships from shared surnames, a shared "plus one" column,
 shared addresses, or chains of reasoning. If it wasn't stated by the guest or by
-Hilary/Elliott, leave it blank and ask.
+Hilary/Elliott, leave it blank and ask. (This is about not *guessing* — using a
+plus-one list Hilary/Elliott hand you directly, as the stated source, is fine;
+that's authored by them, not inferred.)
 
-*(Note: the memory/relationship `source` tags in the database currently still
-accept the old couple's names. If Hilary & Elliott want to hand-author memories or
-"Here with" couple-links, update those source tags to their names first — it
-touches the `wedding.db` CHECK constraints, `scripts/edit_guests.py`, and the
-validators in `build.py`. Flag this to them before doing it.)*
+*(The memory/relationship `source` tags now accept `'elliott'` / `'hilary'` —
+renamed from the old couple's `'elien'` / `'nima'` across the `wedding.db` CHECK
+constraints, `scripts/edit_guests.py`, and the validators in `build.py`, so
+Hilary & Elliott can hand-author memories and "Here with" couple-links.)*
+
+**"Here with" plus-ones who never filled the guest form:** a `relationships`
+row can point at someone with no `guests` row at all (they never submitted the
+small form) — `guest_a_name`/`guest_b_name` hold a fallback display name for
+that side. `build_herewith_for()` in `build.py` renders them as plain text
+(not a clickable chip, since there's no profile/stub to open) instead of
+silently dropping them. If that person later fills out the form themselves,
+their real profile takes over automatically on the next sync — no relationship
+data needs to change. Imported from "Wedding Guest List - FINAL" (the
+couple's Google Sheet of every guest + their named plus-one) on 2026-09-10;
+3 pairs were skipped because the two directions of the same pair disagreed on
+spelling (Gabe Nicholas/Nicolas, Andrew Garsetti/Garcetti, Allie/Annie
+Goodman) — ask Hilary/Elliott for the correct spelling before adding those.
 
 ## Data pipeline
 

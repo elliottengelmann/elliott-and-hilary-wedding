@@ -33,10 +33,12 @@ DIRECTIONAL_LABELS = {
     "mentor", "mentee",
 }
 
-# Labels that qualify a relationship as a romantic partner. Only these rows
-# appear in the "Here with" section under the current-city facts — the
-# intent is "who this guest came with," not the full social graph.
-# Add new terms here as needed; matching is case-insensitive.
+# Labels that qualify for the "Here with" line. Mostly romantic-partner
+# terms, but "plus one" (etc.) also covers a non-romantic named plus-one
+# from the guest list — e.g. a sibling or friend someone's attending
+# with. Only these rows appear in "Here with"; the intent is "who this
+# guest came with," not the full social graph. Add new terms here as
+# needed; matching is case-insensitive.
 ROMANTIC_LABELS = {
     "spouse", "spouses",
     "wife", "wives",
@@ -53,8 +55,8 @@ ROMANTIC_LABELS = {
 
 MEMORY_TITLES = {
     "them": "A memory of {name}",
-    "nima": "A memory of Hilary",
-    "elien": "A memory of Elliott",
+    "hilary": "A memory of Hilary",
+    "elliott": "A memory of Elliott",
     "both":  "A memory of Hilary and Elliott",
 }
 
@@ -372,7 +374,7 @@ GUIDE_SECTION_ORDER = [
 ]
 
 # Per-section Google-Maps shortcuts. Each section optionally gets one or
-# more pinned links at the top before its cards — Elien's curated maps
+# more pinned links at the top before its cards — the couple's curated maps
 # for that category. Banned outside this dict; never auto-generated.
 GUIDE_SECTION_MAPS = {
     # Optional pinned Google-Maps links per guide section — Hilary & Elliott's
@@ -406,7 +408,7 @@ ROOFTOP_ICON_SVG = (
 
 def _place_card_html(p, has_rooftop_flag=False):
     """Travel-style collapsible card. The HEADER previews the place: name
-    + Elien's description (line-clamped to 2 lines via CSS when collapsed,
+    + the couple's description (line-clamped to 2 lines via CSS when collapsed,
     full when expanded). The BODY holds address + Get Directions, revealed
     by tapping the disclosure arrow.
 
@@ -618,12 +620,12 @@ def guest_key(first, last):
     return f"{(first or '').strip().lower()}_{(last or '').strip().lower()}".replace(" ", "_")
 
 
-RELATIONSHIP_SOURCES = {"elien", "nima"}
+RELATIONSHIP_SOURCES = {"elliott", "hilary"}
 
 
 def load_curation(conn):
     """
-    Load Elien/Nima-authored curation from wedding.db — the only
+    Load Hilary/Elliott-authored curation from wedding.db — the only
     source of truth. Returns a dict shaped like the old overrides
     JSON so downstream builders don't have to care.
     """
@@ -640,10 +642,14 @@ def load_curation(conn):
         memories.append({"guest": guest_key, "subject": subject, "text": text, "source": source})
 
     relationships = []
-    for a, b, label, source in conn.execute(
-        "SELECT guest_a_key, guest_b_key, label, source FROM relationships"
+    for a, a_name, b, b_name, label, source in conn.execute(
+        "SELECT guest_a_key, guest_a_name, guest_b_key, guest_b_name, label, source FROM relationships"
     ):
-        relationships.append({"a": a, "b": b, "label": label or "", "source": source})
+        relationships.append({
+            "a": a, "a_name": a_name or "",
+            "b": b, "b_name": b_name or "",
+            "label": label or "", "source": source,
+        })
 
     # Per-field admin overrides of form-sourced values (how_we_know,
     # least_favorite, photo_url). Absent row = use form value.
@@ -660,7 +666,7 @@ def load_curation(conn):
     # Post-wedding contact info — phone, email, socials. Populated from
     # contact_form_responses.csv by merge_guests.merge_contacts() (rows
     # tagged source='form') and from manual edits in edit_guests.py
-    # (source='elien'/'nima'). Either source renders identically on the
+    # (source='elliott'/'hilary'). Either source renders identically on the
     # profile; the source tag only governs whose write wins when both
     # paths touch the same guest. See CLAUDE.md → "guest_contacts".
     contacts: dict[str, dict[str, str]] = {}
@@ -672,12 +678,12 @@ def load_curation(conn):
     except sqlite3.OperationalError:
         rows = []  # table may not yet exist on a fresh checkout
     for guest_key, phone, email, ig, li, tw, bs, sc, source in rows:
-        if source not in ("form", "elien", "nima"):
+        if source not in ("form", "elliott", "hilary"):
             # Schema CHECK constraint should prevent this, but defence
             # in depth — never render an un-sourced contact row.
             raise SystemExit(
                 f"BUILD ABORTED — guest_contacts row for {guest_key!r} has "
-                f"invalid source {source!r}. Allowed: form, elien, nima."
+                f"invalid source {source!r}. Allowed: form, elliott, hilary."
             )
         contacts[guest_key] = {
             "phone":      phone or "",
@@ -702,7 +708,7 @@ def load_curation(conn):
 def _validate_relationship_sources(rows):
     """
     Enforce the "Here with" source rule (see CLAUDE.md): every
-    relationship row must carry a source of 'elien' or 'nima'. Abort
+    relationship row must carry a source of 'elliott' or 'hilary'. Abort
     the build on the first offender — do not render un-sourced or
     AI/inferred relationships. The schema-level CHECK constraint in
     wedding.db provides a second layer of defence.
@@ -725,7 +731,7 @@ def _validate_relationship_sources(rows):
 
 def build_memories_for(key, overrides, display_name):
     """Return memory objects {title, text} for a guest, in a stable order."""
-    order = ["them", "nima", "elien", "both"]
+    order = ["them", "hilary", "elliott", "both"]
     out = []
     for subject in order:
         for m in overrides["memories"]:
@@ -735,12 +741,22 @@ def build_memories_for(key, overrides, display_name):
     return out
 
 
-def build_herewith_for(key, overrides, name_by_key):
+def build_herewith_for(key, overrides, name_by_key, real_keys):
     """
-    Return [{key, name}] for a guest's "Here with" line — romantic
-    partners only (spouse, date, fiancé, etc.). All other relationship
-    types (family, friends) are intentionally excluded; they'll surface
-    in other sections to be added later.
+    Return [{key, name}] for a guest's "Here with" line — rows tagged
+    with a label in ROMANTIC_LABELS only (spouse, date, fiancé, a named
+    "plus one," etc.). A "plus one" needn't be romantic — it's whoever
+    the guest list names as their invited companion. Other relationship
+    types (e.g. an unlabeled family/friend connection) are intentionally
+    excluded; they'll surface in other sections to be added later.
+
+    A partner's `key` is set to "" (rather than a real guest_key) when
+    they're not in `real_keys` — i.e. they have no profile or stub to
+    link to at all (never filled the guest form, no curated photo/story
+    either). The front end renders those as plain text instead of a
+    dead-end clickable chip. `name_by_key` still has to have an entry
+    for them (via a relationship row's fallback a_name/b_name) or they
+    don't render at all.
     """
     partners = {}
     for r in overrides["relationships"]:
@@ -751,9 +767,9 @@ def build_herewith_for(key, overrides, name_by_key):
         if label not in ROMANTIC_LABELS:
             continue
         if key == a and b in name_by_key:
-            partners[b] = {"key": b, "name": name_by_key[b]}
+            partners[b] = {"key": b if b in real_keys else "", "name": name_by_key[b]}
         elif key == b and a in name_by_key:
-            partners[a] = {"key": a, "name": name_by_key[a]}
+            partners[a] = {"key": a if a in real_keys else "", "name": name_by_key[a]}
     return sorted(partners.values(), key=lambda c: c["name"].lower())
 
 
@@ -762,7 +778,7 @@ def build_guest_json(conn):
     # regardless of their RSVP status. Whether they've formally ticked
     # "Attending" on the RSVP is not the gate — a submitted form
     # answer is. (An admin story override also unlocks a profile, for
-    # cases where Elien or Nima add the story themselves.)
+    # cases where Hilary or Elliott add the story themselves.)
     #
     # Returns a (guests_json, partner_profiles_json) pair. partner_profiles
     # holds minimal "linked-partner" stubs: attending guests who haven't
@@ -809,20 +825,30 @@ def build_guest_json(conn):
     # editor allows entering a "Here with" pointing at someone who
     # hasn't filled out the form yet; this is what makes those chips
     # render and link out to a minimal profile page.
+    #
+    # phantom_names covers the other case: a partner with no guest row
+    # at all (never filled the form — e.g. a plus-one hand-imported from
+    # a guest list that isn't gated on the small "get to know you"
+    # form). They get no profile/stub, just a plain-text name in the
+    # "Here with" line, sourced from the relationship row's fallback
+    # a_name/b_name. See build_herewith_for().
     linked_partner_keys = set()
+    phantom_names = {}
     for r in overrides["relationships"]:
         a, b = r.get("a"), r.get("b")
+        a_name, b_name = r.get("a_name") or "", r.get("b_name") or ""
         label = (r.get("label") or "").strip().lower()
         if not a or not b or label not in ROMANTIC_LABELS:
             continue
-        for partner_key, anchor_key in ((a, b), (b, a)):
+        for partner_key, anchor_key, fallback_name in ((a, b, a_name), (b, a, b_name)):
             if partner_key in visible_keys or anchor_key not in visible_keys:
                 continue
             partner_row = guest_by_key.get(partner_key)
-            if not partner_row:
-                continue
-            if (partner_row.get("rsvp_status") or "").strip() == "Attending":
-                linked_partner_keys.add(partner_key)
+            if partner_row:
+                if (partner_row.get("rsvp_status") or "").strip() == "Attending":
+                    linked_partner_keys.add(partner_key)
+            elif fallback_name:
+                phantom_names[partner_key] = fallback_name
 
     # First pass: build key → display-name map so relationship chips
     # can label each other. Includes both the visible (story-having)
@@ -845,6 +871,13 @@ def build_guest_json(conn):
         fo = field_overrides.get(k, {})
         override_name = (fo.get("display_name") or "").strip()
         name_by_key[k] = override_name or f"{first} {last}".strip()
+    for k, phantom_name in phantom_names.items():
+        name_by_key.setdefault(k, phantom_name)
+
+    # Keys with an actual profile or stub to link to. Everyone else in
+    # name_by_key (i.e. phantom_names) is display-only — see
+    # build_herewith_for().
+    real_keys = visible_keys | linked_partner_keys
 
     js_guests = []
     for g in guests:
@@ -885,7 +918,7 @@ def build_guest_json(conn):
             attending_events.append("Sunday Come Down Dinner")
 
         loc = overrides["locations"].get(key, {})
-        # city/hometown: Elien/Nima curation wins; otherwise fall back
+        # city/hometown: Hilary/Elliott curation wins; otherwise fall back
         # to whatever the guest wrote on the Google Form.
         city = (loc.get("currentCity") or "").strip() or (g.get("form_current_city") or "").strip()
         hometown = (loc.get("hometown") or "").strip() or (g.get("form_hometown") or "").strip()
@@ -911,7 +944,7 @@ def build_guest_json(conn):
             "initials": ((first[:1] + last[:1]) or "").upper(),
             "photoUrl": photo,
             "memories": build_memories_for(key, overrides, display),
-            "hereWith": build_herewith_for(key, overrides, name_by_key),
+            "hereWith": build_herewith_for(key, overrides, name_by_key, real_keys),
             "events": attending_events,
             "contacts": contacts,
             "hasContacts": bool(contacts),
@@ -924,7 +957,7 @@ def build_guest_json(conn):
     # guest. They never enter the browse grid or swipe sequence; the
     # front end only opens them when a "Here with" chip targets their
     # key. Photo override + initials are surfaced so the empty profile
-    # at least shows a face if Elien curated one.
+    # at least shows a face if the couple curated one.
     js_partner_profiles = []
     for k in sorted(linked_partner_keys):
         g = guest_by_key[k]
@@ -1944,6 +1977,14 @@ TEMPLATE = r"""<!DOCTYPE html>
             text-decoration: underline;
         }
 
+        /* Plain-text "Here with" name — used instead of .invitado-herewith-link
+           when the partner has no profile/stub to link to at all (e.g. a
+           plus-one who never filled the guest form). Same inline position,
+           just not clickable. */
+        .invitado-herewith-name {
+            color: inherit;
+        }
+
         /* Stay in Touch — post-wedding contact info shared via the
            "Contact & Socials" form. Sits AFTER the wedding-narrative
            sections (story / memories / events) because it's the
@@ -2070,7 +2111,7 @@ TEMPLATE = r"""<!DOCTYPE html>
         }
 
         /* "Claim profile" footer — tiny, subtle SMS link so guests can
-           text Elien to request an edit to their profile. Even quieter
+           text the couple to request an edit to their profile. Even quieter
            than the events block. */
         .invitado-claim {
             margin-top: 24px;
@@ -2136,7 +2177,7 @@ TEMPLATE = r"""<!DOCTYPE html>
 
         .guide-jump-pill {
             font-family: 'Bodoni Moda', serif;
-            font-size: 15px; /* +12% from 13 — readability pass per Elien's note */
+            font-size: 15px; /* +12% from 13 — readability pass */
             color: white;
             background: #7FB5C9;
             border: none;
@@ -2158,7 +2199,7 @@ TEMPLATE = r"""<!DOCTYPE html>
 
         .guide-section-title {
             font-family: 'Bodoni Moda', serif;
-            font-size: 20px; /* +12% from 18 — readability pass per Elien's note */
+            font-size: 20px; /* +12% from 18 — readability pass */
             font-weight: 600;
             color: var(--dark);
             margin: 0 0 10px;
@@ -2208,7 +2249,7 @@ TEMPLATE = r"""<!DOCTYPE html>
         /* Bare-text link — pin icon, label, arrow. No pill background. */
         .guide-map-link {
             font-family: 'Bodoni Moda', serif;
-            font-size: 16px; /* +12% from 14 — readability pass per Elien's note */
+            font-size: 16px; /* +12% from 14 — readability pass */
             color: var(--primary-green);
             text-decoration: none;
             display: inline-flex;
@@ -3852,8 +3893,13 @@ TEMPLATE = r"""<!DOCTYPE html>
             const partners = guest.hereWith || [];
             let hereWithHtml = '';
             if (partners.length > 0) {
-                const linkHtml = (p) =>
-                    `<button class="invitado-herewith-link" data-chip-key="${invitadoEscape(p.key)}">${invitadoEscape(p.name)}</button>`;
+                // A partner with no key has no profile/stub anywhere on
+                // the site to link to (never filled the form, nothing
+                // curated) — render their name as plain text instead of
+                // a chip that would do nothing when tapped.
+                const linkHtml = (p) => p.key
+                    ? `<button class="invitado-herewith-link" data-chip-key="${invitadoEscape(p.key)}">${invitadoEscape(p.name)}</button>`
+                    : `<span class="invitado-herewith-name">${invitadoEscape(p.name)}</span>`;
                 let namesHtml;
                 if (partners.length === 1) {
                     namesHtml = linkHtml(partners[0]);
@@ -3875,11 +3921,11 @@ TEMPLATE = r"""<!DOCTYPE html>
                    </div>`
                 : '';
             // Tiny SMS link so any guest who wants to correct something
-            // on their profile can text Elien directly.
+            // on their profile can text the couple directly.
             const claimHtml = '';
             // Stay in Touch — only renders if the guest has at least
             // one non-empty contact field (form-submitted OR hand-added
-            // by Elien/Nima). Same source-of-truth as the grid badge.
+            // by Hilary/Elliott). Same source-of-truth as the grid badge.
             const contactsHtml = invitadoContactsHtml(guest);
             card.innerHTML = `
                 <div class="invitado-photo ${colorClass}">${invitadoEscape(guest.initials)}${photoImg}</div>
