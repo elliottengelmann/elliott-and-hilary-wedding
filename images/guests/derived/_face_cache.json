@@ -366,7 +366,7 @@
       810,
       888
     ],
-    "override_sig": "",
+    "override_sig": "{\"cx\": 680, \"cy\": 660, \"size\": 820}",
     "sha256": "2b2609546cb03759f470eae273f30f17e296cb5b2ca5b3cce8dd75de13a03a07"
   },
   "nathan_goldsberry": {
@@ -456,7 +456,7 @@
       739,
       376
     ],
-    "override_sig": "",
+    "override_sig": "{\"cx\": 782, \"cy\": 654, \"size\": 260}",
     "sha256": "0083d4f7afa923e58548d39e1e6899df6677ffbdcf96241723a38d02a61b1b17"
   },
   "suah_kim": {
