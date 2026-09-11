@@ -49,6 +49,16 @@
     "override_sig": "",
     "sha256": "63971b4852192088f83198b216ae32f1189163039b5cfec8fd4ddaea213813ef"
   },
+  "anna_macnaughton": {
+    "face": [
+      1713,
+      1039,
+      1884,
+      868
+    ],
+    "override_sig": "",
+    "sha256": "501a6cfc27beb0530cb511a49c87ac6abf98f3fd8d92d21e9b1b30004229e91d"
+  },
   "averi_becque": {
     "face": [
       480,
@@ -103,6 +113,46 @@
     ],
     "override_sig": "",
     "sha256": "7c7fc2e718f1be3a1ec4fbb2c180d2544fe146e19f79cc8fd0bba722981afc5b"
+  },
+  "chris_lowe": {
+    "face": [
+      460,
+      1425,
+      1332,
+      554
+    ],
+    "override_sig": "",
+    "sha256": "1604b80112acf3c6db4ba933fd13169030c927f02ef2cc40a3fb04d3dcc5136f"
+  },
+  "cinn_frost": {
+    "face": [
+      1550,
+      1100,
+      2222,
+      428
+    ],
+    "override_sig": "",
+    "sha256": "efeecabcbc9d1b4c53973a7cf5d35a03828a8f46af3402bd39d4e69e7ccaf7ca"
+  },
+  "dana_howe": {
+    "face": [
+      2090,
+      2901,
+      2823,
+      2169
+    ],
+    "override_sig": "",
+    "sha256": "621c4fa959827230bc2d333924e6e2faec01ee016306e6d9e3a889b242301ccd"
+  },
+  "david_mcintyre": {
+    "face": [
+      164,
+      818,
+      700,
+      282
+    ],
+    "override_sig": "",
+    "sha256": "83eddea114d21ca034ed80cf7b0efe54cb79b57c46e911e532cf397672c6b708"
   },
   "diana_engelmann": {
     "face": [
@@ -279,6 +329,16 @@
     "override_sig": "",
     "sha256": "65afe435118438958df6a29739a5b6900401cec41d2551963af02c5dadc906ce"
   },
+  "luke_sandor": {
+    "face": [
+      792,
+      2448,
+      2036,
+      1204
+    ],
+    "override_sig": "",
+    "sha256": "6f43465c62e27b3f02b9912192169ede94c0e18ef07610c9ca7f4b0219fe3ef1"
+  },
   "marco_marrazza": {
     "face": [
       153,
@@ -288,6 +348,36 @@
     ],
     "override_sig": "",
     "sha256": "5b65d6fabcf8251d7142b984223b5dc7ee0f392851e0b7adb09e0b98b46de309"
+  },
+  "matt_taylor": {
+    "face": [
+      634,
+      1044,
+      1163,
+      515
+    ],
+    "override_sig": "",
+    "sha256": "b030e86e3239fb6a5f9e8500e94cf45561c34026174bdce06ac9e0def2a5c590"
+  },
+  "mical_(meeks)_nobel": {
+    "face": [
+      630,
+      1068,
+      810,
+      888
+    ],
+    "override_sig": "",
+    "sha256": "2b2609546cb03759f470eae273f30f17e296cb5b2ca5b3cce8dd75de13a03a07"
+  },
+  "nathan_goldsberry": {
+    "face": [
+      559,
+      2779,
+      1610,
+      1724
+    ],
+    "override_sig": "",
+    "sha256": "45ed020138063bbdd5562a4e6250af14e1c3f1c5ec0205cce2164ac0be48004b"
   },
   "noah_jefferson": {
     "face": [
@@ -313,6 +403,16 @@
     ],
     "override_sig": "",
     "sha256": "847c66b2ed57ca0108218aaf7ea3088941fd4d4042cd4c4bdb287160a3b28b9e"
+  },
+  "riley_meehan": {
+    "face": [
+      1600,
+      3889,
+      3069,
+      2414
+    ],
+    "override_sig": "",
+    "sha256": "ce70e199e9c220c40a0f44267acb0c3d1aeb3bb9c1ca63bf1b78f488d873b1ab"
   },
   "ross_lipschultz": {
     "face": null,
@@ -348,6 +448,16 @@
     ],
     "override_sig": "",
     "sha256": "6f3051d3103c0227ad29b339571a54ce01ec777e5d5388c7a84cdd13d33fff4c"
+  },
+  "stefan_shatlan": {
+    "face": [
+      646,
+      470,
+      739,
+      376
+    ],
+    "override_sig": "",
+    "sha256": "0083d4f7afa923e58548d39e1e6899df6677ffbdcf96241723a38d02a61b1b17"
   },
   "suah_kim": {
     "face": [

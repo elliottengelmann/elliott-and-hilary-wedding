@@ -3,7 +3,7 @@
 // updates — the SW bytes change → registration.update() sees a new worker
 // → install/activate runs → controllerchange fires → page reloads.
 // Don't hand-edit this line; bumping it manually is fine but unnecessary.
-const CACHE_VERSION = 'fcb768d233a6';
+const CACHE_VERSION = 'ed8f24c4bbfb';
 const CACHE_NAME = `hilary-elliot-${CACHE_VERSION}`;
 
 // Icon and manifest URLs carry ?v=${CACHE_VERSION} so iOS treats each new
