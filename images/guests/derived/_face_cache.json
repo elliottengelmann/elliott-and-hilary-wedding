@@ -469,6 +469,11 @@
     "override_sig": "{\"cx\": 680, \"cy\": 660, \"size\": 820}",
     "sha256": "2b2609546cb03759f470eae273f30f17e296cb5b2ca5b3cce8dd75de13a03a07"
   },
+  "namika_maki": {
+    "face": null,
+    "override_sig": "",
+    "sha256": "80ad64752214cb4aaf8d09de406bd97174bf31f5d835223fac4c085195be49f7"
+  },
   "nathan_goldsberry": {
     "face": [
       559,
