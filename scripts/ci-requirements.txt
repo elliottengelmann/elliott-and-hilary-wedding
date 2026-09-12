@@ -1,0 +1,19 @@
+# Image pipeline for .github/workflows/sync-guests.yml (Linux runners).
+#
+# Differs from photos-requirements.txt, which is the local macOS setup:
+#   - dlib-bin replaces dlib. face_recognition depends on dlib, which has no
+#     Linux wheel and compiles from source for ~10 minutes on a runner.
+#     dlib-bin is the same library, prebuilt. face_recognition is then
+#     installed with --no-deps so pip doesn't pull source dlib in anyway.
+#   - pillow-heif handles the HEIC/HEIF an iPhone uploads. Locally that
+#     conversion could lean on macOS `sips`; a Linux runner has no such thing.
+#
+# setuptools<81 is load-bearing: face_recognition_models imports
+# pkg_resources, which setuptools removed in 81.
+setuptools<81
+Pillow
+pillow-heif
+numpy
+Click
+dlib-bin
+face_recognition_models

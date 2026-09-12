@@ -161,6 +161,42 @@ guest's profile keeps the raw (non-rendering) Drive share link. The core build
 needs **only Python 3's standard library** — no pip packages. (Photo
 face-cropping is the one optional exception and has its own setup script.)
 
+## Automated sync (form submission → live site)
+
+As of 2026-09-11 the pipeline above also runs itself. **Check whether the
+automation already handled something before syncing by hand.**
+
+- An Apps Script bound to the responses sheet (`scripts/apps-script/Code.gs`,
+  setup in `SETUP.md` beside it) fires on every form submission. It commits
+  the whole sheet to `incoming/form_responses.csv` and that guest's photo to
+  `images/guests/<stem>.<ext>`, as **one** commit via the Git Data API.
+- That push runs `.github/workflows/sync-guests.yml`, which does exactly what
+  a human would: `normalize_photos.py` → `merge_guests.py` →
+  `process_guest_images.py` → `build.py`, then commits and pushes. Vercel
+  deploys from there. An hourly `schedule` re-runs it as a safety net.
+- The script **drops the `Email Address` column** before committing, because
+  this repo is public. Anything that reads guest email from the form will get
+  an empty string from now on. Don't "fix" that without making the repo
+  private first.
+- Pushes made with `GITHUB_TOKEN` don't start Actions runs, so the workflow's
+  own commit can't retrigger it. Vercel still deploys — its GitHub App gets
+  the webhook either way.
+- `scripts/ci-requirements.txt` is the Linux install list, deliberately
+  different from `photos-requirements.txt`: `dlib-bin` (prebuilt) instead of
+  `dlib` (compiles for ~10 min), plus `pillow-heif` because a runner has no
+  macOS `sips`. `face_recognition` is installed with `--no-deps` so pip
+  doesn't drag source dlib in behind it.
+- `detect_face_bbox()` degrades to a centre crop if `face_recognition` won't
+  import, rather than taking the whole sync down. A run that does this says so
+  in its job summary.
+
+**What the automation cannot do is judge a crop.** Roughly one photo in five
+has needed a hand-pinned crop — wrong person, guest's face cropped out, a
+child centred instead of the guest. The job summary flags photos where no face
+was detected, but a confidently-wrong crop looks identical to a correct one
+from the outside. Spot-check `images/guests/derived/*-thumb.jpg` after a batch
+of submissions; fix with `process_guest_images.py --set-crop`.
+
 ## Typography & readability minimums
 
 Read on phones, often outdoors, by a wide age range. **Body/description text:

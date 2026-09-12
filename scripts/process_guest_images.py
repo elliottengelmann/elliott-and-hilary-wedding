@@ -77,7 +77,15 @@ def detect_face_bbox(img: Image.Image) -> tuple[int, int, int, int] | None:
     """Return (top, right, bottom, left) of the largest face in the
     full-resolution image, or None if no face is detected. Detection
     runs on a downscaled copy for speed; coordinates are scaled back."""
-    import face_recognition  # imported lazily so --set-crop runs without it
+    # Imported lazily so --set-crop runs without it, and so an environment
+    # that couldn't install dlib (the CI runner, say) degrades to the
+    # fallback centre crop instead of taking the whole sync down with it.
+    try:
+        import face_recognition
+    except ImportError:
+        print("  !! face_recognition unavailable — falling back to centre "
+              "crops. Crops from this run need review.")
+        return None
     import numpy as np
 
     w, h = img.size

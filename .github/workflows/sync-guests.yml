@@ -1,0 +1,99 @@
+# Rebuilds the guest directory when a new form response lands.
+#
+# The Apps Script bound to Hilary's "Fwedding Questionnaire (Responses)"
+# sheet commits two things on every submission (see scripts/apps-script/):
+#
+#   incoming/form_responses.csv   the whole sheet, minus the email column
+#   images/guests/<stem>.<ext>    that guest's photo, straight from Drive
+#
+# That push lands here. This job runs the same pipeline a human would:
+# normalize odd image formats, merge the CSV into wedding.db, crop
+# thumbnails, rebuild index.html, push. Vercel deploys on that push.
+#
+# Pushes made with GITHUB_TOKEN do not start further Actions runs, so the
+# commit this job makes cannot retrigger it. Vercel still deploys, because
+# its GitHub App receives the webhook regardless.
+
+name: Sync guest list
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "incoming/form_responses.csv"
+      - "images/guests/**"
+  workflow_dispatch: {}
+  # Safety net. If a submission ever fails to trigger the push above, this
+  # reconciles the site with whatever the repo holds.
+  schedule:
+    - cron: "17 * * * *"
+
+concurrency:
+  # Two people submitting seconds apart must not race each other's commit.
+  group: sync-guests
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: scripts/ci-requirements.txt
+
+      - name: Install image dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r scripts/ci-requirements.txt
+          # --no-deps: face_recognition lists dlib as a dependency, and pip
+          # would fetch the source distribution and compile it. dlib-bin
+          # (installed above) already provides the same module, prebuilt.
+          pip install --no-deps face_recognition
+          python -c "import face_recognition, pillow_heif; print('image stack OK')"
+
+      - name: Stage the form responses
+        run: |
+          if [ ! -f incoming/form_responses.csv ]; then
+            echo "::error::incoming/form_responses.csv is missing — the Apps Script never committed it."
+            exit 1
+          fi
+          cp incoming/form_responses.csv form_responses.csv
+          echo "responses: $(($(wc -l < form_responses.csv) - 1))"
+
+      - name: Convert photos browsers cannot render
+        run: python3 scripts/normalize_photos.py
+
+      - name: Merge into wedding.db
+        run: python3 merge_guests.py
+
+      - name: Crop thumbnails
+        run: python3 scripts/process_guest_images.py
+
+      - name: Rebuild index.html
+        run: python3 build.py
+
+      - name: Commit and deploy
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          # The root form_responses.csv stays gitignored and transient; the
+          # copy under incoming/ is the tracked one.
+          git add images/guests wedding.db index.html sw.js manifest.webmanifest
+          if git diff --cached --quiet; then
+            echo "nothing changed — no deploy needed"
+            exit 0
+          fi
+          git commit -m "Sync guest list from the form (automated)" \
+                     -m "Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>"
+          git push origin HEAD:main
+
+      - name: Report
+        if: always()
+        run: python3 scripts/ci_summary.py >> "$GITHUB_STEP_SUMMARY"

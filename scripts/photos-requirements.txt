@@ -4,3 +4,7 @@
 Pillow
 face_recognition
 setuptools<81
+# For scripts/normalize_photos.py — iPhones upload HEIC, which browsers can't
+# render and process_guest_images.py skips. See scripts/ci-requirements.txt
+# for the Linux equivalent used by the Actions sync.
+pillow-heif

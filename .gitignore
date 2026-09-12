@@ -6,6 +6,10 @@ tmp-icons/
 .vercel
 .context
 *.csv
+# ...except the copy the Apps Script commits on each form submission, which
+# is the input the Actions sync runs from. The root form_responses.csv stays
+# ignored and transient — CI copies this one over it.
+!incoming/form_responses.csv
 *Farsi Toasts.md
 __pycache__/
 .tinify-cache.json
