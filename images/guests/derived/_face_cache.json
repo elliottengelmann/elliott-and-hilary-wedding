@@ -284,6 +284,16 @@
     "override_sig": "",
     "sha256": "2795abcc7103c26bec13a5ec24265c548f2e4eb7ea90479b9990483606a81ab8"
   },
+  "guy_alcock": {
+    "face": [
+      1342,
+      3386,
+      2216,
+      2508
+    ],
+    "override_sig": "",
+    "sha256": "fee2b0d543436f4ce8b0878a343d136302e27029c193a404e9f2c35dd7e40b21"
+  },
   "ian_maclellan": {
     "face": [
       1745,
