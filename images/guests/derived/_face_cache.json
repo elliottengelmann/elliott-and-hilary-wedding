@@ -179,6 +179,16 @@
     "override_sig": "",
     "sha256": "621c4fa959827230bc2d333924e6e2faec01ee016306e6d9e3a889b242301ccd"
   },
+  "danny_shassian": {
+    "face": [
+      1770,
+      1948,
+      2578,
+      1142
+    ],
+    "override_sig": "",
+    "sha256": "d9c6eec32250a0087ab569420b06b22ab4298f9574d774f7d1705d9bac69758a"
+  },
   "david_mcintyre": {
     "face": [
       164,
