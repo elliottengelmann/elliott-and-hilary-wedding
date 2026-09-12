@@ -179,6 +179,16 @@
     "override_sig": "",
     "sha256": "621c4fa959827230bc2d333924e6e2faec01ee016306e6d9e3a889b242301ccd"
   },
+  "dana_wilke": {
+    "face": [
+      2214,
+      2610,
+      2934,
+      1890
+    ],
+    "override_sig": "",
+    "sha256": "2ae2050c2d7e5b399bdd4c03e618dd63c69506f7f63fbdc3044e3a6267161aa8"
+  },
   "danny_shassian": {
     "face": [
       1770,
