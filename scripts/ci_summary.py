@@ -9,13 +9,36 @@ Writes to stdout; the workflow redirects it into $GITHUB_STEP_SUMMARY.
 
 from __future__ import annotations
 
-import os
+import json
 import sqlite3
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 DB = ROOT / "wedding.db"
-NO_FACE = ROOT / "images" / "guests" / "derived" / "_no_face.txt"
+DERIVED = ROOT / "images" / "guests" / "derived"
+# Deliberately not _no_face.txt: that file records the last run that *had* a
+# fallback and isn't rewritten when a later run fixes one, so it goes stale
+# and names guests who now have a pinned crop. The cache plus the overrides
+# describe the current state exactly — a key is centre-cropped right now iff
+# detection found no face and nobody has pinned a crop for it.
+FACE_CACHE = DERIVED / "_face_cache.json"
+OVERRIDES = DERIVED / "_overrides.json"
+
+
+def centre_cropped_keys() -> list[str]:
+    """Keys whose thumbnail is a blind centre crop as of this run."""
+    try:
+        cache = json.loads(FACE_CACHE.read_text())
+    except (OSError, ValueError):
+        return []
+    try:
+        overrides = json.loads(OVERRIDES.read_text())
+    except (OSError, ValueError):
+        overrides = {}
+    return sorted(
+        key for key, entry in cache.items()
+        if entry.get("face") is None and key not in overrides
+    )
 
 
 def main() -> None:
@@ -56,18 +79,17 @@ def main() -> None:
                    f"{', '.join(name(r) for r in none_)}")
         out.append("")
 
-    if NO_FACE.exists() and NO_FACE.stat().st_size:
-        keys = [k.strip() for k in NO_FACE.read_text().splitlines() if k.strip()]
-        if keys:
-            out.append("No face detected — centre-cropped, may be framed wrong:")
-            out.extend(f"- `{k}`" for k in keys)
-            out.append("")
-            out.append("Fix one with:")
-            out.append("")
-            out.append("```bash")
-            out.append("python3 scripts/process_guest_images.py --set-crop KEY "
-                       "--cx N --cy N --size N")
-            out.append("```")
+    keys = centre_cropped_keys()
+    if keys:
+        out.append("No face detected — centre-cropped, may be framed wrong:")
+        out.extend(f"- `{k}`" for k in keys)
+        out.append("")
+        out.append("Fix one with:")
+        out.append("")
+        out.append("```bash")
+        out.append("python3 scripts/process_guest_images.py --set-crop KEY "
+                   "--cx N --cy N --size N")
+        out.append("```")
 
     print("\n".join(out))
 
