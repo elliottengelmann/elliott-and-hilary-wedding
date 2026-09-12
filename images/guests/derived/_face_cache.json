@@ -79,6 +79,11 @@
     "override_sig": "",
     "sha256": "09ed62ed824ca24071aa57a5d57a10d5dd80eb5993075584b60572fbabc9c644"
   },
+  "anna_furman": {
+    "face": null,
+    "override_sig": "",
+    "sha256": "ae4a4e59c32965cfc59be2dd40406b6551a8b5de7e39d2908b2347de13124033"
+  },
   "anna_macnaughton": {
     "face": [
       1713,
