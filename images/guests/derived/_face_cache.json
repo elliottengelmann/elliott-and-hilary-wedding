@@ -14,6 +14,16 @@
     "override_sig": "{\"cx\": 1650, \"cy\": 680, \"size\": 1150}",
     "sha256": "8239e78fb8049a5feba9be1890c870f99e876d37ed744ccbd351d14a2fccd675"
   },
+  "alexis_hoffman": {
+    "face": [
+      423,
+      1205,
+      987,
+      674
+    ],
+    "override_sig": "",
+    "sha256": "bf847e66dda1459ae728ae1233f69059bdd0242e40966e94eb9b528ca821913d"
+  },
   "alice_cavanaugh_berners-lee": {
     "face": [
       1260,
