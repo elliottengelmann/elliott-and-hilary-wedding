@@ -554,6 +554,16 @@
     "override_sig": "",
     "sha256": "5aebf175532ea600b172e236e2a893b7c71d71ebebc91e66bb1dbed078f9deb5"
   },
+  "sam_jaffe": {
+    "face": [
+      941,
+      2012,
+      1449,
+      1504
+    ],
+    "override_sig": "",
+    "sha256": "5b5f4fabd58f122e78e628a9e20b6330d3607c811a4fe8fa6033ad59d3d289ee"
+  },
   "scott_gardner": {
     "face": [
       1535,
