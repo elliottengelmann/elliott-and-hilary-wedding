@@ -484,6 +484,16 @@
     "override_sig": "",
     "sha256": "45ed020138063bbdd5562a4e6250af14e1c3f1c5ec0205cce2164ac0be48004b"
   },
+  "nika_sremac": {
+    "face": [
+      696,
+      961,
+      1501,
+      156
+    ],
+    "override_sig": "",
+    "sha256": "316fbc8c82bde2c28a5a0e7a2d7cc795a99d2b47dca4c2b98b27621cb1596cee"
+  },
   "noah_jefferson": {
     "face": [
       553,
