@@ -614,6 +614,16 @@
     "override_sig": "{\"cx\": 782, \"cy\": 654, \"size\": 260}",
     "sha256": "0083d4f7afa923e58548d39e1e6899df6677ffbdcf96241723a38d02a61b1b17"
   },
+  "stuart_klein": {
+    "face": [
+      201,
+      407,
+      387,
+      221
+    ],
+    "override_sig": "",
+    "sha256": "416db130bf3d94e1643b217868fe31cc8e9b75fbb7c6634b7f76a98b0bbd6a87"
+  },
   "suah_kim": {
     "face": [
       452,
