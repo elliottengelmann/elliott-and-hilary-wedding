@@ -554,6 +554,16 @@
     "override_sig": "",
     "sha256": "5aebf175532ea600b172e236e2a893b7c71d71ebebc91e66bb1dbed078f9deb5"
   },
+  "ryan_pandya": {
+    "face": [
+      539,
+      1175,
+      1255,
+      458
+    ],
+    "override_sig": "",
+    "sha256": "87a11ce82d3946d29342c468aefc48de99bb394045a5d2dbf94f9fe839075b40"
+  },
   "sam_jaffe": {
     "face": [
       941,
