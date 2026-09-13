@@ -469,6 +469,16 @@
     "override_sig": "",
     "sha256": "6f43465c62e27b3f02b9912192169ede94c0e18ef07610c9ca7f4b0219fe3ef1"
   },
+  "lynn_lim": {
+    "face": [
+      1922,
+      1640,
+      2542,
+      1019
+    ],
+    "override_sig": "",
+    "sha256": "3665a9d33ef043a2cfd5f10ef30b400ae3a2623b282ce9d45cf13af4d7638c54"
+  },
   "marco_marrazza": {
     "face": [
       153,
