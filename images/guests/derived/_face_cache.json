@@ -349,6 +349,16 @@
     "override_sig": "",
     "sha256": "e8cb1c95e3b7bfcf422310cb4ed2c6d4384e577f11191007283ec1d8c0679766"
   },
+  "john_mazzoli": {
+    "face": [
+      647,
+      2175,
+      1506,
+      1316
+    ],
+    "override_sig": "",
+    "sha256": "36518fea35171b834f7d021f7db5412a2710319040b1a1ea39c2797e7fa406ba"
+  },
   "john_work": {
     "face": [
       641,
