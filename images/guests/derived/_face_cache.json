@@ -104,6 +104,16 @@
     "override_sig": "",
     "sha256": "501a6cfc27beb0530cb511a49c87ac6abf98f3fd8d92d21e9b1b30004229e91d"
   },
+  "annie_sloan": {
+    "face": [
+      390,
+      291,
+      613,
+      68
+    ],
+    "override_sig": "",
+    "sha256": "827e34a374b2f728743abddf9efc6949c871c72d1448fb9542eb01a7dde34d72"
+  },
   "averi_becque": {
     "face": [
       480,
