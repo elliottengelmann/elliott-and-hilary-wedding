@@ -44,6 +44,11 @@
     "override_sig": "",
     "sha256": "3e4e10ceb83f06780d544f6b44969a9473b11b625e2b1e610de20020ec9dd2f0"
   },
+  "allie_goodman": {
+    "face": null,
+    "override_sig": "",
+    "sha256": "6b6298b87ffa7bc8730808151b602f2ee808d5b5aa81660bbdfeb6f5005dfda7"
+  },
   "althea_cavanaugh_berners-lee": {
     "face": [
       250,
