@@ -429,6 +429,16 @@
     "override_sig": "",
     "sha256": "afdfe84c201bed09395f19746f79281124b131c22122cb787b30c286153908be"
   },
+  "kenny_cohen": {
+    "face": [
+      1449,
+      2268,
+      2397,
+      1343
+    ],
+    "override_sig": "",
+    "sha256": "9c0c797f65e7b2651fa5a4cd5085feda9e18cb411ee53018bce658dafccb0eca"
+  },
   "la_creech": {
     "face": [
       2047,
