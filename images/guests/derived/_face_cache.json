@@ -679,6 +679,16 @@
     "override_sig": "{\"cx\": 782, \"cy\": 654, \"size\": 260}",
     "sha256": "0083d4f7afa923e58548d39e1e6899df6677ffbdcf96241723a38d02a61b1b17"
   },
+  "steve_engelmann": {
+    "face": [
+      592,
+      742,
+      716,
+      620
+    ],
+    "override_sig": "",
+    "sha256": "e05048148624942197c9956eed111433c57c512ec4badd03293a57b5efb21fbd"
+  },
   "stuart_klein": {
     "face": [
       201,
