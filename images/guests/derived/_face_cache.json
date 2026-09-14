@@ -204,6 +204,16 @@
     "override_sig": "{\"cx\": 1520, \"cy\": 950, \"size\": 850}",
     "sha256": "edb92a99a1ebe30213141bd6449d2ebcb70099d23681db935d12f8e557cb53cc"
   },
+  "dan_keches": {
+    "face": [
+      559,
+      1842,
+      1610,
+      787
+    ],
+    "override_sig": "",
+    "sha256": "43b124d89b59827362ab9c39d71df1e0512c889a43a028fc41db0cf3a1657a70"
+  },
   "dana_howe": {
     "face": [
       2090,
