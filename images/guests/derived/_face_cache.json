@@ -119,6 +119,16 @@
     "override_sig": "",
     "sha256": "827e34a374b2f728743abddf9efc6949c871c72d1448fb9542eb01a7dde34d72"
   },
+  "arlen_weiner": {
+    "face": [
+      1584,
+      1924,
+      2616,
+      886
+    ],
+    "override_sig": "",
+    "sha256": "477fc0f7d648e306ce3d1a66207a742471d37e12a8268fb6a4cd7eaa122f03ec"
+  },
   "averi_becque": {
     "face": [
       480,
