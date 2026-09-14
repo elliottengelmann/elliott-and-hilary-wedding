@@ -359,6 +359,16 @@
     "override_sig": "",
     "sha256": "e8cb1c95e3b7bfcf422310cb4ed2c6d4384e577f11191007283ec1d8c0679766"
   },
+  "jake_savage": {
+    "face": [
+      2610,
+      2125,
+      2850,
+      1885
+    ],
+    "override_sig": "",
+    "sha256": "fda1c0628d15fbf8168df3b063e2079a2e0a012d98419e32525f8c25079e7c25"
+  },
   "john_mazzoli": {
     "face": [
       647,
