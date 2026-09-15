@@ -504,6 +504,18 @@
     "sha256": "fda1c0628d15fbf8168df3b063e2079a2e0a012d98419e32525f8c25079e7c25",
     "width": 4284
   },
+  "jeff_williams": {
+    "face": [
+      1219,
+      3506,
+      2247,
+      2478
+    ],
+    "height": 8160,
+    "override_sig": "",
+    "sha256": "9489b9e0158c9eafe2a4dbff2ffb4039457df8cff4057673af1a294f81e7c45d",
+    "width": 6144
+  },
   "john_mazzoli": {
     "face": [
       647,

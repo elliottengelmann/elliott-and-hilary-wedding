@@ -12,9 +12,9 @@
   "dir": "ltr",
   "categories": ["lifestyle", "social"],
   "icons": [
-    { "src": "/icons/icon.svg?v=6ea75e8182b9", "sizes": "any", "type": "image/svg+xml", "purpose": "any" },
-    { "src": "/icons/icon-192.png?v=6ea75e8182b9", "sizes": "192x192", "type": "image/png", "purpose": "any" },
-    { "src": "/icons/icon-512.png?v=6ea75e8182b9", "sizes": "512x512", "type": "image/png", "purpose": "any" },
-    { "src": "/icons/icon-maskable-512.png?v=6ea75e8182b9", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+    { "src": "/icons/icon.svg?v=1f83811f24f0", "sizes": "any", "type": "image/svg+xml", "purpose": "any" },
+    { "src": "/icons/icon-192.png?v=1f83811f24f0", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/icons/icon-512.png?v=1f83811f24f0", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/icons/icon-maskable-512.png?v=1f83811f24f0", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
   ]
 }
