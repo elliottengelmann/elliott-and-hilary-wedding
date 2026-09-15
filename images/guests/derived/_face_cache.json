@@ -250,6 +250,18 @@
     "sha256": "1604b80112acf3c6db4ba933fd13169030c927f02ef2cc40a3fb04d3dcc5136f",
     "width": 3000
   },
+  "chris_toliver": {
+    "face": [
+      393,
+      1669,
+      607,
+      1455
+    ],
+    "height": 1775,
+    "override_sig": "",
+    "sha256": "bc635d35508806bdea8b8194182b19ae36ef3413722dadac3ee0494b637a1bc3",
+    "width": 2025
+  },
   "cinn_frost": {
     "face": [
       1550,
