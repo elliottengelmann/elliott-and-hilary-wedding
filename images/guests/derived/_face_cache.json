@@ -734,6 +734,18 @@
     "sha256": "316fbc8c82bde2c28a5a0e7a2d7cc795a99d2b47dca4c2b98b27621cb1596cee",
     "width": 2316
   },
+  "nima_gardideh": {
+    "face": [
+      465,
+      740,
+      820,
+      385
+    ],
+    "height": 1361,
+    "override_sig": "",
+    "sha256": "de0212a1b1ba31fc89787194fa03e595c22ea52b39c8699abb488adc81617d4d",
+    "width": 1082
+  },
   "noah_jefferson": {
     "face": [
       553,
