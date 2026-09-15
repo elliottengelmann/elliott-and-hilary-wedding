@@ -3153,13 +3153,13 @@ TEMPLATE = r"""<!DOCTYPE html>
                         <div style="background: white; border: 1px solid var(--divider); border-radius: 12px; padding: 16px; margin-bottom: 12px;">
                             <div style="font-family: 'Bodoni Moda', serif; font-size: 18px; font-weight: 600; color: var(--dark); margin-bottom: 6px;">Pretrial Bail Freedom Fund</div>
                             <div style="font-family: 'Nunito', sans-serif; font-size: 16px; color: var(--dark); line-height: 1.6; margin-bottom: 10px;">Responds to the daily violence of the criminal legal system by paying bail and bringing people home from pre-trial detention.</div>
-                            <a href="https://secure.actblue.com/donate/pretrialfreedom" target="_blank" style="font-family: 'Nunito', sans-serif; font-size: 16px; color: var(--primary-green); word-break: break-all;">secure.actblue.com/donate/pretrialfreedom</a>
+                            <a href="https://www.zola.com/registry/hilaryandelliott" target="_blank" rel="noopener noreferrer" style="font-family: 'Nunito', sans-serif; font-size: 16px; color: var(--primary-green);">Donate through our registry</a>
                         </div>
 
                         <div style="background: white; border: 1px solid var(--divider); border-radius: 12px; padding: 16px; margin-bottom: 12px;">
                             <div style="font-family: 'Bodoni Moda', serif; font-size: 18px; font-weight: 600; color: var(--dark); margin-bottom: 6px;">Immigration Bond Freedom Fund</div>
                             <div style="font-family: 'Nunito', sans-serif; font-size: 16px; color: var(--dark); line-height: 1.6; margin-bottom: 10px;">A system of community-led immigration bond funds that raise money to free our friends and neighbors from immigration detention, intervene in deportations, and ensure people can pursue their cases from a place of freedom &amp; keep their families and communities together.</div>
-                            <a href="https://secure.actblue.com/donate/immbondfreedom" target="_blank" style="font-family: 'Nunito', sans-serif; font-size: 16px; color: var(--primary-green); word-break: break-all;">secure.actblue.com/donate/immbondfreedom</a>
+                            <a href="https://www.zola.com/registry/hilaryandelliott" target="_blank" rel="noopener noreferrer" style="font-family: 'Nunito', sans-serif; font-size: 16px; color: var(--primary-green);">Donate through our registry</a>
                         </div>
                     </div>
                 </div>
