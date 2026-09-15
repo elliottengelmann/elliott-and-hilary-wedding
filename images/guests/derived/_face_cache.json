@@ -155,9 +155,14 @@
     "sha256": "c1c7d84e2558b95d9ff756443bc2a31478a2a5f1a6e60241e651ff9f7337b6fe"
   },
   "bronwen_raff": {
-    "face": null,
+    "face": [
+      280,
+      575,
+      386,
+      468
+    ],
     "override_sig": "",
-    "sha256": "2bfa4b2761d29825d86feabea50a9e55baa6ebf247ed80e70b253ed5dac65b1b"
+    "sha256": "eb4caa47a21985d7f25b55bcc6c29ac1d9c518c00326875263ce23381d01db0d"
   },
   "bruce_becque": {
     "face": [
