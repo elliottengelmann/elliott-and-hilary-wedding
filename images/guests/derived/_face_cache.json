@@ -219,6 +219,16 @@
     "override_sig": "{\"cx\": 1520, \"cy\": 950, \"size\": 850}",
     "sha256": "edb92a99a1ebe30213141bd6449d2ebcb70099d23681db935d12f8e557cb53cc"
   },
+  "courtney_grady": {
+    "face": [
+      363,
+      346,
+      502,
+      209
+    ],
+    "override_sig": "",
+    "sha256": "8bdb6849442ec3bcdc6a97b3d3217302b98f1efe1f735b9ebe79d55c4e7c9d54"
+  },
   "dan_keches": {
     "face": [
       559,
