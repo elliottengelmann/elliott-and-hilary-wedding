@@ -99,6 +99,76 @@ def derived_variants_for(photo_url: str) -> dict:
     return out
 
 
+#: Where in the square box we'd like the face to land, top-to-bottom.
+#: Slightly above centre — portraits read better with a little headroom.
+FACE_TARGET = 0.45
+
+_FACE_CACHE_PATH = os.path.join(DERIVED_DIR, "_face_cache.json")
+_OVERRIDES_PATH = os.path.join(DERIVED_DIR, "_overrides.json")
+
+
+def _load_json(path, default):
+    try:
+        with open(path, encoding="utf-8") as f:
+            return json.load(f)
+    except (OSError, ValueError):
+        return default
+
+
+def _cover_position(face_fraction, overflow_ratio):
+    """CSS object-position fraction that puts the face at FACE_TARGET.
+
+    `object-fit: cover` scales the image so the short side fills the box and
+    lets the long side spill; object-position then picks which band survives.
+    Aligning the face's own fraction with the box's would only be right when
+    the box and image have the same shape, so solve for the offset instead:
+    with the image scaled to k times the box along the overflowing axis, the
+    face lands at `f*k - P*(k-1)`, and we want that to equal FACE_TARGET.
+
+    Clamps to [0, 1] — a face near an edge can't be pulled past it, which is
+    the correct answer, not a failure.
+    """
+    if overflow_ratio <= 1:
+        return 0.5
+    p = (face_fraction * overflow_ratio - FACE_TARGET) / (overflow_ratio - 1)
+    return max(0.0, min(1.0, p))
+
+
+def build_face_positions():
+    """{guest key: "x% y%"} biasing each profile photo toward its face.
+
+    The profile shows the full photo in a square box, so a tall portrait gets
+    centre-cropped by CSS and can lose the head entirely. Dimensions and face
+    boxes both come from _face_cache.json, written by process_guest_images.py
+    — build.py is stdlib-only and can't measure an image itself.
+    """
+    cache = _load_json(_FACE_CACHE_PATH, {})
+    overrides = _load_json(_OVERRIDES_PATH, {})
+    out = {}
+    for key, entry in cache.items():
+        width, height = entry.get("width"), entry.get("height")
+        if not width or not height:
+            continue
+        override = overrides.get(key)
+        if override:
+            cx, cy = override.get("cx"), override.get("cy")
+        elif entry.get("face"):
+            top, right, bottom, left = entry["face"]
+            cx, cy = (left + right) / 2, (top + bottom) / 2
+        else:
+            # No face found and nobody pinned a crop — centre is as good a
+            # guess as any, and matches what the page already does.
+            continue
+        if cx is None or cy is None:
+            continue
+        x = _cover_position(cx / width, width / height)
+        y = _cover_position(cy / height, height / width)
+        if abs(x - 0.5) < 0.005 and abs(y - 0.5) < 0.005:
+            continue  # already centred; don't bloat the payload
+        out[key] = f"{round(x * 100, 1)}% {round(y * 100, 1)}%"
+    return out
+
+
 def query(conn, sql):
     c = conn.cursor()
     c.execute(sql)
@@ -788,6 +858,7 @@ def build_guest_json(conn):
     # NOCASE: SQLite's default BINARY collation sorts uppercase before
     # lowercase, which flung a guest who typed their name in lowercase to
     # the end of the directory and an all-caps surname to the front.
+    face_positions = build_face_positions()
     all_guests = query(
         conn,
         "SELECT * FROM guests "
@@ -957,6 +1028,8 @@ def build_guest_json(conn):
             "hasContacts": bool(contacts),
         }
         obj.update(derived_variants_for(photo))
+        if face_positions.get(key):
+            obj["objectPosition"] = face_positions[key]
         js_guests.append(obj)
 
     # Linked-partner stubs — minimal profile data for an attending guest
@@ -983,6 +1056,8 @@ def build_guest_json(conn):
             "photoUrl": photo,
         }
         stub.update(derived_variants_for(photo))
+        if face_positions.get(k):
+            stub["objectPosition"] = face_positions[k]
         js_partner_profiles.append(stub)
 
     return (
@@ -3835,17 +3910,27 @@ TEMPLATE = r"""<!DOCTYPE html>
         }
 
         function invitadoProfilePhotoHtml(guest) {
+            // The profile box is square but -full.webp keeps the photo's own
+            // shape, so `object-fit: cover` crops it. Left to itself that
+            // crop is dead centre, which decapitates a tall portrait whose
+            // subject stands high in frame. objectPosition (computed from the
+            // detected face in build.py) aims the surviving band at the face.
+            // Absent for photos with no detected face — those stay centred.
+            const pos = guest.objectPosition
+                ? ` style="object-position:${invitadoEscape(guest.objectPosition)}"`
+                : '';
             // Prefer the resized -full.webp; show the cached thumb behind it
-            // (blurred) so there's no empty avatar while the full loads.
+            // (blurred) so there's no empty avatar while the full loads. The
+            // thumb is already a square face crop, so it wants no nudging.
             if (guest.fullWebp && guest.thumbWebp && guest.thumbJpg) {
                 return `<picture>
                         <source type="image/webp" srcset="${invitadoEscape(guest.thumbWebp)}">
                         <img class="avatar-img profile-thumb" src="${invitadoEscape(guest.thumbJpg)}" alt="" decoding="async">
                     </picture>
-                    <img class="avatar-img profile-full" src="${invitadoEscape(guest.fullWebp)}" alt="" decoding="async" onload="this.classList.add('loaded')" onerror="this.remove()">`;
+                    <img class="avatar-img profile-full" src="${invitadoEscape(guest.fullWebp)}" alt="" decoding="async"${pos} onload="this.classList.add('loaded')" onerror="this.remove()">`;
             }
             if (guest.photoUrl) {
-                return `<img class="avatar-img" src="${invitadoEscape(guest.photoUrl)}" alt="" decoding="async" onerror="this.remove()">`;
+                return `<img class="avatar-img" src="${invitadoEscape(guest.photoUrl)}" alt="" decoding="async"${pos} onerror="this.remove()">`;
             }
             return '';
         }

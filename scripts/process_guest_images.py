@@ -193,6 +193,46 @@ def derivatives_for(key: str) -> list[Path]:
     ]
 
 
+#: EXIF orientations 5-8 mean the stored pixels are rotated a quarter turn,
+#: so the displayed width and height are the stored ones swapped.
+_SWAPPED_ORIENTATIONS = {5, 6, 7, 8}
+_ORIENTATION_TAG = 274
+
+
+def oriented_size(path: Path) -> tuple[int, int]:
+    """(width, height) as displayed, without decoding the pixels.
+
+    Image.open() only reads the header, so this stays cheap enough to run
+    over every photo on each build.
+    """
+    with Image.open(path) as im:
+        w, h = im.size
+        try:
+            orientation = im.getexif().get(_ORIENTATION_TAG)
+        except Exception:
+            orientation = None
+    return (h, w) if orientation in _SWAPPED_ORIENTATIONS else (w, h)
+
+
+def backfill_dimensions(cache: dict, sources: list[Path]) -> int:
+    """Add width/height to cache entries written before they were recorded.
+
+    Without this, every photo already on disk would need a full reprocess
+    just to teach build.py how big it is.
+    """
+    added = 0
+    for src in sources:
+        entry = cache.get(src.stem)
+        if entry is None or entry.get("width"):
+            continue
+        try:
+            entry["width"], entry["height"] = oriented_size(src)
+        except Exception:
+            continue
+        added += 1
+    return added
+
+
 def process_one(src: Path, force: bool, cache: dict, overrides: dict,
                 no_face: list[str]) -> tuple[bool, int]:
     """Returns (regenerated, total_bytes_written)."""
@@ -244,6 +284,11 @@ def process_one(src: Path, force: bool, cache: dict, overrides: dict,
         "sha256": digest,
         "face": face,
         "override_sig": override_sig,
+        # Oriented pixel dimensions of the source. build.py needs these to
+        # turn a face box into a CSS object-position percentage, and it is
+        # stdlib-only — it cannot open the image itself.
+        "width": img.size[0],
+        "height": img.size[1],
     }
 
     crop = square_crop(img, cx, cy, size)
@@ -291,6 +336,10 @@ def main() -> int:
         if not sources:
             print(f"no source matches --only {args.only}", file=sys.stderr)
             return 1
+
+    filled = backfill_dimensions(cache, sources)
+    if filled:
+        print(f"recorded dimensions for {filled} already-processed photo(s)")
 
     no_face: list[str] = []
     regenerated = 0

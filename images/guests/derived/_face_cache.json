@@ -6,13 +6,17 @@
       1535,
       2996
     ],
+    "height": 3024,
     "override_sig": "",
-    "sha256": "05e1e8376302a595ac35174b831d9861a9aeefda87e1283420c57afa541fd263"
+    "sha256": "05e1e8376302a595ac35174b831d9861a9aeefda87e1283420c57afa541fd263",
+    "width": 4032
   },
   "alex_\u201cbeede_or_beenus\u201d_beede": {
     "face": null,
+    "height": 4032,
     "override_sig": "{\"cx\": 1650, \"cy\": 680, \"size\": 1150}",
-    "sha256": "8239e78fb8049a5feba9be1890c870f99e876d37ed744ccbd351d14a2fccd675"
+    "sha256": "8239e78fb8049a5feba9be1890c870f99e876d37ed744ccbd351d14a2fccd675",
+    "width": 3024
   },
   "alexis_hoffman": {
     "face": [
@@ -21,8 +25,10 @@
       987,
       674
     ],
+    "height": 1799,
     "override_sig": "",
-    "sha256": "bf847e66dda1459ae728ae1233f69059bdd0242e40966e94eb9b528ca821913d"
+    "sha256": "bf847e66dda1459ae728ae1233f69059bdd0242e40966e94eb9b528ca821913d",
+    "width": 1206
   },
   "alice_cavanaugh_berners-lee": {
     "face": [
@@ -31,8 +37,10 @@
       2424,
       1260
     ],
+    "height": 3088,
     "override_sig": "",
-    "sha256": "6490b97f0e332034a7a67411af29bce54fd71dd534c4ab4c0a708fe076470b0c"
+    "sha256": "6490b97f0e332034a7a67411af29bce54fd71dd534c4ab4c0a708fe076470b0c",
+    "width": 2316
   },
   "alison_turka": {
     "face": [
@@ -41,13 +49,17 @@
       1811,
       452
     ],
+    "height": 4032,
     "override_sig": "",
-    "sha256": "3e4e10ceb83f06780d544f6b44969a9473b11b625e2b1e610de20020ec9dd2f0"
+    "sha256": "3e4e10ceb83f06780d544f6b44969a9473b11b625e2b1e610de20020ec9dd2f0",
+    "width": 3024
   },
   "allie_goodman": {
     "face": null,
+    "height": 1510,
     "override_sig": "",
-    "sha256": "6b6298b87ffa7bc8730808151b602f2ee808d5b5aa81660bbdfeb6f5005dfda7"
+    "sha256": "6b6298b87ffa7bc8730808151b602f2ee808d5b5aa81660bbdfeb6f5005dfda7",
+    "width": 1179
   },
   "althea_cavanaugh_berners-lee": {
     "face": [
@@ -56,13 +68,17 @@
       508,
       794
     ],
+    "height": 2048,
     "override_sig": "",
-    "sha256": "c4f2e6fa0c489be43064744aba7e0157aa412b25279596f13a849bda2bb8c6d8"
+    "sha256": "c4f2e6fa0c489be43064744aba7e0157aa412b25279596f13a849bda2bb8c6d8",
+    "width": 1536
   },
   "amanda_borow": {
     "face": null,
+    "height": 4032,
     "override_sig": "",
-    "sha256": "1cb81317198c0c52f579dcb9ff6c51bd68e6ffe0f095c847decf9fccba7a9714"
+    "sha256": "1cb81317198c0c52f579dcb9ff6c51bd68e6ffe0f095c847decf9fccba7a9714",
+    "width": 3024
   },
   "andrew_garsetti": {
     "face": [
@@ -71,8 +87,10 @@
       400,
       319
     ],
+    "height": 1350,
     "override_sig": "",
-    "sha256": "833b058ea2e6bee50225501afbe931690109f8e568331a79d9f0ec2bdc60a68b"
+    "sha256": "833b058ea2e6bee50225501afbe931690109f8e568331a79d9f0ec2bdc60a68b",
+    "width": 1080
   },
   "angelina_ross": {
     "face": [
@@ -81,8 +99,10 @@
       859,
       301
     ],
+    "height": 2218,
     "override_sig": "",
-    "sha256": "63971b4852192088f83198b216ae32f1189163039b5cfec8fd4ddaea213813ef"
+    "sha256": "63971b4852192088f83198b216ae32f1189163039b5cfec8fd4ddaea213813ef",
+    "width": 1665
   },
   "angie_alcock": {
     "face": [
@@ -91,13 +111,17 @@
       998,
       105
     ],
+    "height": 1186,
     "override_sig": "",
-    "sha256": "09ed62ed824ca24071aa57a5d57a10d5dd80eb5993075584b60572fbabc9c644"
+    "sha256": "09ed62ed824ca24071aa57a5d57a10d5dd80eb5993075584b60572fbabc9c644",
+    "width": 888
   },
   "anna_furman": {
     "face": null,
+    "height": 4032,
     "override_sig": "",
-    "sha256": "ae4a4e59c32965cfc59be2dd40406b6551a8b5de7e39d2908b2347de13124033"
+    "sha256": "ae4a4e59c32965cfc59be2dd40406b6551a8b5de7e39d2908b2347de13124033",
+    "width": 3024
   },
   "anna_macnaughton": {
     "face": [
@@ -106,8 +130,10 @@
       1884,
       868
     ],
+    "height": 4080,
     "override_sig": "",
-    "sha256": "501a6cfc27beb0530cb511a49c87ac6abf98f3fd8d92d21e9b1b30004229e91d"
+    "sha256": "501a6cfc27beb0530cb511a49c87ac6abf98f3fd8d92d21e9b1b30004229e91d",
+    "width": 3072
   },
   "annie_sloan": {
     "face": [
@@ -116,8 +142,10 @@
       613,
       68
     ],
+    "height": 870,
     "override_sig": "",
-    "sha256": "827e34a374b2f728743abddf9efc6949c871c72d1448fb9542eb01a7dde34d72"
+    "sha256": "827e34a374b2f728743abddf9efc6949c871c72d1448fb9542eb01a7dde34d72",
+    "width": 810
   },
   "arlen_weiner": {
     "face": [
@@ -126,8 +154,10 @@
       2616,
       886
     ],
+    "height": 5712,
     "override_sig": "",
-    "sha256": "477fc0f7d648e306ce3d1a66207a742471d37e12a8268fb6a4cd7eaa122f03ec"
+    "sha256": "477fc0f7d648e306ce3d1a66207a742471d37e12a8268fb6a4cd7eaa122f03ec",
+    "width": 4284
   },
   "averi_becque": {
     "face": [
@@ -136,8 +166,10 @@
       880,
       211
     ],
+    "height": 1536,
     "override_sig": "{\"cx\": 750, \"cy\": 620, \"size\": 1200}",
-    "sha256": "3ba8de384fddf16d7d2f9042cddcc429c298368200ce382a3f614e36c7698221"
+    "sha256": "3ba8de384fddf16d7d2f9042cddcc429c298368200ce382a3f614e36c7698221",
+    "width": 1536
   },
   "ben_johnson": {
     "face": [
@@ -146,13 +178,17 @@
       676,
       1034
     ],
+    "height": 1366,
     "override_sig": "",
-    "sha256": "1457b2eb8b74a0217fbc0029b47648bd2a2ad844d6836279edac695df5c47d62"
+    "sha256": "1457b2eb8b74a0217fbc0029b47648bd2a2ad844d6836279edac695df5c47d62",
+    "width": 2048
   },
   "blobette_": {
     "face": null,
+    "height": 2875,
     "override_sig": "",
-    "sha256": "c1c7d84e2558b95d9ff756443bc2a31478a2a5f1a6e60241e651ff9f7337b6fe"
+    "sha256": "c1c7d84e2558b95d9ff756443bc2a31478a2a5f1a6e60241e651ff9f7337b6fe",
+    "width": 2971
   },
   "bronwen_raff": {
     "face": [
@@ -161,8 +197,10 @@
       386,
       468
     ],
+    "height": 1218,
     "override_sig": "",
-    "sha256": "eb4caa47a21985d7f25b55bcc6c29ac1d9c518c00326875263ce23381d01db0d"
+    "sha256": "eb4caa47a21985d7f25b55bcc6c29ac1d9c518c00326875263ce23381d01db0d",
+    "width": 950
   },
   "bruce_becque": {
     "face": [
@@ -171,8 +209,10 @@
       1848,
       877
     ],
+    "height": 3088,
     "override_sig": "",
-    "sha256": "a9190159b0506bc95fcb324bd475572891c425ebab4a66edf384148103fef6be"
+    "sha256": "a9190159b0506bc95fcb324bd475572891c425ebab4a66edf384148103fef6be",
+    "width": 2316
   },
   "catherine_par\u00e9": {
     "face": [
@@ -181,8 +221,10 @@
       2732,
       860
     ],
+    "height": 4096,
     "override_sig": "{\"cx\": 1550, \"cy\": 1450, \"size\": 1300}",
-    "sha256": "5a13427898f73e22961853ea8de166d797cb25152668b06e412d680b989e3d8c"
+    "sha256": "5a13427898f73e22961853ea8de166d797cb25152668b06e412d680b989e3d8c",
+    "width": 3072
   },
   "chad_bookwrm": {
     "face": [
@@ -191,8 +233,10 @@
       3165,
       1606
     ],
+    "height": 4032,
     "override_sig": "",
-    "sha256": "7c7fc2e718f1be3a1ec4fbb2c180d2544fe146e19f79cc8fd0bba722981afc5b"
+    "sha256": "7c7fc2e718f1be3a1ec4fbb2c180d2544fe146e19f79cc8fd0bba722981afc5b",
+    "width": 3024
   },
   "chris_lowe": {
     "face": [
@@ -201,8 +245,10 @@
       1332,
       554
     ],
+    "height": 4000,
     "override_sig": "",
-    "sha256": "1604b80112acf3c6db4ba933fd13169030c927f02ef2cc40a3fb04d3dcc5136f"
+    "sha256": "1604b80112acf3c6db4ba933fd13169030c927f02ef2cc40a3fb04d3dcc5136f",
+    "width": 3000
   },
   "cinn_frost": {
     "face": [
@@ -211,13 +257,17 @@
       2222,
       428
     ],
+    "height": 3088,
     "override_sig": "",
-    "sha256": "efeecabcbc9d1b4c53973a7cf5d35a03828a8f46af3402bd39d4e69e7ccaf7ca"
+    "sha256": "efeecabcbc9d1b4c53973a7cf5d35a03828a8f46af3402bd39d4e69e7ccaf7ca",
+    "width": 2316
   },
   "clarissa_sosin": {
     "face": null,
+    "height": 4032,
     "override_sig": "{\"cx\": 1520, \"cy\": 950, \"size\": 850}",
-    "sha256": "edb92a99a1ebe30213141bd6449d2ebcb70099d23681db935d12f8e557cb53cc"
+    "sha256": "edb92a99a1ebe30213141bd6449d2ebcb70099d23681db935d12f8e557cb53cc",
+    "width": 3024
   },
   "courtney_grady": {
     "face": [
@@ -226,8 +276,10 @@
       502,
       209
     ],
+    "height": 1899,
     "override_sig": "",
-    "sha256": "8bdb6849442ec3bcdc6a97b3d3217302b98f1efe1f735b9ebe79d55c4e7c9d54"
+    "sha256": "8bdb6849442ec3bcdc6a97b3d3217302b98f1efe1f735b9ebe79d55c4e7c9d54",
+    "width": 877
   },
   "dan_keches": {
     "face": [
@@ -236,8 +288,10 @@
       1610,
       787
     ],
+    "height": 4032,
     "override_sig": "",
-    "sha256": "43b124d89b59827362ab9c39d71df1e0512c889a43a028fc41db0cf3a1657a70"
+    "sha256": "43b124d89b59827362ab9c39d71df1e0512c889a43a028fc41db0cf3a1657a70",
+    "width": 3024
   },
   "dana_howe": {
     "face": [
@@ -246,8 +300,10 @@
       2823,
       2169
     ],
+    "height": 4032,
     "override_sig": "",
-    "sha256": "621c4fa959827230bc2d333924e6e2faec01ee016306e6d9e3a889b242301ccd"
+    "sha256": "621c4fa959827230bc2d333924e6e2faec01ee016306e6d9e3a889b242301ccd",
+    "width": 3024
   },
   "dana_wilke": {
     "face": [
@@ -256,8 +312,10 @@
       2934,
       1890
     ],
+    "height": 5712,
     "override_sig": "",
-    "sha256": "2ae2050c2d7e5b399bdd4c03e618dd63c69506f7f63fbdc3044e3a6267161aa8"
+    "sha256": "2ae2050c2d7e5b399bdd4c03e618dd63c69506f7f63fbdc3044e3a6267161aa8",
+    "width": 4284
   },
   "danny_shassian": {
     "face": [
@@ -266,8 +324,10 @@
       2578,
       1142
     ],
+    "height": 3088,
     "override_sig": "",
-    "sha256": "d9c6eec32250a0087ab569420b06b22ab4298f9574d774f7d1705d9bac69758a"
+    "sha256": "d9c6eec32250a0087ab569420b06b22ab4298f9574d774f7d1705d9bac69758a",
+    "width": 2316
   },
   "david_mcintyre": {
     "face": [
@@ -276,8 +336,10 @@
       700,
       282
     ],
+    "height": 1536,
     "override_sig": "",
-    "sha256": "83eddea114d21ca034ed80cf7b0efe54cb79b57c46e911e532cf397672c6b708"
+    "sha256": "83eddea114d21ca034ed80cf7b0efe54cb79b57c46e911e532cf397672c6b708",
+    "width": 2048
   },
   "diana_engelmann": {
     "face": [
@@ -286,8 +348,10 @@
       1228,
       422
     ],
+    "height": 1752,
     "override_sig": "",
-    "sha256": "6bd7868c2422722f9c649714e699183547c2b03ff6374ce31c92118212b25726"
+    "sha256": "6bd7868c2422722f9c649714e699183547c2b03ff6374ce31c92118212b25726",
+    "width": 1140
   },
   "douglas_sun": {
     "face": [
@@ -296,8 +360,10 @@
       1118,
       1114
     ],
+    "height": 4032,
     "override_sig": "",
-    "sha256": "e616d639e56c030bcdd6a54d517aa3a502a39f1d560e564b85a6651ccced3f53"
+    "sha256": "e616d639e56c030bcdd6a54d517aa3a502a39f1d560e564b85a6651ccced3f53",
+    "width": 3024
   },
   "elien_becque": {
     "face": [
@@ -306,8 +372,10 @@
       1827,
       2898
     ],
+    "height": 3024,
     "override_sig": "",
-    "sha256": "c7b9dc1cd21d147aa638b11953adc97d7c946ef86f94c00041913e648be08255"
+    "sha256": "c7b9dc1cd21d147aa638b11953adc97d7c946ef86f94c00041913e648be08255",
+    "width": 4032
   },
   "emily_beinecke": {
     "face": [
@@ -316,13 +384,17 @@
       2661,
       2193
     ],
+    "height": 3024,
     "override_sig": "",
-    "sha256": "4fda92c8c907c782276c9308fe58d951b88c10a5770e71f649c2a36c2ab18106"
+    "sha256": "4fda92c8c907c782276c9308fe58d951b88c10a5770e71f649c2a36c2ab18106",
+    "width": 4032
   },
   "emma_hochfelder": {
     "face": null,
+    "height": 5712,
     "override_sig": "",
-    "sha256": "0bbcac531dad09a01adb2611a94eb359db9c72b2eeb432eed5b47fcf79f94ec7"
+    "sha256": "0bbcac531dad09a01adb2611a94eb359db9c72b2eeb432eed5b47fcf79f94ec7",
+    "width": 4284
   },
   "emma_scudder": {
     "face": [
@@ -331,8 +403,10 @@
       880,
       134
     ],
+    "height": 2048,
     "override_sig": "",
-    "sha256": "e7e8e9272cab06f33430b8051cba06d7507016ba5b9df1f28581e45c2f45bb7f"
+    "sha256": "e7e8e9272cab06f33430b8051cba06d7507016ba5b9df1f28581e45c2f45bb7f",
+    "width": 1542
   },
   "emma_van_dervort": {
     "face": [
@@ -341,8 +415,10 @@
       1158,
       1158
     ],
+    "height": 3088,
     "override_sig": "",
-    "sha256": "6f892d584a2198e899d03b63d03185a44dc449d16f8a1d4fb0034905d072e331"
+    "sha256": "6f892d584a2198e899d03b63d03185a44dc449d16f8a1d4fb0034905d072e331",
+    "width": 2316
   },
   "eric_wilburn": {
     "face": [
@@ -351,8 +427,10 @@
       2129,
       603
     ],
+    "height": 3088,
     "override_sig": "",
-    "sha256": "2795abcc7103c26bec13a5ec24265c548f2e4eb7ea90479b9990483606a81ab8"
+    "sha256": "2795abcc7103c26bec13a5ec24265c548f2e4eb7ea90479b9990483606a81ab8",
+    "width": 2316
   },
   "guy_alcock": {
     "face": [
@@ -361,8 +439,10 @@
       2216,
       2508
     ],
+    "height": 3024,
     "override_sig": "",
-    "sha256": "fee2b0d543436f4ce8b0878a343d136302e27029c193a404e9f2c35dd7e40b21"
+    "sha256": "fee2b0d543436f4ce8b0878a343d136302e27029c193a404e9f2c35dd7e40b21",
+    "width": 4032
   },
   "ian_maclellan": {
     "face": [
@@ -371,8 +451,10 @@
       2408,
       1375
     ],
+    "height": 3648,
     "override_sig": "",
-    "sha256": "553a38146aa434c9f6828547c14d8b0a583703a6aedf5d5b6c1333e37af749a5"
+    "sha256": "553a38146aa434c9f6828547c14d8b0a583703a6aedf5d5b6c1333e37af749a5",
+    "width": 2736
   },
   "jack_melcher": {
     "face": [
@@ -381,8 +463,10 @@
       1761,
       525
     ],
+    "height": 4080,
     "override_sig": "",
-    "sha256": "10834870d73d90aed3d31ef5aea62106edf4335ad740c0bf085af0db1255413f"
+    "sha256": "10834870d73d90aed3d31ef5aea62106edf4335ad740c0bf085af0db1255413f",
+    "width": 3072
   },
   "jake_kramer": {
     "face": [
@@ -391,8 +475,10 @@
       641,
       2051
     ],
+    "height": 4032,
     "override_sig": "",
-    "sha256": "e8cb1c95e3b7bfcf422310cb4ed2c6d4384e577f11191007283ec1d8c0679766"
+    "sha256": "e8cb1c95e3b7bfcf422310cb4ed2c6d4384e577f11191007283ec1d8c0679766",
+    "width": 3024
   },
   "jake_savage": {
     "face": [
@@ -401,8 +487,10 @@
       2850,
       1885
     ],
+    "height": 5712,
     "override_sig": "{\"cx\": 2300, \"cy\": 2620, \"size\": 1380}",
-    "sha256": "fda1c0628d15fbf8168df3b063e2079a2e0a012d98419e32525f8c25079e7c25"
+    "sha256": "fda1c0628d15fbf8168df3b063e2079a2e0a012d98419e32525f8c25079e7c25",
+    "width": 4284
   },
   "john_mazzoli": {
     "face": [
@@ -411,8 +499,10 @@
       1506,
       1316
     ],
+    "height": 5712,
     "override_sig": "",
-    "sha256": "36518fea35171b834f7d021f7db5412a2710319040b1a1ea39c2797e7fa406ba"
+    "sha256": "36518fea35171b834f7d021f7db5412a2710319040b1a1ea39c2797e7fa406ba",
+    "width": 4284
   },
   "john_work": {
     "face": [
@@ -421,8 +511,10 @@
       1067,
       1063
     ],
+    "height": 4032,
     "override_sig": "",
-    "sha256": "79c07e6b566edc786d2e6487c6f699484484ec710ca1efca8902b771c5c3ef86"
+    "sha256": "79c07e6b566edc786d2e6487c6f699484484ec710ca1efca8902b771c5c3ef86",
+    "width": 3024
   },
   "jonathan_ludlow": {
     "face": [
@@ -431,8 +523,10 @@
       634,
       345
     ],
+    "height": 821,
     "override_sig": "",
-    "sha256": "f0d7b0eabfe4cdd77759ebf95bc4df628e45ddcd44cfdb1fa769defa90f0d69b"
+    "sha256": "f0d7b0eabfe4cdd77759ebf95bc4df628e45ddcd44cfdb1fa769defa90f0d69b",
+    "width": 779
   },
   "julia_bowling": {
     "face": [
@@ -441,8 +535,10 @@
       1767,
       1358
     ],
+    "height": 3024,
     "override_sig": "",
-    "sha256": "dd85ec9a4376af7a7e24ba9477644a511028ac612f3c3af888436c73b3ba57dd"
+    "sha256": "dd85ec9a4376af7a7e24ba9477644a511028ac612f3c3af888436c73b3ba57dd",
+    "width": 4032
   },
   "katie_klein": {
     "face": [
@@ -451,8 +547,10 @@
       356,
       459
     ],
+    "height": 768,
     "override_sig": "",
-    "sha256": "afdfe84c201bed09395f19746f79281124b131c22122cb787b30c286153908be"
+    "sha256": "afdfe84c201bed09395f19746f79281124b131c22122cb787b30c286153908be",
+    "width": 1024
   },
   "kenny_cohen": {
     "face": [
@@ -461,8 +559,10 @@
       2397,
       1343
     ],
+    "height": 3024,
     "override_sig": "",
-    "sha256": "9c0c797f65e7b2651fa5a4cd5085feda9e18cb411ee53018bce658dafccb0eca"
+    "sha256": "9c0c797f65e7b2651fa5a4cd5085feda9e18cb411ee53018bce658dafccb0eca",
+    "width": 2268
   },
   "la_creech": {
     "face": [
@@ -471,8 +571,10 @@
       2406,
       1609
     ],
+    "height": 4080,
     "override_sig": "",
-    "sha256": "e088d67a663a0625f67246723edeaca00809b89c6c6fbeb4803e797e2e9088ac"
+    "sha256": "e088d67a663a0625f67246723edeaca00809b89c6c6fbeb4803e797e2e9088ac",
+    "width": 3072
   },
   "laura_liddell": {
     "face": [
@@ -481,8 +583,10 @@
       759,
       1143
     ],
+    "height": 2470,
     "override_sig": "",
-    "sha256": "f13f919f15232115dbb6d244734d1a415cdd8cc1a35d8018ba0967c47c12327d"
+    "sha256": "f13f919f15232115dbb6d244734d1a415cdd8cc1a35d8018ba0967c47c12327d",
+    "width": 1982
   },
   "lily_black": {
     "face": [
@@ -491,8 +595,10 @@
       1981,
       428
     ],
+    "height": 3088,
     "override_sig": "",
-    "sha256": "3b2255941d135301fae98a443c79bbce26fc2facb365909ad315e71c00893de9"
+    "sha256": "3b2255941d135301fae98a443c79bbce26fc2facb365909ad315e71c00893de9",
+    "width": 2316
   },
   "lincoln_giesel": {
     "face": [
@@ -501,13 +607,17 @@
       1501,
       247
     ],
+    "height": 3088,
     "override_sig": "",
-    "sha256": "b0ab73e0243acaebbbe42282bbdf348babac810596e626de20cb365d14238c0f"
+    "sha256": "b0ab73e0243acaebbbe42282bbdf348babac810596e626de20cb365d14238c0f",
+    "width": 2316
   },
   "liz_wheeler": {
     "face": null,
+    "height": 4032,
     "override_sig": "",
-    "sha256": "4137aeb64626bd0e76254c1aa0b774fec3ebbff79a7762225974e80cc30270b3"
+    "sha256": "4137aeb64626bd0e76254c1aa0b774fec3ebbff79a7762225974e80cc30270b3",
+    "width": 3024
   },
   "lizzy_wilburn": {
     "face": [
@@ -516,8 +626,10 @@
       727,
       744
     ],
+    "height": 1572,
     "override_sig": "",
-    "sha256": "6e9c2a4193aa8ba20f0ce9e79b48b8fda4e5b1278d2acdd3b129f6e157b86e80"
+    "sha256": "6e9c2a4193aa8ba20f0ce9e79b48b8fda4e5b1278d2acdd3b129f6e157b86e80",
+    "width": 1179
   },
   "lucas_berry": {
     "face": [
@@ -526,8 +638,10 @@
       2104,
       784
     ],
+    "height": 4096,
     "override_sig": "",
-    "sha256": "65afe435118438958df6a29739a5b6900401cec41d2551963af02c5dadc906ce"
+    "sha256": "65afe435118438958df6a29739a5b6900401cec41d2551963af02c5dadc906ce",
+    "width": 3072
   },
   "luke_sandor": {
     "face": [
@@ -536,8 +650,10 @@
       2036,
       1204
     ],
+    "height": 5712,
     "override_sig": "",
-    "sha256": "6f43465c62e27b3f02b9912192169ede94c0e18ef07610c9ca7f4b0219fe3ef1"
+    "sha256": "6f43465c62e27b3f02b9912192169ede94c0e18ef07610c9ca7f4b0219fe3ef1",
+    "width": 4284
   },
   "lynn_lim": {
     "face": [
@@ -546,8 +662,10 @@
       2542,
       1019
     ],
+    "height": 3435,
     "override_sig": "",
-    "sha256": "3665a9d33ef043a2cfd5f10ef30b400ae3a2623b282ce9d45cf13af4d7638c54"
+    "sha256": "3665a9d33ef043a2cfd5f10ef30b400ae3a2623b282ce9d45cf13af4d7638c54",
+    "width": 2701
   },
   "marco_marrazza": {
     "face": [
@@ -556,8 +674,10 @@
       282,
       296
     ],
+    "height": 739,
     "override_sig": "",
-    "sha256": "5b65d6fabcf8251d7142b984223b5dc7ee0f392851e0b7adb09e0b98b46de309"
+    "sha256": "5b65d6fabcf8251d7142b984223b5dc7ee0f392851e0b7adb09e0b98b46de309",
+    "width": 492
   },
   "matt_taylor": {
     "face": [
@@ -566,8 +686,10 @@
       1163,
       515
     ],
+    "height": 2030,
     "override_sig": "",
-    "sha256": "b030e86e3239fb6a5f9e8500e94cf45561c34026174bdce06ac9e0def2a5c590"
+    "sha256": "b030e86e3239fb6a5f9e8500e94cf45561c34026174bdce06ac9e0def2a5c590",
+    "width": 1944
   },
   "mical_(meeks)_nobel": {
     "face": [
@@ -576,13 +698,17 @@
       810,
       888
     ],
+    "height": 2048,
     "override_sig": "{\"cx\": 680, \"cy\": 660, \"size\": 820}",
-    "sha256": "2b2609546cb03759f470eae273f30f17e296cb5b2ca5b3cce8dd75de13a03a07"
+    "sha256": "2b2609546cb03759f470eae273f30f17e296cb5b2ca5b3cce8dd75de13a03a07",
+    "width": 1536
   },
   "namika_maki": {
     "face": null,
+    "height": 3088,
     "override_sig": "",
-    "sha256": "80ad64752214cb4aaf8d09de406bd97174bf31f5d835223fac4c085195be49f7"
+    "sha256": "80ad64752214cb4aaf8d09de406bd97174bf31f5d835223fac4c085195be49f7",
+    "width": 2316
   },
   "nathan_goldsberry": {
     "face": [
@@ -591,8 +717,10 @@
       1610,
       1724
     ],
+    "height": 3024,
     "override_sig": "",
-    "sha256": "45ed020138063bbdd5562a4e6250af14e1c3f1c5ec0205cce2164ac0be48004b"
+    "sha256": "45ed020138063bbdd5562a4e6250af14e1c3f1c5ec0205cce2164ac0be48004b",
+    "width": 4032
   },
   "nika_sremac": {
     "face": [
@@ -601,8 +729,10 @@
       1501,
       156
     ],
+    "height": 3088,
     "override_sig": "",
-    "sha256": "316fbc8c82bde2c28a5a0e7a2d7cc795a99d2b47dca4c2b98b27621cb1596cee"
+    "sha256": "316fbc8c82bde2c28a5a0e7a2d7cc795a99d2b47dca4c2b98b27621cb1596cee",
+    "width": 2316
   },
   "noah_jefferson": {
     "face": [
@@ -611,8 +741,10 @@
       1064,
       722
     ],
+    "height": 1953,
     "override_sig": "",
-    "sha256": "79570ef8cad021319055f6a2f5ebe2ed28c288b188968f889edaa7067b432e94"
+    "sha256": "79570ef8cad021319055f6a2f5ebe2ed28c288b188968f889edaa7067b432e94",
+    "width": 1953
   },
   "peyton_johnson": {
     "face": [
@@ -621,13 +753,17 @@
       2705,
       0
     ],
+    "height": 4032,
     "override_sig": "",
-    "sha256": "8ab9f5a1133cb4526b9d1c9cfdbca94e8c714b7d0b569556e67f69c46f0f1ce9"
+    "sha256": "8ab9f5a1133cb4526b9d1c9cfdbca94e8c714b7d0b569556e67f69c46f0f1ce9",
+    "width": 3024
   },
   "piers_macnaughton": {
     "face": null,
+    "height": 3648,
     "override_sig": "",
-    "sha256": "e301155c04a155b4bc3e6329081769e25a1647b2f51e8e2e19d1909f35e4f105"
+    "sha256": "e301155c04a155b4bc3e6329081769e25a1647b2f51e8e2e19d1909f35e4f105",
+    "width": 2736
   },
   "richard_fisher": {
     "face": [
@@ -636,8 +772,10 @@
       2370,
       1796
     ],
+    "height": 5712,
     "override_sig": "",
-    "sha256": "847c66b2ed57ca0108218aaf7ea3088941fd4d4042cd4c4bdb287160a3b28b9e"
+    "sha256": "847c66b2ed57ca0108218aaf7ea3088941fd4d4042cd4c4bdb287160a3b28b9e",
+    "width": 4284
   },
   "riley_meehan": {
     "face": [
@@ -646,13 +784,17 @@
       3069,
       2414
     ],
+    "height": 4492,
     "override_sig": "",
-    "sha256": "ce70e199e9c220c40a0f44267acb0c3d1aeb3bb9c1ca63bf1b78f488d873b1ab"
+    "sha256": "ce70e199e9c220c40a0f44267acb0c3d1aeb3bb9c1ca63bf1b78f488d873b1ab",
+    "width": 6774
   },
   "ross_lipschultz": {
     "face": null,
+    "height": 425,
     "override_sig": "",
-    "sha256": "5aebf175532ea600b172e236e2a893b7c71d71ebebc91e66bb1dbed078f9deb5"
+    "sha256": "5aebf175532ea600b172e236e2a893b7c71d71ebebc91e66bb1dbed078f9deb5",
+    "width": 756
   },
   "ryan_pandya": {
     "face": [
@@ -661,8 +803,10 @@
       1255,
       458
     ],
+    "height": 2748,
     "override_sig": "",
-    "sha256": "87a11ce82d3946d29342c468aefc48de99bb394045a5d2dbf94f9fe839075b40"
+    "sha256": "87a11ce82d3946d29342c468aefc48de99bb394045a5d2dbf94f9fe839075b40",
+    "width": 2062
   },
   "sam_jaffe": {
     "face": [
@@ -671,8 +815,10 @@
       1449,
       1504
     ],
+    "height": 4032,
     "override_sig": "",
-    "sha256": "5b5f4fabd58f122e78e628a9e20b6330d3607c811a4fe8fa6033ad59d3d289ee"
+    "sha256": "5b5f4fabd58f122e78e628a9e20b6330d3607c811a4fe8fa6033ad59d3d289ee",
+    "width": 3024
   },
   "scott_gardner": {
     "face": [
@@ -681,8 +827,10 @@
       2413,
       1630
     ],
+    "height": 4032,
     "override_sig": "",
-    "sha256": "f8e68bf3388ce21f8f95f81f8a0df1acb73fb425706ed120c0c3469bb6f9e3da"
+    "sha256": "f8e68bf3388ce21f8f95f81f8a0df1acb73fb425706ed120c0c3469bb6f9e3da",
+    "width": 3024
   },
   "sienna_mintz": {
     "face": [
@@ -691,8 +839,10 @@
       2212,
       807
     ],
+    "height": 4032,
     "override_sig": "",
-    "sha256": "7f592e21d9b42819d85e91adc741604ddd79ae4fe091d78788862cff034bee70"
+    "sha256": "7f592e21d9b42819d85e91adc741604ddd79ae4fe091d78788862cff034bee70",
+    "width": 3024
   },
   "sofia_urquiola": {
     "face": [
@@ -701,8 +851,10 @@
       564,
       678
     ],
+    "height": 2048,
     "override_sig": "",
-    "sha256": "6f3051d3103c0227ad29b339571a54ce01ec777e5d5388c7a84cdd13d33fff4c"
+    "sha256": "6f3051d3103c0227ad29b339571a54ce01ec777e5d5388c7a84cdd13d33fff4c",
+    "width": 1536
   },
   "stefan_shatlan": {
     "face": [
@@ -711,8 +863,10 @@
       739,
       376
     ],
+    "height": 1529,
     "override_sig": "{\"cx\": 782, \"cy\": 654, \"size\": 260}",
-    "sha256": "0083d4f7afa923e58548d39e1e6899df6677ffbdcf96241723a38d02a61b1b17"
+    "sha256": "0083d4f7afa923e58548d39e1e6899df6677ffbdcf96241723a38d02a61b1b17",
+    "width": 1179
   },
   "steve_engelmann": {
     "face": [
@@ -721,8 +875,10 @@
       716,
       620
     ],
+    "height": 2016,
     "override_sig": "",
-    "sha256": "e05048148624942197c9956eed111433c57c512ec4badd03293a57b5efb21fbd"
+    "sha256": "e05048148624942197c9956eed111433c57c512ec4badd03293a57b5efb21fbd",
+    "width": 1512
   },
   "stuart_klein": {
     "face": [
@@ -731,8 +887,10 @@
       387,
       221
     ],
+    "height": 870,
     "override_sig": "",
-    "sha256": "416db130bf3d94e1643b217868fe31cc8e9b75fbb7c6634b7f76a98b0bbd6a87"
+    "sha256": "416db130bf3d94e1643b217868fe31cc8e9b75fbb7c6634b7f76a98b0bbd6a87",
+    "width": 719
   },
   "suah_kim": {
     "face": [
@@ -741,8 +899,10 @@
       630,
       570
     ],
+    "height": 2048,
     "override_sig": "",
-    "sha256": "6ec31ddb2e13a3aa993529a7d6e690fa6801678beb7c3c1336d2ea65ffccf610"
+    "sha256": "6ec31ddb2e13a3aa993529a7d6e690fa6801678beb7c3c1336d2ea65ffccf610",
+    "width": 1365
   },
   "suzanne_becque": {
     "face": [
@@ -751,8 +911,10 @@
       1494,
       1494
     ],
+    "height": 4284,
     "override_sig": "{\"cx\": 2946, \"cy\": 2288, \"size\": 1934}",
-    "sha256": "59a8d59a73d81f71146734fa0c2b3f5580a112abbda681902899c9aaae38847b"
+    "sha256": "59a8d59a73d81f71146734fa0c2b3f5580a112abbda681902899c9aaae38847b",
+    "width": 5712
   },
   "tim_nelson_nelson": {
     "face": [
@@ -761,8 +923,10 @@
       1634,
       1145
     ],
+    "height": 4032,
     "override_sig": "",
-    "sha256": "19b7dbf58db1dc60d8f3679570eff1879b788f266d8da145584538bd5319c9fe"
+    "sha256": "19b7dbf58db1dc60d8f3679570eff1879b788f266d8da145584538bd5319c9fe",
+    "width": 3024
   },
   "tom_gubernat": {
     "face": [
@@ -771,12 +935,16 @@
       1767,
       708
     ],
+    "height": 4032,
     "override_sig": "",
-    "sha256": "a349ba22e57a3409c8e503d42c09487a1dc3491f02cdda09fc9b9c9f40ac52aa"
+    "sha256": "a349ba22e57a3409c8e503d42c09487a1dc3491f02cdda09fc9b9c9f40ac52aa",
+    "width": 3024
   },
   "zamani_berry": {
     "face": null,
+    "height": 1455,
     "override_sig": "",
-    "sha256": "83022258486bcd335ec2b67f16c9cce9b5df29c4d3b10fcb324b0800c6704150"
+    "sha256": "83022258486bcd335ec2b67f16c9cce9b5df29c4d3b10fcb324b0800c6704150",
+    "width": 1179
   }
 }
