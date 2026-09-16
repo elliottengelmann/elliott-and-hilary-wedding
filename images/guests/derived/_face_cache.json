@@ -456,6 +456,18 @@
     "sha256": "2795abcc7103c26bec13a5ec24265c548f2e4eb7ea90479b9990483606a81ab8",
     "width": 2316
   },
+  "gabe_nicholas": {
+    "face": [
+      1037,
+      1803,
+      2415,
+      422
+    ],
+    "height": 3664,
+    "override_sig": "",
+    "sha256": "32ce19a9925ba4cb03ba8ae575c173642ed6f2362c489098174388f2219284f1",
+    "width": 2062
+  },
   "guy_alcock": {
     "face": [
       1342,
