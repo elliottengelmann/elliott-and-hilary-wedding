@@ -660,6 +660,18 @@
     "sha256": "d9f686d0ea81f6d6912202c326b78f4a64fb1e36bbf040042a72134647d455ab",
     "width": 438
   },
+  "laura_distel_distel": {
+    "face": [
+      1271,
+      2691,
+      2338,
+      1625
+    ],
+    "height": 4896,
+    "override_sig": "",
+    "sha256": "d2b1521e322c5f48d8e6d22dc1feca280315b2c36afc823c6551d0617beb8ed9",
+    "width": 3672
+  },
   "laura_liddell": {
     "face": [
       610,
