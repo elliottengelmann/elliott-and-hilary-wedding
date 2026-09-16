@@ -456,6 +456,13 @@
     "sha256": "2795abcc7103c26bec13a5ec24265c548f2e4eb7ea90479b9990483606a81ab8",
     "width": 2316
   },
+  "filip_shatlan": {
+    "face": null,
+    "height": 5120,
+    "override_sig": "",
+    "sha256": "1c8262588de133dccba3325265f74d3a9c0ec0c00990889a0991605ce5dafb32",
+    "width": 3840
+  },
   "gabe_nicholas": {
     "face": [
       1037,
