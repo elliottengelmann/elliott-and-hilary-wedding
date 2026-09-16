@@ -432,6 +432,18 @@
     "sha256": "6f892d584a2198e899d03b63d03185a44dc449d16f8a1d4fb0034905d072e331",
     "width": 2316
   },
+  "eric_swanson": {
+    "face": [
+      965,
+      1589,
+      1770,
+      784
+    ],
+    "height": 3088,
+    "override_sig": "",
+    "sha256": "d3a0708abf18305b92b18c0f98253bbb7ee8265d1bed858d97cdb77c65e7b832",
+    "width": 2316
+  },
   "eric_wilburn": {
     "face": [
       1323,
