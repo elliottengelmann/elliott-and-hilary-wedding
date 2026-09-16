@@ -612,6 +612,18 @@
     "sha256": "afdfe84c201bed09395f19746f79281124b131c22122cb787b30c286153908be",
     "width": 1024
   },
+  "katie_swanson": {
+    "face": [
+      1550,
+      2482,
+      1751,
+      2281
+    ],
+    "height": 5712,
+    "override_sig": "",
+    "sha256": "272f01b4641ad8ecce201caf1903d6fdc9e4322abc2b35f0c30306223973ed98",
+    "width": 4284
+  },
   "kenny_cohen": {
     "face": [
       1449,
