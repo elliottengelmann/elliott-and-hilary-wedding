@@ -504,6 +504,18 @@
     "sha256": "10834870d73d90aed3d31ef5aea62106edf4335ad740c0bf085af0db1255413f",
     "width": 3072
   },
+  "jacqueline_fedida": {
+    "face": [
+      1924,
+      2270,
+      2961,
+      1232
+    ],
+    "height": 5712,
+    "override_sig": "",
+    "sha256": "c86c48190a603fb676928f5fa669e4ff67c1ba67771a4e67425afa8f0cb16574",
+    "width": 4284
+  },
   "jake_kramer": {
     "face": [
       220,
