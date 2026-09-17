@@ -947,6 +947,18 @@
     "sha256": "5b5f4fabd58f122e78e628a9e20b6330d3607c811a4fe8fa6033ad59d3d289ee",
     "width": 3024
   },
+  "sasha_engelmann": {
+    "face": [
+      740,
+      608,
+      908,
+      440
+    ],
+    "height": 1599,
+    "override_sig": "",
+    "sha256": "4a05c7245c8e56b5a0f3721170a84625912fdb20df2217b4dfe8a14a3498d3cb",
+    "width": 1200
+  },
   "scott_gardner": {
     "face": [
       1535,
