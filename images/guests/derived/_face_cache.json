@@ -571,6 +571,18 @@
     "sha256": "9489b9e0158c9eafe2a4dbff2ffb4039457df8cff4057673af1a294f81e7c45d",
     "width": 6144
   },
+  "joanna_shatlan": {
+    "face": [
+      1188,
+      2666,
+      1600,
+      2247
+    ],
+    "height": 5712,
+    "override_sig": "",
+    "sha256": "38e301dd8714becb90f0fd2add63c69840fc689ddf1ffaa91ceca558ae4aa038",
+    "width": 4284
+  },
   "john_mazzoli": {
     "face": [
       647,
