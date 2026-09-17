@@ -1043,6 +1043,18 @@
     "sha256": "59a8d59a73d81f71146734fa0c2b3f5580a112abbda681902899c9aaae38847b",
     "width": 5712
   },
+  "suzi_engelmann": {
+    "face": [
+      546,
+      2755,
+      1411,
+      1890
+    ],
+    "height": 5712,
+    "override_sig": "",
+    "sha256": "e07a52a9fe9d3a943cc1208e14b409e8dd9d5615ff91f8185c67e38c1c90333b",
+    "width": 4284
+  },
   "tim_nelson_nelson": {
     "face": [
       756,
