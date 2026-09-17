@@ -183,6 +183,18 @@
     "sha256": "1457b2eb8b74a0217fbc0029b47648bd2a2ad844d6836279edac695df5c47d62",
     "width": 2048
   },
+  "bernd_engelmann": {
+    "face": [
+      364,
+      1112,
+      468,
+      1008
+    ],
+    "height": 1536,
+    "override_sig": "",
+    "sha256": "ec98d6782a5b06787cad0197486d83db034cdd37bc20671ed9cb0ff707793b80",
+    "width": 2048
+  },
   "blobette_": {
     "face": null,
     "height": 2875,
