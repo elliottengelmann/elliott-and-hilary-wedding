@@ -904,6 +904,18 @@
     "sha256": "e301155c04a155b4bc3e6329081769e25a1647b2f51e8e2e19d1909f35e4f105",
     "width": 2736
   },
+  "rachel_kossar_kossar": {
+    "face": [
+      165,
+      463,
+      282,
+      346
+    ],
+    "height": 794,
+    "override_sig": "",
+    "sha256": "ec5b95c9149fe157b8df3428a166d78d40a68ae1daff27a0e80d63e16787366b",
+    "width": 1115
+  },
   "richard_fisher": {
     "face": [
       1506,
